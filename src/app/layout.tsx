@@ -1,8 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
+import Provider from "./Provider";
+import Header from "../components/Header";
 
-const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -10,7 +11,8 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Rotina Monetária",
-  description: "Um planejador financeiro de uso pessoal para a gestão de suas",
+  description:
+    "Um planejador financeiro de uso pessoal para a gestão de suas finanças",
 };
 
 export default function RootLayout({
@@ -20,7 +22,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <Provider>
+        <body className={poppins.className}>
+          <Header />
+          {children}
+        </body>
+      </Provider>
     </html>
   );
 }
