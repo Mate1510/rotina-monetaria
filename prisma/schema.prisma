@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String        @id @default(uuid())
+  name        String
+  email       String        @unique
+  password    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  lastEntry   DateTime?
+  status      Status        @default(ACTIVE)
+  role        Role          @default(USER)
+  transactions FinanceTransaction[]
+  categories  Category[]
+  goals       Goal[]
+}
+
+model FinanceTransaction {
+  id        String          @id @default(uuid())
+  name      String
+  value     Decimal         @db.Decimal(9, 2)
+  type      TransactionType
+  date      DateTime
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  Goal       Goal?    @relation(fields: [goalId], references: [id])
+  goalId     String?
+}
+
+model Category {
+  id              String          @id @default(uuid())
+  name            String
+  color           Color           @default(BLACK)
+  transactionType TransactionType
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  Transaction FinanceTransaction[]
+}
+
+model Goal {
+  id        String   @id @default(uuid())
+  name      String
+  value     Decimal  @db.Decimal(9, 2)
+  color     Color    @default(BLACK)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  transactions FinanceTransaction[]
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum Color {
+  BLACK
+  RED
+  BLUE
+  GREEN
+  YELLOW
+  PURPLE
+  ORANGE
+}
