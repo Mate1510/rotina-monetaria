@@ -15,9 +15,9 @@ module.exports = {
       colors: {
         primaryOrange: "#EE4B1F",
         orangeDarker: "#B1320F",
-        constrastGrey: "#D9D9D9",
+        constrastGray: "#D9D9D9",
         constrastBlack: "#1E1E1E",
-        textGrey: "#BFBFBF",
+        textGray: "#A3A3A3",
         success: "#28A745",
         warning: "#FFC107",
         danger: "#DC3545",
@@ -27,6 +27,7 @@ module.exports = {
         textGrey: "#BFBFBF",
         constrastBlack: "#1E1E1E",
       },
+
     },
   },
   plugins: [],
