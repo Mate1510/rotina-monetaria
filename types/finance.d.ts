@@ -1,10 +1,9 @@
 import { TransactionType } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime/library";
 
 type Finance = {
   id: string;
   name: string;
-  value: Decimal;
+  value: Number;
   type: TransactionType;
   date: Date;
   categoryId: string;
