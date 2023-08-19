@@ -1,9 +1,15 @@
+import Finances from '@/components/sections/InsertFinances'
+import CardSection from '@/components/sections/homepage/CardSection'
+import FinanceTable from '@/components/sections/homepage/FinanceTable'
+
 import Image from 'next/image'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-
+    <main className="container flex min-h-screen flex-col items-center p-5 gap-12">
+      <Finances />
+      <CardSection />
+      <FinanceTable />
     </main>
   )
 }
