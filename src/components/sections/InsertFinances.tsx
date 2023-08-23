@@ -9,6 +9,7 @@ import CurrencyInput from "@/components/components/CurrencyInput";
 import Select from "@/components/components/Select";
 import DatePicker from "@/components/components/DatePicker";
 import Button from "@/components/components/Button";
+import axios from "axios";
 
 const Finances = () => {
   const [name, setName] = useState("");
@@ -28,27 +29,20 @@ const Finances = () => {
     }
 
     try {
-      const userIdResponse = await fetch(
+      const userIdResponse = await axios.get(
         `/api/getuserid?email=${session.user?.email}`
       );
-      const { userId } = await userIdResponse.json();
+      const userId = userIdResponse.data.userId;
 
-      const response = await fetch(`/api/finances/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          value,
-          date,
-          type,
-          userId: userId,
-          categoryId: category,
-        }),
+      const response = await axios.post(`/api/finances/`, {
+        name,
+        value,
+        date,
+        type,
+        userId: userId,
+        categoryId: category,
       });
-
-      const data = await response.json();
+      const data = response.data;
 
       if (data.error) {
         console.error(data.error);
@@ -68,15 +62,15 @@ const Finances = () => {
 
     const fetchCategories = async () => {
       try {
-        const userIdResponse = await fetch(
+        const userIdResponse = await axios.get(
           `/api/getuserid?email=${session.user?.email}`
         );
-        const { userId } = await userIdResponse.json();
+        const userId = userIdResponse.data.userId;
 
-        const categoriesResponse = await fetch(
+        const categoriesResponse = await axios.get(
           `/api/categories?userid=${userId}`
         );
-        const categoriesData: Category[] = await categoriesResponse.json();
+        const categoriesData = categoriesResponse.data;
         setCategories(categoriesData);
       } catch (error) {
         console.error("Failed to fetch categories:", error);

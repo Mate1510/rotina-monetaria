@@ -8,16 +8,17 @@ import axios from "axios";
 import { Category } from "@/categories";
 import { MdTrendingUp, MdTrendingDown, MdDelete, MdEdit } from "react-icons/md";
 import EditFinanceModal from "./EditFinanceModal";
-import ConfirmDeleteModal from "./DeleteModal";
+import DeleteFinanceModal from "./DeleteFinanceModal";
 
 const FinanceTable = () => {
-  const { data: session } = useSession();
   const [finances, setFinances] = useState<Finance[]>([]);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedFinance, setSelectedFinance] = useState<Finance | null>(null);
+  const [financeToEdit, setFinanceToEdit] = useState<Finance | null>(null);
   const [financeToDelete, setFinanceToDelete] = useState<Finance | null>(null);
+
+  const { data: session } = useSession();
 
   const monthNames = [
     "Janeiro",
@@ -42,10 +43,16 @@ const FinanceTable = () => {
 
     const fetchFinances = async () => {
       try {
-        const response = await axios.get(`/api/finances`, {
-          params: { month, year },
+        const userIdReponse = await axios.get(
+          `/api/getuserid?email=${session.user?.email}`
+        );
+        const userId = await userIdReponse.data.userId;
+
+        const financesResponse = await axios.get(`/api/finances`, {
+          params: { month, year, userid: userId },
         });
-        setFinances(response.data);
+        const financesData: Finance[] = await financesResponse.data;
+        setFinances(financesData);
       } catch (error) {
         console.error("Failed to fetch finances:", error);
       }
@@ -53,15 +60,15 @@ const FinanceTable = () => {
 
     const fetchCategories = async () => {
       try {
-        const userIdResponse = await fetch(
+        const userIdResponse = await axios.get(
           `/api/getuserid?email=${session.user?.email}`
         );
-        const { userId } = await userIdResponse.json();
+        const userId = await userIdResponse.data.userId;
 
-        const categoriesResponse = await fetch(
+        const categoriesResponse = await axios.get(
           `/api/categories?userid=${userId}`
         );
-        const categoriesData: Category[] = await categoriesResponse.json();
+        const categoriesData: Category[] = await categoriesResponse.data;
         setCategories(categoriesData);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -70,7 +77,7 @@ const FinanceTable = () => {
 
     fetchFinances();
     fetchCategories();
-  }, [month, year]);
+  }, [session, month, year]);
 
   const handlePrevMonth = () => {
     setMonth((prevMonth) => (prevMonth === 1 ? 12 : prevMonth - 1));
@@ -83,20 +90,20 @@ const FinanceTable = () => {
   };
 
   const handleEditClick = (finance: Finance) => {
-    setSelectedFinance(finance);
+    setFinanceToEdit(finance);
   };
 
   const handleSave = async (updatedFinance: Finance) => {
     try {
-      const response = await fetch(`/api/finances/${updatedFinance.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedFinance),
+      const response = await axios.put(`/api/finances/${updatedFinance.id}`, {
+        name: updatedFinance.name,
+        value: updatedFinance.value,
+        categoryId: updatedFinance.categoryId,
+        date: updatedFinance.date,
+        type: updatedFinance.type,
       });
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Failed to update finance data.");
       }
 
@@ -108,7 +115,7 @@ const FinanceTable = () => {
       console.error(error);
     }
 
-    setSelectedFinance(null);
+    setFinanceToEdit(null);
   };
 
   const handleDeleteClick = (finance: Finance) => {
@@ -119,11 +126,11 @@ const FinanceTable = () => {
     if (!financeToDelete) return;
 
     try {
-      const response = await fetch(`/api/finances/${financeToDelete.id}`, {
-        method: "DELETE",
-      });
+      const response = await axios.delete(
+        `/api/finances/${financeToDelete.id}`
+      );
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Failed to delete finance entry.");
       }
 
@@ -161,7 +168,7 @@ const FinanceTable = () => {
         />
       </div>
 
-      <div className="min-w-full overflow-x-auto  rounded-2xl bg-primaryOrange p-0.5 no-scrollbar">
+      <div className="min-w-full overflow-x-auto rounded-2xl bg-primaryOrange p-0.5 no-scrollbar">
         <table className="min-w-full bg-white overflow-hidden rounded-2xl">
           <thead className="bg-primaryOrange text-left text-white font-medium text-base">
             <tr>
@@ -221,6 +228,7 @@ const FinanceTable = () => {
                 </td>
               </tr>
             ))}
+
             {finances.length === 0 && (
               <tr>
                 <td
@@ -234,18 +242,18 @@ const FinanceTable = () => {
           </tbody>
         </table>
 
-        {selectedFinance && (
+        {financeToEdit && (
           <EditFinanceModal
-            isOpen={!!selectedFinance}
-            onClose={() => setSelectedFinance(null)}
-            finance={selectedFinance}
+            isOpen={!!financeToEdit}
+            onClose={() => setFinanceToEdit(null)}
+            finance={financeToEdit}
             onSave={handleSave}
             categories={categories}
           />
         )}
 
         {financeToDelete && (
-          <ConfirmDeleteModal
+          <DeleteFinanceModal
             isOpen={!!financeToDelete}
             onClose={() => setFinanceToDelete(null)}
             onConfirm={handleConfirmDelete}
