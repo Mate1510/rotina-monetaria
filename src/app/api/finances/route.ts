@@ -14,8 +14,10 @@ export async function GET(req: NextRequest) {
     });
   }
 
+  console.log(userId);
+
   if (!userId) {
-    return NextResponse.json({ error: "USer not authenticated", status: 500 });
+    return NextResponse.json({ error: "User not authenticated", status: 500 });
   }
 
   const startDate = new Date(year, month - 1, 1);

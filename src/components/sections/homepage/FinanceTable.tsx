@@ -18,6 +18,8 @@ const FinanceTable = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
 
+  const { data: session } = useSession();
+
   const monthNames = [
     "Janeiro",
     "Fevereiro",
@@ -34,19 +36,31 @@ const FinanceTable = () => {
   ];
 
   useEffect(() => {
+    if (!session) {
+      console.error("User not authenticated.");
+      return;
+    }
+
     const fetchFinances = async () => {
       try {
-        const response = await axios.get(`/api/finances`, {
-          params: { month, year },
+        const userIdReponse = await axios.get(
+          `/api/getuserid?email=${session.user?.email}`
+        );
+        const userId = await userIdReponse.data.userId;
+
+        const financesResponse = await axios.get(`/api/finances`, {
+          params: { month, year, userid: userId },
         });
-        setFinances(response.data);
+        console.log('API Response:', financesResponse.data);
+        const financesData: Finance[] = await financesResponse.data;
+        setFinances(financesData);
       } catch (error) {
         console.error("Failed to fetch finances:", error);
       }
     };
 
     fetchFinances();
-  }, [month, year]);
+  }, [session, month, year]);
 
   const handlePrevMonth = () => {
     setMonth((prevMonth) => (prevMonth === 1 ? 12 : prevMonth - 1));
