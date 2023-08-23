@@ -33,7 +33,6 @@ const FinanceTable = () => {
     "Dezembro",
   ];
 
-
   useEffect(() => {
     const fetchFinances = async () => {
       try {
@@ -45,7 +44,7 @@ const FinanceTable = () => {
         console.error("Failed to fetch finances:", error);
       }
     };
-    
+
     fetchFinances();
   }, [month, year]);
 
