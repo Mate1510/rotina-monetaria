@@ -15,8 +15,8 @@ const Header = () => {
   const handleMenuClick = () => setMenuIsOpen(!menuIsOpen);
 
   return (
-    <div className="container flex mx-auto p-5 justify-between shadow-sm">
-      <Link href="/" className="cursor-pointer">
+    <div className="flex w-full mx-auto p-6 justify-between items-center">
+      <Link href="/" className="cursor-pointer lg:mx-auto">
         <Image
           src={"/Logo.svg"}
           alt={"Rotina Monetária"}

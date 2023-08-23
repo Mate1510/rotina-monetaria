@@ -25,12 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Provider>
-        <body className={`${poppins.className} container mx-auto flex-col`}>
-          <div className="min-h-screen flex-grow">
-            <Header />
+        <body className={`${poppins.className} mx-auto flex-col `}>
+          <Header />
+          <div className="container min-h-screen flex-grow lg:max-w-screen-xl lg:mx-auto">
             {children}
-            <Footer />
           </div>
+          <Footer />
         </body>
       </Provider>
     </html>

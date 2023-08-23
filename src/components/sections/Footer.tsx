@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <div className="container flex bg-primaryOrange bottom-0 py-14 px-6 mt-12 justify-center relative">
+    <div className="flex bg-primaryOrange bottom-0 py-14 px-6 mt-12 justify-center relative">
       <div className="relative w-[200px] h-[75px] self-center mr-4">
         <Image src={"/Logo white.svg"} alt={"Rotina Monetária"} fill></Image>
       </div>
