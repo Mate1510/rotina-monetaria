@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Finance } from "@/finance";
-import Modal from "react-modal";
 import Input from "@/components/components/Input";
 import CurrencyInput from "@/components/components/CurrencyInput";
 import Select from "@/components/components/Select";
@@ -10,6 +9,7 @@ import DatePicker from "@/components/components/DatePicker";
 import Button from "@/components/components/Button";
 import { Category } from "@/categories";
 import { TransactionType } from "@/enum";
+import ModalComponent from "@/components/sections/Modal";
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +19,13 @@ type Props = {
   categories: Category[];
 };
 
-const EditFinanceModal: React.FC<Props> = ({ isOpen, onClose, finance, onSave, categories }) => {
+const EditFinanceModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  finance,
+  onSave,
+  categories,
+}) => {
   const [updatedFinance, setUpdatedFinance] = useState<Finance>(finance);
 
   useEffect(() => {
@@ -32,33 +38,27 @@ const EditFinanceModal: React.FC<Props> = ({ isOpen, onClose, finance, onSave, c
   };
 
   return (
-    <Modal
+    <ModalComponent
       isOpen={isOpen}
-      onRequestClose={onClose}
-      className="flex flex-col gap-5 p-5 border-primaryOrange border-2 rounded-lg items-center justify-center bg-white mx-auto w-4/5"
-      style={{
-        overlay: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.95)"
-        },
-        content: {
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        },
-      }}
+      onClose={onClose}
+      modalTitle="Editar Finança"
+      actionButton={
+        <Button
+          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
+          onClick={handleSave}
+        >
+          Salvar
+        </Button>
+      }
     >
-      <h2 className="text-2xl text-primaryOrange font-semibold">Editar Finança</h2>
-
       <div className="flex flex-col gap-3 w-full">
         <Input
           placeholder="Título"
           className="w-full"
           value={updatedFinance.name}
-          onChange={(e) => setUpdatedFinance({ ...updatedFinance, name: e.target.value })}
+          onChange={(e) =>
+            setUpdatedFinance({ ...updatedFinance, name: e.target.value })
+          }
         />
 
         <div className="grid grid-cols-5 gap-3 w-full">
@@ -67,7 +67,12 @@ const EditFinanceModal: React.FC<Props> = ({ isOpen, onClose, finance, onSave, c
               placeholder="R$"
               className="w-full"
               value={updatedFinance.value.toString()}
-              onValueChange={(val) => setUpdatedFinance({ ...updatedFinance, value: parseFloat(val || "0") })}
+              onValueChange={(val) =>
+                setUpdatedFinance({
+                  ...updatedFinance,
+                  value: parseFloat(val || "0"),
+                })
+              }
             />
           </div>
 
@@ -76,7 +81,12 @@ const EditFinanceModal: React.FC<Props> = ({ isOpen, onClose, finance, onSave, c
               placeholder="Categorias"
               className="w-full"
               value={updatedFinance.categoryId}
-              onChange={(e) => setUpdatedFinance({ ...updatedFinance, categoryId: e.target.value })}
+              onChange={(e) =>
+                setUpdatedFinance({
+                  ...updatedFinance,
+                  categoryId: e.target.value,
+                })
+              }
             >
               {categories.map((category, index) => (
                 <option key={index} value={category.id}>
@@ -92,7 +102,9 @@ const EditFinanceModal: React.FC<Props> = ({ isOpen, onClose, finance, onSave, c
             <DatePicker
               className="w-full"
               selected={new Date(updatedFinance.date)}
-              onChange={(date) => setUpdatedFinance({ ...updatedFinance, date: date as Date })}
+              onChange={(date) =>
+                setUpdatedFinance({ ...updatedFinance, date: date as Date })
+              }
               placeholderText="Data"
             />
           </div>
@@ -102,24 +114,20 @@ const EditFinanceModal: React.FC<Props> = ({ isOpen, onClose, finance, onSave, c
               placeholder="Tipo Transação"
               className="w-full"
               value={updatedFinance.type}
-              onChange={(e) => setUpdatedFinance({ ...updatedFinance, type: e.target.value as TransactionType })}
+              onChange={(e) =>
+                setUpdatedFinance({
+                  ...updatedFinance,
+                  type: e.target.value as TransactionType,
+                })
+              }
             >
               <option value="INCOME">Entrada</option>
               <option value="EXPENSE">Despesa</option>
             </Select>
           </div>
         </div>
-
-        <div className="flex flex-wrap gap-10">
-          <Button className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg" onClick={handleSave}>
-            Salvar
-          </Button>
-          <Button className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg" onClick={onClose}>
-            Cancelar
-          </Button>
-        </div>
       </div>
-    </Modal>
+    </ModalComponent>
   );
 };
 
