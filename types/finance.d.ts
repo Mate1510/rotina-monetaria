@@ -1,9 +1,10 @@
-import { TransactionType } from "@prisma/client";
+import { TransactionType } from "@/enum";
+import { Decimal } from "prisma";
 
 type Finance = {
   id: string;
   name: string;
-  value: Number;
+  value: Decimal;
   type: TransactionType;
   date: Date;
   categoryId: string;
