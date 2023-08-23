@@ -1,11 +1,14 @@
 export enum Color {
-  BLACK = "BLACK",
-  RED = "RED",
-  BLUE = "BLUE",
-  GREEN = "GREEN",
-  YELLOW = "YELLOW",
-  PURPLE = "PURPLE",
-  ORANGE = "ORANGE",
+  RED = "#ff0000",
+  ORANGE = "#ee4b1f",
+  PURPLE = "#a020f0",
+  PINK = "#ff00ff",
+  BLUE = "#0000ff",
+  AQUA = "#00ffff",
+  GREEN = "#00ff00",
+  YELLOW = "#ffff00",
+  BLACK = "#0a0a0a",
+  WHITE = "#ffffff",
 }
 
 export enum TransactionType {
