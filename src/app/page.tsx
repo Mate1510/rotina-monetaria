@@ -1,8 +1,8 @@
-import Finances from '@/components/sections/InsertFinances'
-import CardSection from '@/components/sections/homepage/CardSection'
-import FinanceTable from '@/components/sections/homepage/FinanceTable'
+import Finances from "@/components/sections/finances/InsertFinances";
+import CardSection from "@/components/sections/homepage/CardSection";
+import FinanceTable from "@/components/sections/homepage/FinanceTable";
 
-import Image from 'next/image'
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -11,5 +11,5 @@ export default function Home() {
       <CardSection />
       <FinanceTable />
     </main>
-  )
+  );
 }
