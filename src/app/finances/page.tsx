@@ -1,5 +1,5 @@
 import React from "react";
-import InsertFinances from "@/components/sections/InsertFinances";
+import InsertFinances from "@/components/sections/finances/InsertFinances";
 import FinanceTableExtended from "@/components/sections/finances/FinanceTableExtended";
 
 const FinancesPage = () => {
