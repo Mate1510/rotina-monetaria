@@ -44,14 +44,14 @@ const FinanceTable = () => {
     const fetchFinances = async () => {
       try {
         const userIdResponse = await axios.get(
-          `/api/getuserid?email=${session.user?.email}`
+          `/api/get-user-info/user-id?email=${session.user?.email}`
         );
         const userId = await userIdResponse.data.userId;
 
         const financesResponse = await axios.get(`/api/finances`, {
           params: { month, year, userid: userId },
         });
-        console.log('API Response:', financesResponse.data);
+        console.log("API Response:", financesResponse.data);
         const financesData: Finance[] = await financesResponse.data;
         setFinances(financesData);
       } catch (error) {

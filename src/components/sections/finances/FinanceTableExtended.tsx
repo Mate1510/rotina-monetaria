@@ -44,7 +44,7 @@ const FinanceTable = () => {
     const fetchFinances = async () => {
       try {
         const userIdResponse = await axios.get(
-          `/api/getuserid?email=${session.user?.email}`
+          `/api/get-user-info/user-id?email=${session.user?.email}`
         );
         const userId = await userIdResponse.data.userId;
 
@@ -61,7 +61,7 @@ const FinanceTable = () => {
     const fetchCategories = async () => {
       try {
         const userIdResponse = await axios.get(
-          `/api/getuserid?email=${session.user?.email}`
+          `/api/get-user-info/user-id?email=${session.user?.email}`
         );
         const userId = await userIdResponse.data.userId;
 

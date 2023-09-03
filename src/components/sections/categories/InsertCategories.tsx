@@ -26,7 +26,7 @@ const InsertCategories = () => {
 
     try {
       const userIdResponse = await axios.get(
-        `/api/getuserid?email=${session.user?.email}`
+        `/api/get-user-info/user-id?email=${session.user?.email}`
       );
       const userId = userIdResponse.data.userId;
 

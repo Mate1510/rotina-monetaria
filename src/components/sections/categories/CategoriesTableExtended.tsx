@@ -27,7 +27,7 @@ const CategoryTable = () => {
     const fetchCategories = async () => {
       try {
         const userIdResponse = await axios.get(
-          `/api/getuserid?email=${session.user?.email}`
+          `/api/get-user-info/user-id?email=${session.user?.email}`
         );
         const userId = await userIdResponse.data.userId;
 
@@ -123,7 +123,10 @@ const CategoryTable = () => {
                 <td className="flex py-2 px-4 border-b">
                   <span
                     className="w-10 h-10 rounded-full border border-textGray"
-                    style={{ backgroundColor: Color[category.color as keyof typeof Color] }}
+                    style={{
+                      backgroundColor:
+                        Color[category.color as keyof typeof Color],
+                    }}
                   ></span>
                 </td>
                 <td className="py-2 px-4 border-b">{category.name}</td>

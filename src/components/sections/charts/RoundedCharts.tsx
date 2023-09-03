@@ -27,7 +27,7 @@ const RoundedCharts = () => {
     const fetchData = async () => {
       try {
         const userIdResponse = await axios.get(
-          `/api/getuserid?email=${session.user?.email}`
+          `/api/get-user-info/user-id?email=${session.user?.email}`
         );
         const userId = await userIdResponse.data.userId;
 
@@ -47,7 +47,9 @@ const RoundedCharts = () => {
           labels: categoriesData.map((category) => category.name),
           datasets: [
             {
-              data: financesData.map((finance) => {finance.value}),
+              data: financesData.map((finance) => {
+                finance.value;
+              }),
               backgroundColor: categoriesData.map((category) => category.color),
             },
           ],
