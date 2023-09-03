@@ -7,50 +7,53 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const financeId = params.id;
 
-    if (!id) {
-      return NextResponse.json({ error: "Invalid ID provided", status: 500 });
+    if (!financeId) {
+      return NextResponse.json({ error: "ID inválido.", status: 400 });
     }
 
-    const financeInput: FinanceInput = await req.json();
+    const financeData: FinanceInput = await req.json();
 
-    if (financeInput.date) {
-      const dateObject = new Date(financeInput.date);
-      financeInput.date = dateObject;
+    if (financeData.date) {
+      const dateObject = new Date(financeData.date);
+      financeData.date = dateObject;
     }
 
     const updatedFinance = await prisma.financeTransaction.update({
-      where: { id: id },
-      data: financeInput,
+      where: { id: financeId },
+      data: financeData,
     });
-    return NextResponse.json(updatedFinance);
+    return NextResponse.json(updatedFinance, { status: 200 });
   } catch (error) {
     return NextResponse.json({
-      error: "Failed to update finance entry ",
+      error: "Falha em atualizar finança.\nErro: " + error,
       status: 500,
     });
   }
 }
 
 export async function DELETE(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const financeId = params.id;
 
-    if (!id) {
-      return NextResponse.json({ error: "Invalid ID provided", status: 500 });
+    if (!financeId) {
+      return NextResponse.json({ error: "ID inválido.", status: 400 });
     }
 
     await prisma.financeTransaction.delete({
-      where: { id: id },
+      where: { id: financeId },
     });
-    return NextResponse.json({ message: "Finance entry deleted successfuly" });
+    return NextResponse.json({
+      message: "A Finança foi excluída com sucesso.",
+      status: 200,
+    });
   } catch (error) {
     return NextResponse.json({
-      error: "Failed to delete finance entry",
+      error: "Falha em excluir finança.\nErro: " + error,
       status: 500,
     });
   }

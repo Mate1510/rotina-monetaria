@@ -3,21 +3,25 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 export async function PUT(req: NextRequest) {
-  const { password, token } = await req.json();
+  const passwordData = await req.json();
+  const { password, token } = passwordData;
 
   const passwordResetToken = await prisma.passwordResetToken.findUnique({
     where: { token },
   });
 
   if (!passwordResetToken) {
-    return NextResponse.json("Invalid or expired token", { status: 400 });
+    return NextResponse.json({
+      message: "Token inválido ou expirado.",
+      status: 400,
+    });
   }
 
   const now = new Date();
   const tokenExpiresAt = new Date(passwordResetToken.expiresAt);
 
   if (tokenExpiresAt < now) {
-    return NextResponse.json("Token has expired", { status: 400 });
+    return NextResponse.json({ message: "O Token expirou.", status: 400 });
   }
 
   const user = await prisma.user.findUnique({
@@ -25,7 +29,10 @@ export async function PUT(req: NextRequest) {
   });
 
   if (!user) {
-    return NextResponse.json("User not found.", { status: 400 });
+    return NextResponse.json({
+      message: "Usuário não encontrado.",
+      status: 400,
+    });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,5 +46,8 @@ export async function PUT(req: NextRequest) {
     where: { token },
   });
 
-  return NextResponse.json("Password reset successful", { status: 200 });
+  return NextResponse.json({
+    message: "Senha reiniciada com sucesso.",
+    status: 200,
+  });
 }

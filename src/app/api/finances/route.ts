@@ -9,15 +9,16 @@ export async function GET(req: NextRequest) {
 
   if (!month || !year) {
     return NextResponse.json({
-      error: "Month and year are required",
-      status: 500,
+      error: "Mês e ano são obrigatórios.",
+      status: 400,
     });
   }
 
-  console.log(userId);
-
   if (!userId) {
-    return NextResponse.json({ error: "User not authenticated", status: 500 });
+    return NextResponse.json({
+      error: "Usuário não autenticado ou inexistente.",
+      status: 400,
+    });
   }
 
   const startDate = new Date(year, month - 1, 1);
@@ -36,36 +37,35 @@ export async function GET(req: NextRequest) {
         date: "asc",
       },
     })) as Finance[];
-    return NextResponse.json(finances);
+    return NextResponse.json(finances, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch finances" });
+    return NextResponse.json({
+      error: "Falha em coletar finanças.\nErro: " + error,
+    });
   }
 }
 
 export async function POST(req: Request) {
   if (!req.body) {
-    return NextResponse.json({ error: "Request body is missing" });
+    return NextResponse.json({ error: "Estão faltando dados.", status: 400 });
   }
 
-  const financeInput: FinanceInput = await req.json();
+  const financeData: FinanceInput = await req.json();
 
-  if (financeInput.date) {
-    const dateObject = new Date(financeInput.date);
-    financeInput.date = dateObject;
+  if (financeData.date) {
+    const dateObject = new Date(financeData.date);
+    financeData.date = dateObject;
   }
 
   try {
-    const newFinance: Finance = (await prisma.financeTransaction.create({
-      data: financeInput,
+    const finance: Finance = (await prisma.financeTransaction.create({
+      data: financeData,
     })) as Finance;
 
-    return NextResponse.json(newFinance, {
-      status: 200,
-    });
+    return NextResponse.json(finance, { status: 200 });
   } catch (error) {
-    console.error("Error creating finance entry:", error);
     return NextResponse.json({
-      error: "Failed to create finance entry",
+      error: "Falha em criar finança.\nErro: " + error,
       status: 500,
     });
   }

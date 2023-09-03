@@ -6,7 +6,7 @@ import { seedCategories } from "../../../lib/seedCategories";
 export async function POST(req: NextRequest) {
   if (!req.body) {
     return NextResponse.json({
-      message: "Request body is missing",
+      message: "Estão faltando dados.",
       status: 400,
     });
   }
@@ -15,11 +15,11 @@ export async function POST(req: NextRequest) {
   const { name, email, password } = userData;
 
   if (!name || !email || !password) {
-    return NextResponse.json("Invalid data.", { status: 400 });
+    return NextResponse.json({ message: "Dados inválidos.", status: 400 });
   }
 
   if (!email.includes("@")) {
-    return NextResponse.json("Invalid e-mail.", { status: 400 });
+    return NextResponse.json({ message: "E-mail inválido.", status: 400 });
   }
 
   try {
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     if (isUserExist) {
       return NextResponse.json({
-        error: "E-mail already exists",
+        error: "Usuário já existe.",
         status: 400,
       });
     }
@@ -52,6 +52,9 @@ export async function POST(req: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    return NextResponse.json("Error creating user.", { status: 500 });
+    return NextResponse.json({
+      error: "Falha ao criar usuário.\nError: " + error,
+      status: 500,
+    });
   }
 }

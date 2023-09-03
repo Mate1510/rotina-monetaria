@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get("userid");
 
   if (!userId) {
-    return NextResponse.json("User invalid!", { status: 400 });
+    return NextResponse.json({ message: "Usuário inválido.", status: 400 });
   }
 
   try {
@@ -14,22 +14,23 @@ export async function GET(req: NextRequest) {
     });
 
     if (!oAuthAccount) {
-      return NextResponse.json("User doesn't have an Account Provider.", {
+      return NextResponse.json({
+        message: "O usuário não tem uma conta com um provedor.",
         status: 400,
       });
     }
 
     if (oAuthAccount.type !== "oauth" && oAuthAccount.provider !== "google") {
-      return NextResponse.json(
-        "The user don't have any bond with oAuth Google API.",
-        { status: 400 }
-      );
+      return NextResponse.json({
+        message: "O usuário não tem nenhuma relação com o Google API.",
+        status: 400,
+      });
     }
 
-    return NextResponse.json({ userOAuth: true });
+    return NextResponse.json({ userOAuth: true, status: 200 });
   } catch (error) {
     return NextResponse.json({
-      error: "Failed to fetch oAuth Account.",
+      error: "Falha em coletar dados da conta oAuth.\nErro: " + error,
       status: 500,
     });
   }

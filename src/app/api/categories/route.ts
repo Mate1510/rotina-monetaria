@@ -6,7 +6,10 @@ export async function GET(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get("userid");
 
   if (!userId) {
-    return NextResponse.json({ error: "Failed to get user ID", status: 400 });
+    return NextResponse.json({
+      error: "Falha em pegar o ID do usuário.",
+      status: 400,
+    });
   }
 
   try {
@@ -16,32 +19,30 @@ export async function GET(req: NextRequest) {
         name: "asc",
       },
     });
-    return NextResponse.json(categories);
+    return NextResponse.json(categories, { status: 200 });
   } catch (error) {
-    console.error("Error fetching categories:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch categories" },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      error: "Falha em coletar as categorias.\nErro: " + error,
+      status: 500,
+    });
   }
 }
 
 export async function POST(req: Request) {
   if (!req.body) {
-    return NextResponse.json({ error: "Request body is missing", status: 500 });
+    return NextResponse.json({ error: "Estão faltando dados.", status: 400 });
   }
 
-  const categoryInput: CategoryInput = await req.json();
+  const categoryData: CategoryInput = await req.json();
 
   try {
-    const newCategory: Category = await prisma.category.create({
-      data: categoryInput,
+    const category: Category = await prisma.category.create({
+      data: categoryData,
     });
-    return NextResponse.json(newCategory, { status: 200 });
+    return NextResponse.json(category, { status: 200 });
   } catch (error) {
-    console.error("Error creating category entry:", error);
     return NextResponse.json({
-      error: "Failed to create category entry",
+      error: "Falha em criar categoria.\nErro: "+ error,
       status: 500,
     });
   }

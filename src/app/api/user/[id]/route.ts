@@ -9,14 +9,14 @@ export async function PUT(
   const userId = params.id;
 
   if (!userId) {
-    return NextResponse.json({ message: "Invalid ID provided!", status: 400 });
+    return NextResponse.json({ message: "ID inválido.", status: 400 });
   }
 
   const userData = await req.json();
 
   if (!userData) {
     return NextResponse.json({
-      message: "Invalid user data provided!",
+      message: "Dados inválidos.",
       status: 400,
     });
   }
@@ -44,7 +44,10 @@ export async function PUT(
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error, status: 500 });
+    return NextResponse.json({
+      error: "Falha ao atualizar usuário.\nErro: " + error,
+      status: 500,
+    });
   }
 }
 
@@ -57,7 +60,7 @@ export async function DELETE(
 
     if (!userId) {
       return NextResponse.json({
-        message: "Invalid ID provided!",
+        message: "ID inválido.",
         status: 400,
       });
     }
@@ -66,10 +69,10 @@ export async function DELETE(
       where: { id: userId },
       data: { status: "INACTIVE" },
     });
-    return NextResponse.json({ message: "User Inactivated!", status: 200 });
+    return NextResponse.json({ message: "Usuário inativado.", status: 200 });
   } catch (error) {
     return NextResponse.json({
-      error: "Failed to inactivate user.",
+      error: "Falha em inativar usuário.\nErro: " + error,
       status: 500,
     });
   }

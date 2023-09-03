@@ -1,28 +1,28 @@
 import { CategoryInput } from "@/categories";
 import { prisma } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const categoryId = params.id;
 
-    if (!id) {
-      return NextResponse.json({ error: "Invalid ID provided.", status: 500 });
+    if (!categoryId) {
+      return NextResponse.json({ error: "ID inválido.", status: 400 });
     }
 
-    const categoryInput: CategoryInput = await req.json();
+    const categoryData: CategoryInput = await req.json();
 
     const updatedCategory = await prisma.category.update({
-      where: { id: id },
-      data: categoryInput,
+      where: { id: categoryId },
+      data: categoryData,
     });
-    return NextResponse.json(updatedCategory);
+    return NextResponse.json(updatedCategory, { status: 200 });
   } catch (error) {
     return NextResponse.json({
-      error: "Failed to update category entry",
+      error: "Falha em atualizar categoria.\nErro: " + error,
       status: 500,
     });
   }
@@ -33,19 +33,19 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = params.id;
+    const categoryId = params.id;
 
-    if (!id) {
-      return NextResponse.json({ error: "Invalid ID provided", status: 500 });
+    if (!categoryId) {
+      return NextResponse.json({ error: "ID inválido.", status: 400 });
     }
 
-    await prisma.category.delete({ where: { id: id } });
+    await prisma.category.delete({ where: { id: categoryId } });
     return NextResponse.json({
-      message: "Category entry deleted successfuly.",
+      message: "A categoria foi excluída com sucesso.",
     });
   } catch (error) {
     return NextResponse.json({
-      error: "Failed to delete category entry",
+      error: "Falha em excluir categoria.\nErro: " + error,
       status: 500,
     });
   }
