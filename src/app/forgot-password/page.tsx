@@ -3,7 +3,7 @@
 import ForgotPassword from "@/components/sections/user/ForgotPassword";
 import React from "react";
 
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
   return (
     <div className="container relative py-48 md:py-0 min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       {/* Coluna da Esquerda */}
@@ -36,4 +36,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ForgotPasswordPage;

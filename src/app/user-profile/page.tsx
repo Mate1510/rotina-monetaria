@@ -4,7 +4,7 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import UserProfile from "@/components/sections/user/UserProfile";
 
-const Profile = () => {
+const UserProfilePage = () => {
   const { data: session } = useSession();
   return (
     <div className="container relative py-48 md:py-0 min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -31,4 +31,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfilePage;
