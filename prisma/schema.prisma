@@ -19,7 +19,7 @@ model FinanceTransaction {
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
 
-  User   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   category   Category @relation(fields: [categoryId], references: [id])
@@ -37,7 +37,7 @@ model Category {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 
-  User   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   Transaction FinanceTransaction[]
@@ -51,7 +51,7 @@ model Goal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  User   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   transactions FinanceTransaction[]
@@ -81,7 +81,8 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -89,20 +90,22 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  password      String?
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
 
   // My Project
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-  lastEntry    DateTime?
-  status       Status               @default(ACTIVE)
-  role         Role                 @default(USER)
-  transactions FinanceTransaction[]
-  categories   Category[]
-  goals        Goal[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  lastEntry          DateTime?
+  status             Status               @default(ACTIVE)
+  role               Role                 @default(USER)
+  transactions       FinanceTransaction[]
+  categories         Category[]
+  goals              Goal[]
+  PasswordResetToken PasswordResetToken?
 }
 
 model VerificationToken {
@@ -111,6 +114,15 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique
+  token     String   @unique
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 enum Status {
