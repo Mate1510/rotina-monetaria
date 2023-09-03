@@ -9,8 +9,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const user = await prisma.user.findFirst({
-      where: { email: email },
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
 
     if (!user) {
