@@ -1,9 +1,9 @@
 "use client";
 
-import ForgotPassword from "@/components/sections/user/ForgotPassword";
+import ForgetPassword from "@/components/sections/user/ForgetPassword";
 import React from "react";
 
-const ForgotPasswordPage = () => {
+const ForgetPasswordPage = () => {
   return (
     <div className="container relative py-48 md:py-0 min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       {/* Coluna da Esquerda */}
@@ -29,11 +29,11 @@ const ForgotPasswordPage = () => {
       {/* Coluna da Direita */}
       <div className="p-2">
         <div className="mx-auto flex w-full flex-col justify-center py-0 sm:w-[350px]">
-          <ForgotPassword />
+          <ForgetPassword />
         </div>
       </div>
     </div>
   );
 };
 
-export default ForgotPasswordPage;
+export default ForgetPasswordPage;

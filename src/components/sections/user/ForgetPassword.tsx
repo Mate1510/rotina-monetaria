@@ -13,7 +13,7 @@ interface UserEmail {
   email: string;
 }
 
-const ForgotPassword = () => {
+const ForgetPassword = () => {
   const [data, setData] = useState<UserEmail>({ email: "" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -26,7 +26,7 @@ const ForgotPassword = () => {
     try {
       const { email } = data;
 
-      const response = await axios.post("/api/forgot-password", {
+      const response = await axios.post("/api/forget-password", {
         email,
       });
 
@@ -103,4 +103,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgetPassword;

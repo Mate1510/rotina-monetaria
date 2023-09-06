@@ -97,7 +97,7 @@ const UserLogin = () => {
               />
               <div className="flex justify-end">
                 <Link
-                  href={"/forgot-password"}
+                  href={"/forget-password"}
                   className="text-right mb-3 cursor-pointer font-medium text-sm text-blue-500"
                 >
                   Esqueceu a senha?

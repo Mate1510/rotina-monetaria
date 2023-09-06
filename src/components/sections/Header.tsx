@@ -20,7 +20,7 @@ const Header = () => {
   if (
     currentPage == "register" ||
     currentPage == "login" ||
-    currentPage == "forgot-password" ||
+    currentPage == "forget-password" ||
     currentPage == "reset-password"
   ) {
     changeColor = true;
