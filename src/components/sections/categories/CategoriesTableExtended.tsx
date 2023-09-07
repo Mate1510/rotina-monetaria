@@ -26,10 +26,7 @@ const CategoryTable = () => {
 
     const fetchCategories = async () => {
       try {
-        const userIdResponse = await axios.get(
-          `/api/get-user-info/user-id?email=${session.user?.email}`
-        );
-        const userId = await userIdResponse.data.userId;
+        const userId = session?.user?.userId;
 
         const categoriesResponse = await axios.get(
           `/api/categories?userid=${userId}`

@@ -12,143 +12,141 @@ import Button from "@/components/components/Button";
 import axios from "axios";
 
 const Finances = () => {
-  const [name, setName] = useState("");
-  const [value, setValue] = useState("");
-  const [category, setCategory] = useState("");
-  const [date, setDate] = useState<Date | null>(null);
-  const [type, setType] = useState("");
+    const [name, setName] = useState("");
+    const [value, setValue] = useState("");
+    const [category, setCategory] = useState("");
+    const [date, setDate] = useState<Date | null>(null);
+    const [type, setType] = useState("");
 
-  const [categories, setCategories] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
 
-  const { data: session } = useSession();
+    const { data: session } = useSession();
 
-  const handleSubmit = async () => {
-    if (!session) {
-      console.error("User not authenticated.");
-      return;
-    }
+    const handleSubmit = async () => {
+        if (!session) {
+            console.error("User not authenticated.");
+            return;
+        }
 
-    try {
-      const userIdResponse = await axios.get(
-        `/api/get-user-info/user-id?email=${session.user?.email}`
-      );
-      const userId = userIdResponse.data.userId;
+        try {
+            const userId = session?.user?.userId;
 
-      const response = await axios.post(`/api/finances/`, {
-        name,
-        value,
-        date,
-        type,
-        userId: userId,
-        categoryId: category,
-      });
-      const data = response.data;
+            const response = await axios.post(`/api/finances/`, {
+                name,
+                value,
+                date,
+                type,
+                userId: userId,
+                categoryId: category,
+            });
+            const data = response.data;
 
-      if (data.error) {
-        console.error(data.error);
-      } else {
-        console.log("Finance created:", data);
-      }
-    } catch (error) {
-      console.error("Failed to add finance:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (!session) {
-      console.error("User not authenticated.");
-      return;
-    }
-
-    const fetchCategories = async () => {
-      try {
-        const userIdResponse = await axios.get(
-          `/api/get-user-info/user-id?email=${session.user?.email}`
-        );
-        const userId = userIdResponse.data.userId;
-
-        const categoriesResponse = await axios.get(
-          `/api/categories?userid=${userId}`
-        );
-        const categoriesData = categoriesResponse.data;
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
+            if (data.error) {
+                console.error(data.error);
+            } else {
+                console.log("Finance created:", data);
+            }
+            window.location.reload();
+        } catch (error) {
+            console.error("Failed to add finance:", error);
+        }
     };
 
-    fetchCategories();
-  }, [session]);
+    useEffect(() => {
+        if (!session) {
+            console.error("User not authenticated.");
+            return;
+        }
 
-  return (
-    <div className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm">
-      <h3 className="text-center text-constrastBlack font-semibold text-lg">
-        Insira suas finanças:
-      </h3>
+        const fetchCategories = async () => {
+            try {
+                const userId = session?.user?.userId;
 
-      <div className="flex flex-col gap-3">
-        <Input
-          placeholder="Título"
-          className="w-full"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+                const categoriesResponse = await axios.get(
+                    `/api/categories?userid=${userId}`
+                );
+                const categoriesData = categoriesResponse.data;
+                setCategories(categoriesData);
+            } catch (error) {
+                console.error("Failed to fetch categories:", error);
+            }
+        };
 
-        <div className="grid grid-cols-5 gap-3 w-full">
-          <div className="col-span-2">
-            <CurrencyInput
-              placeholder="R$"
-              className="w-full"
-              value={value}
-              onValueChange={(val) => setValue(val || "")}
-            />
-          </div>
+        fetchCategories();
+    }, [session]);
 
-          <div className="col-span-3">
-            <Select
-              placeholder="Categorias"
-              className="w-full"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              {categories.map((category, index) => (
-                <option key={index} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </Select>
-          </div>
+    return (
+        <div className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm">
+            <h3 className="text-center text-constrastBlack font-semibold text-lg">
+                Insira suas finanças:
+            </h3>
+
+            <div className="flex flex-col gap-3">
+                <Input
+                    placeholder="Título"
+                    className="w-full"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+
+                <div className="grid grid-cols-5 gap-3 w-full">
+                    <div className="col-span-2">
+                        <CurrencyInput
+                            placeholder="R$"
+                            className="w-full"
+                            value={value}
+                            onValueChange={(val) => setValue(val || "")}
+                        />
+                    </div>
+
+                    <div className="col-span-3">
+                        <Select
+                            placeholder="Categorias"
+                            className="w-full"
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            {categories.map((category, index) => (
+                                <option key={index} value={category.id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-12 gap-3">
+                    <div className="col-span-7">
+                        <DatePicker
+                            className="w-full"
+                            selected={date}
+                            onChange={setDate}
+                            placeholderText="Data"
+                        />
+                    </div>
+
+                    <div className="col-span-5">
+                        <Select
+                            placeholder="Tipo Transação"
+                            className="w-full"
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                        >
+                            <option value="INCOME">Entrada</option>
+                            <option value="EXPENSE">Despesa</option>
+                        </Select>
+                    </div>
+                </div>
+
+                <Button
+                    className="w-full self-center mt-3"
+                    onClick={handleSubmit}
+                >
+                    Adicionar
+                </Button>
+            </div>
         </div>
-
-        <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-7">
-            <DatePicker
-              className="w-full"
-              selected={date}
-              onChange={setDate}
-              placeholderText="Data"
-            />
-          </div>
-
-          <div className="col-span-5">
-            <Select
-              placeholder="Tipo Transação"
-              className="w-full"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="INCOME">Entrada</option>
-              <option value="EXPENSE">Despesa</option>
-            </Select>
-          </div>
-        </div>
-
-        <Button className="w-full self-center mt-3" onClick={handleSubmit}>
-          Adicionar
-        </Button>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Finances;

@@ -36,10 +36,7 @@ const UserProfile = () => {
     setIsLoading(true);
 
     try {
-      const userIdResponse = await axios.get(
-        `/api/get-user-info/user-id?email=${session?.user?.email}`
-      );
-      const { userId } = userIdResponse.data;
+      const userId  = session?.user?.userId;
 
       const response = await axios.put(`/api/user/${userId}`, {
         name: data.name,
@@ -64,10 +61,7 @@ const UserProfile = () => {
     setIsLoading(true);
 
     try {
-      const userIdResponse = await axios.get(
-        `/api/get-user-info/user-id?email=${session?.user?.email}`
-      );
-      const { userId } = userIdResponse.data;
+      const userId = session?.user?.userId;
 
       const response = await axios.put(`/api/user/${userId}`, {
         password: data.password,
@@ -101,10 +95,7 @@ const UserProfile = () => {
     setIsLoading(true);
 
     try {
-      const userIdResponse = await axios.get(
-        `/api/get-user-info/user-id?email=${session?.user?.email}`
-      );
-      const { userId } = userIdResponse.data;
+      const userId  = session?.user?.userId;
 
       const response = await axios.delete(`/api/user/${userId}`);
 
@@ -144,10 +135,7 @@ const UserProfile = () => {
 
     const fetchUserOAuth = async () => {
       try {
-        const userIdResponse = await axios.get(
-          `/api/get-user-info/user-id?email=${session.user?.email}`
-        );
-        const userId = userIdResponse.data.userId;
+        const userId = session?.user?.userId;
 
         const userOAuthresponse = await axios.get(
           `/api/get-user-info/oauth-account?userid=${userId}`

@@ -43,10 +43,7 @@ const FinanceTable = () => {
 
     const fetchFinances = async () => {
       try {
-        const userIdResponse = await axios.get(
-          `/api/get-user-info/user-id?email=${session.user?.email}`
-        );
-        const userId = await userIdResponse.data.userId;
+        const userId = session?.user?.userId;
 
         const financesResponse = await axios.get(`/api/finances`, {
           params: { month, year, userid: userId },
