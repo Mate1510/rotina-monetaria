@@ -4,6 +4,7 @@ import CredentialProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcrypt";
+import { seedCategories } from "./seedCategories";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma as any),
@@ -56,18 +57,32 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user, session }) {
-            console.log("Token: ", { session, token, user });
+        async jwt({ token, user, account }) {
             if (user) {
+                const existingUser = await prisma.user.findUnique({
+                    where: {
+                        email: user.email!,
+                    },
+                });
+
+                if (existingUser?.lastEntry === null) {
+                     await seedCategories(existingUser.id);
+                }
+
+                await prisma.user.update({
+                    where: { id: existingUser?.id },
+                    data: { lastEntry: new Date() },
+                });
+
                 return {
                     ...token,
                     userId: user.id,
                 };
             }
+
             return token;
         },
         async session({ session, token, user }) {
-            console.log("Session: ", { session, token, user });
             return {
                 ...session,
                 user: {

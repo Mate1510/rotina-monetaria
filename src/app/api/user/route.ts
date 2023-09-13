@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { seedCategories } from "../../../lib/seedCategories";
 
 export async function POST(req: NextRequest) {
   if (!req.body) {
@@ -45,8 +44,6 @@ export async function POST(req: NextRequest) {
         password: hashedPassword,
       },
     });
-
-    seedCategories(user.id);
 
     return NextResponse.json(user, {
       status: 200,

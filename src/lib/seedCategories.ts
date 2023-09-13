@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 
 export async function seedCategories(userId: string) {
-  const categories = await prisma.category.createMany({
+  await prisma.category.createMany({
     data: [
       {
         name: "Salário",
