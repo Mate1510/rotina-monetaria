@@ -132,7 +132,7 @@ const Finances = () => {
                             value={type}
                             onChange={(e) => setType(e.target.value)}
                         >
-                            <option value="INCOME">Entrada</option>
+                            <option value="INCOME">Receita</option>
                             <option value="EXPENSE">Despesa</option>
                         </Select>
                     </div>

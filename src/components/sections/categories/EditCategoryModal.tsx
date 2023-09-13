@@ -112,7 +112,7 @@ const EditCategoryModal: React.FC<Props> = ({
                   })
                 }
               >
-                <option value="INCOME">Entrada</option>
+                <option value="INCOME">Receita</option>
                 <option value="EXPENSE">Despesa</option>
               </Select>
             </div>
