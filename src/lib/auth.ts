@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user, account }) {
+        async jwt({ token, user }) {
             if (user) {
                 const existingUser = await prisma.user.findUnique({
                     where: {
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
                 });
 
                 if (existingUser?.lastEntry === null) {
-                     await seedCategories(existingUser.id);
+                    await seedCategories(existingUser.id);
                 }
 
                 await prisma.user.update({
@@ -77,6 +77,7 @@ export const authOptions: NextAuthOptions = {
                 return {
                     ...token,
                     userId: user.id,
+                    role: existingUser?.role,
                 };
             }
 
@@ -88,6 +89,7 @@ export const authOptions: NextAuthOptions = {
                 user: {
                     ...session.user,
                     userId: token.userId,
+                    role: token.role,
                 },
             };
         },
