@@ -10,7 +10,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { signIn } from "next-auth/react";
 
 interface User {
-  name: "";
+  name: string;
   email: string;
   password: string;
   passwordConfirmation: string;
