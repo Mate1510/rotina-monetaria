@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 
 const Header = () => {
     const [menuIsOpen, setMenuIsOpen] = React.useState(false);
-    const { data, status } = useSession();
+    const { data: session, status } = useSession();
 
     const pathname = usePathname();
     const currentPage = pathname.split("/")[1];
@@ -75,13 +75,22 @@ const Header = () => {
                                 Estatísticas
                             </Link>
 
+                            {session.user.role === "ADMIN" && (
+                                <Link
+                                    href="/control-panel"
+                                    className="text-primaryOrange font-semibold text-lg hover:text-xl hover:underline"
+                                >
+                                    Usuários
+                                </Link>
+                            )}
+
                             <div className="border border-solid rounded-full border-primaryOrange flex justify-between gap-3 p-3 items-center relative">
                                 <Link href="/user-profile">
-                                    {data.user?.image ? (
+                                    {session.user?.image ? (
                                         <Image
                                             className="rounded-full cursor-pointer"
-                                            src={data?.user?.image ?? ""}
-                                            alt={data?.user?.name ?? ""}
+                                            src={session?.user?.image ?? ""}
+                                            alt={session?.user?.name ?? ""}
                                             width={32}
                                             height={32}
                                         ></Image>
@@ -109,11 +118,11 @@ const Header = () => {
                 {status === "authenticated" && (
                     <div className="lg:hidden border border-solid rounded-full border-primaryOrange flex justify-between gap-3 p-3 items-center relative">
                         <Link href="/user-profile">
-                            {data.user?.image ? (
+                            {session.user?.image ? (
                                 <Image
                                     className="rounded-full cursor-pointer"
-                                    src={data?.user?.image ?? ""}
-                                    alt={data?.user?.name ?? ""}
+                                    src={session?.user?.image ?? ""}
+                                    alt={session?.user?.name ?? ""}
                                     width={32}
                                     height={32}
                                 ></Image>
@@ -156,6 +165,16 @@ const Header = () => {
                                 >
                                     Estatísticas
                                 </Link>
+
+                                {session.user.role === "ADMIN" && (
+                                    <Link
+                                        href="/control-panel"
+                                        className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
+                                    >
+                                        Usuários
+                                    </Link>
+                                )}
+
                                 <button
                                     className="w-full text-white text-sm text-center font-semibold p-2"
                                     onClick={handleLogoutClick}
