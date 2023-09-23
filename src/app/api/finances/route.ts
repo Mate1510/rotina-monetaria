@@ -51,6 +51,7 @@ export async function GET(req: NextRequest) {
     } catch (error) {
         return NextResponse.json({
             error: "Falha em coletar finanças.\nErro: " + error,
+            status: 500,
         });
     }
 }
