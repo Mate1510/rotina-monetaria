@@ -6,9 +6,7 @@ import React, {
     InputHTMLAttributes,
     DetailedHTMLProps,
 } from "react";
-import axios from "axios";
 import { useSession } from "next-auth/react";
-import { Finance } from "@/finance";
 import { Doughnut, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import useFetchFinances from "@/data/useFetchFinances";
@@ -145,7 +143,7 @@ const RoundedCharts = ({
                 },
             },
         });
-    }, [dataFinances, dataCategories, session]);
+    }, [dataFinances, dataCategories, session, transactionType]);
 
     return (
         <div className="flex flex-col gap-5">
