@@ -34,22 +34,22 @@ const BarChart = ({ selectedYear }: { selectedYear?: number }) => {
     const { data: session } = useSession();
     const { data: dataFinances } = useFetchFinances(undefined, year);
 
-    const months = [
-        "Janeiro",
-        "Fevereiro",
-        "Março",
-        "Abril",
-        "Maio",
-        "Junho",
-        "Julho",
-        "Agosto",
-        "Setembro",
-        "Outubro",
-        "Novembro",
-        "Dezembro",
-    ];
-
     useEffect(() => {
+        const months = [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro",
+        ];
+
         if (!session) {
             console.error("User not authenticated.");
             return;

@@ -28,27 +28,28 @@ const LineChart = ({ selectedYear }: { selectedYear?: number }) => {
         labels: [] as any,
         datasets: [] as any,
     });
+    const [chartOptions, setChartOptions] = useState({});
     const year = selectedYear || new Date().getFullYear();
 
     const { data: session } = useSession();
     const { data: dataFinances } = useFetchFinances(undefined, year);
 
-    const months = [
-        "Janeiro",
-        "Fevereiro",
-        "Março",
-        "Abril",
-        "Maio",
-        "Junho",
-        "Julho",
-        "Agosto",
-        "Setembro",
-        "Outubro",
-        "Novembro",
-        "Dezembro",
-    ];
-
     useEffect(() => {
+        const months = [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro",
+        ];
+
         if (!session) {
             console.error("User not authenticated.");
             return;
@@ -89,30 +90,29 @@ const LineChart = ({ selectedYear }: { selectedYear?: number }) => {
                 },
             ],
         });
+
+        setChartOptions({
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    position: "top",
+                },
+                title: {
+                    display: true,
+                    text: `Finanças de ${year}`,
+                },
+            },
+        });
     }, [dataFinances, year, session]);
 
     return (
         <div className="w-full bg-white p-5 rounded-lg border-primaryOrange border-2">
-            <Line
-                data={chartData}
-                options={{
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                        },
-                    },
-                    plugins: {
-                        legend: {
-                            position: "top",
-                        },
-                        title: {
-                            display: true,
-                            text: `Finanças de ${year}`,
-                        },
-                    },
-                }}
-            />
+            <Line data={chartData} options={chartOptions} />
         </div>
     );
 };
