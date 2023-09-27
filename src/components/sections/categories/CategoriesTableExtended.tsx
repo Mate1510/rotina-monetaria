@@ -10,179 +10,195 @@ import DeleteCategoryModal from "./DeleteCategoryModal";
 import { Color } from "@/enum";
 
 const CategoryTable = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
-  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
-    null
-  );
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
+    const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
+        null
+    );
 
-  const { data: session } = useSession();
+    const { data: session } = useSession();
 
-  useEffect(() => {
-    if (!session) {
-      console.error("User not authenticated.");
-      return;
-    }
+    useEffect(() => {
+        if (!session) {
+            console.error("User not authenticated.");
+            return;
+        }
 
-    const fetchCategories = async () => {
-      try {
-        const userId = session?.user?.userId;
+        const fetchCategories = async () => {
+            try {
+                const userId = session?.user?.userId;
 
-        const categoriesResponse = await axios.get(
-          `/api/categories?userid=${userId}`
-        );
+                const categoriesResponse = await axios.get(
+                    `/api/categories?userid=${userId}`
+                );
 
-        const categoriesData: Category[] = await categoriesResponse.data;
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error("Failed to fetch categories: ", error);
-      }
+                const categoriesData: Category[] =
+                    await categoriesResponse.data;
+                setCategories(categoriesData);
+            } catch (error) {
+                console.error("Failed to fetch categories: ", error);
+            }
+        };
+
+        fetchCategories();
+    }, [session]);
+
+    const handleEditClick = (category: Category) => {
+        setCategoryToEdit(category);
     };
 
-    fetchCategories();
-  }, [session]);
+    const handleSave = async (updatedCategory: Category) => {
+        try {
+            const response = await axios.put(
+                `/api/categories/${updatedCategory.id}`,
+                {
+                    name: updatedCategory.name,
+                    color: updatedCategory.color,
+                    transactionType: updatedCategory.transactionType,
+                }
+            );
 
-  const handleEditClick = (category: Category) => {
-    setCategoryToEdit(category);
-  };
+            if (!response) {
+                throw new Error("Failed to update category data.");
+            }
 
-  const handleSave = async (updatedCategory: Category) => {
-    try {
-      const response = await axios.put(
-        `/api/categories/${updatedCategory.id}`,
-        {
-          name: updatedCategory.name,
-          color: updatedCategory.color,
-          transactionType: updatedCategory.transactionType,
+            const updatedCategories = categories.map((category) =>
+                category.id === updatedCategory.id ? updatedCategory : category
+            );
+            setCategories(updatedCategories);
+        } catch (error) {
+            console.error(error);
         }
-      );
 
-      if (!response) {
-        throw new Error("Failed to update category data.");
-      }
+        setCategoryToEdit(null);
+    };
 
-      const updatedCategories = categories.map((category) =>
-        category.id === updatedCategory.id ? updatedCategory : category
-      );
-      setCategories(updatedCategories);
-    } catch (error) {
-      console.error(error);
-    }
+    const handleDeleteClick = (category: Category) => {
+        setCategoryToDelete(category);
+    };
 
-    setCategoryToEdit(null);
-  };
+    const handleConfirmDelete = async () => {
+        if (!categoryToDelete) return;
 
-  const handleDeleteClick = (category: Category) => {
-    setCategoryToDelete(category);
-  };
+        try {
+            const response = await axios.delete(
+                `/api/categories/${categoryToDelete.id}`
+            );
 
-  const handleConfirmDelete = async () => {
-    if (!categoryToDelete) return;
+            if (!response) {
+                throw new Error("Failed to delete category data.");
+            }
 
-    try {
-      const response = await axios.delete(
-        `/api/categories/${categoryToDelete.id}`
-      );
+            const updatedCategories = categories.filter(
+                (category) => category.id !== categoryToDelete.id
+            );
+            setCategories(updatedCategories);
+        } catch (error) {
+            console.error(error);
+        }
 
-      if (!response) {
-        throw new Error("Failed to delete category data.");
-      }
+        setCategoryToDelete(null);
+    };
 
-      const updatedCategories = categories.filter(
-        (category) => category.id !== categoryToDelete.id
-      );
-      setCategories(updatedCategories);
-    } catch (error) {
-      console.error(error);
-    }
+    return (
+        <div className="min-w-full w-full">
+            <div className="min-w-full overflow-x-auto rounded-2xl bg-primaryOrange p-0.5 no-scrollbar">
+                <table className="w-full bg-white overflow-hidden rounded-2xl">
+                    <thead className="bg-primaryOrange text-left text-white font-medium text-base">
+                        <tr>
+                            <th className="py-2 px-4 border-b font-medium">
+                                Cor
+                            </th>
+                            <th className="py-2 px-4 border-b font-medium">
+                                Nome da Categoria
+                            </th>
+                            <th className="py-2 px-4 border-b font-medium">
+                                Tipo
+                            </th>
+                            <th className="py-2 px-4 border-b font-medium">
+                                Ações
+                            </th>
+                        </tr>
+                    </thead>
 
-    setCategoryToDelete(null);
-  };
+                    <tbody className="font-medium">
+                        {categories.map((category) => (
+                            <tr key={category.id}>
+                                <td className="flex py-2 px-4 border-b">
+                                    <span
+                                        className="w-10 h-10 rounded-full border border-textGray"
+                                        style={{
+                                            backgroundColor:
+                                                Color[
+                                                    category.color as keyof typeof Color
+                                                ],
+                                        }}
+                                    ></span>
+                                </td>
+                                <td className="py-2 px-4 border-b">
+                                    {category.name}
+                                </td>
+                                {category.transactionType === "INCOME" ? (
+                                    <td className="py-2 px-4 border-b text-green-500">
+                                        <MdTrendingUp size={38} />
+                                    </td>
+                                ) : (
+                                    <td className="py-2 px-4 border-b text-red-500">
+                                        <MdTrendingDown size={38} />
+                                    </td>
+                                )}
+                                <td className="py-2 px-4 border-b">
+                                    <div className="flex gap-8 items-center">
+                                        <MdEdit
+                                            className="text-primaryOrange cursor-pointer"
+                                            onClick={() =>
+                                                handleEditClick(category)
+                                            }
+                                        />
+                                        <MdDelete
+                                            className="text-primaryOrange cursor-pointer"
+                                            onClick={() =>
+                                                handleDeleteClick(category)
+                                            }
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
 
-  return (
-    <div className="min-w-full w-full">
-      <div className="min-w-full overflow-x-auto rounded-2xl bg-primaryOrange p-0.5 no-scrollbar">
-        <table className="w-full bg-white overflow-hidden rounded-2xl">
-          <thead className="bg-primaryOrange text-left text-white font-medium text-base">
-            <tr>
-              <th className="py-2 px-4 border-b font-medium">Cor</th>
-              <th className="py-2 px-4 border-b font-medium">
-                Nome da Categoria
-              </th>
-              <th className="py-2 px-4 border-b font-medium">Tipo</th>
-              <th className="py-2 px-4 border-b font-medium">Ações</th>
-            </tr>
-          </thead>
+                        {categories.length === 0 && (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="text-center text-constrastBlack font-medium text-lg"
+                                >
+                                    Parece que você não tem categorias ainda...
+                                    😔
+                                </td>
+                            </tr>
+                        )}
 
-          <tbody className="font-medium">
-            {categories.map((category) => (
-              <tr key={category.id}>
-                <td className="flex py-2 px-4 border-b">
-                  <span
-                    className="w-10 h-10 rounded-full border border-textGray"
-                    style={{
-                      backgroundColor:
-                        Color[category.color as keyof typeof Color],
-                    }}
-                  ></span>
-                </td>
-                <td className="py-2 px-4 border-b">{category.name}</td>
-                {category.transactionType === "INCOME" ? (
-                  <td className="py-2 px-4 border-b text-green-500">
-                    <MdTrendingUp size={38} />
-                  </td>
-                ) : (
-                  <td className="py-2 px-4 border-b text-red-500">
-                    <MdTrendingDown size={38} />
-                  </td>
-                )}
-                <td className="py-2 px-4 border-b">
-                  <div className="flex justify-around items-center">
-                    <MdEdit
-                      className="text-primaryOrange cursor-pointer"
-                      onClick={() => handleEditClick(category)}
-                    />
-                    <MdDelete
-                      className="text-primaryOrange cursor-pointer"
-                      onClick={() => handleDeleteClick(category)}
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
+                        {categoryToEdit && (
+                            <EditCategoryModal
+                                isOpen={!!categoryToEdit}
+                                onClose={() => setCategoryToEdit(null)}
+                                category={categoryToEdit}
+                                onSave={handleSave}
+                            />
+                        )}
 
-            {categories.length === 0 && (
-              <tr>
-                <td
-                  colSpan={4}
-                  className="text-center text-constrastBlack font-medium text-lg"
-                >
-                  Parece que você não tem categorias ainda...
-                </td>
-              </tr>
-            )}
-
-            {categoryToEdit && (
-              <EditCategoryModal
-                isOpen={!!categoryToEdit}
-                onClose={() => setCategoryToEdit(null)}
-                category={categoryToEdit}
-                onSave={handleSave}
-              />
-            )}
-
-            {categoryToDelete && (
-              <DeleteCategoryModal
-                isOpen={!!categoryToDelete}
-                onClose={() => setCategoryToDelete(null)}
-                onConfirm={handleConfirmDelete}
-              />
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+                        {categoryToDelete && (
+                            <DeleteCategoryModal
+                                isOpen={!!categoryToDelete}
+                                onClose={() => setCategoryToDelete(null)}
+                                onConfirm={handleConfirmDelete}
+                            />
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 };
 
 export default CategoryTable;

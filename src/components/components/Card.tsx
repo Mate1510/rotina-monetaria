@@ -6,13 +6,13 @@ type CardProps = {
   Icon: React.ComponentType<{ className?: string; size?: number }>;
 };
 
-const Card = ({ title, value, Icon }: CardProps) => {
+const Card: React.FC<CardProps> = ({ title, value, Icon }) => {
   return (
-    <div className="container mx-auto items-center justify-center flex gap-6 border border-solid border-primaryOrange rounded-lg p-3 w-56 h-24 hover:w-60 hover:h-28">
+    <div className="transition-all duration-300 ease-in-out transform hover:scale-105 container mx-auto flex items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-3 w-56 h-24">
       <Icon className="text-primaryOrange" size={42} />
 
-      <div className="gap-6 font-semibold">
-        <h4 className="text-xl text-constrastBlack">{title}</h4>
+      <div className="gap-6">
+        <h4 className="text-xl text-constrastBlack font-semibold">{title}</h4>
         <h5 className="text-lg text-constrastBlack">{value}</h5>
       </div>
     </div>

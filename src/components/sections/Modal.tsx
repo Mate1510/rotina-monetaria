@@ -23,7 +23,7 @@ const ModalComponent: React.FC<Props> = ({
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      className="flex flex-col gap-5 p-5 border-primaryOrange border-2 rounded-lg items-center justify-center bg-white mx-auto w-4/5"
+      className="flex flex-col gap-5 p-5 border-primaryOrange border-2 rounded-lg items-center justify-center bg-white mx-auto w-2/5"
       style={{
         overlay: {
           display: "flex",

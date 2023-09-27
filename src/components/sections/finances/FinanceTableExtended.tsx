@@ -232,7 +232,7 @@ const FinanceTable = () => {
                                     colSpan={6}
                                     className="text-center text-constrastBlack font-medium text-lg"
                                 >
-                                    Suas finanças não chegaram aqui ainda...
+                                    Suas finanças não chegaram aqui ainda... 😔
                                 </td>
                             </tr>
                         )}
