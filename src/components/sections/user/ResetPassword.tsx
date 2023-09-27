@@ -1,69 +1,69 @@
-import React, { SyntheticEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Input from "@/components/components/Input";
-import Button from "@/components/components/Button";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import axios from "axios";
+import React, { SyntheticEvent, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Input from '@/components/components/Input'
+import Button from '@/components/components/Button'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import axios from 'axios'
 
 interface UserResetPassword {
-  password: string;
-  passwordConfirmation: string;
+  password: string
+  passwordConfirmation: string
 }
 
 const ResetPassword = () => {
   const [data, setData] = useState<UserResetPassword>({
-    password: "",
-    passwordConfirmation: "",
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+    password: '',
+    passwordConfirmation: '',
+  })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const token = searchParams.get("token");
+  const token = searchParams.get('token')
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
-      const { password, passwordConfirmation } = data;
+      const { password, passwordConfirmation } = data
 
       if (password !== passwordConfirmation) {
         //Tratativa de erro senha não coincide
-        return;
+        return
       }
 
-      const response = await axios.put("/api/reset-password", {
+      const response = await axios.put('/api/reset-password', {
         password,
         token,
-      });
+      })
 
-      const responseData = await response.data;
+      const responseData = await response.data
 
       if (response.status == 200) {
-        router.push("/login");
+        router.push('/login')
       } else {
         // Tratamento de Erros
-        console.error(responseData);
+        console.error(responseData)
       }
     } catch (error) {
       // Tratamento de Erros
-      console.error(error);
+      console.error(error)
     } finally {
       setData({
-        password: "",
-        passwordConfirmation: "",
-      });
-      setIsLoading(false);
+        password: '',
+        passwordConfirmation: '',
+      })
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
-  };
+    setData(prev => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
+  }
 
   return (
     <div className="border border-primaryOrange rounded-lg p-">
@@ -119,7 +119,7 @@ const ResetPassword = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResetPassword;
+export default ResetPassword

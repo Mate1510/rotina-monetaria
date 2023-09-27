@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import ForgetPassword from "@/components/sections/user/ForgetPassword";
-import React from "react";
+import ForgetPassword from '@/components/sections/user/ForgetPassword'
+import React from 'react'
 
 const ForgetPasswordPage = () => {
   return (
@@ -33,7 +33,7 @@ const ForgetPasswordPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ForgetPasswordPage;
+export default ForgetPasswordPage

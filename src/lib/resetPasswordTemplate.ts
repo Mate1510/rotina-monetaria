@@ -12,5 +12,5 @@ export function resetPasswordTemplate(resetUrl: string) {
           </a>
         </div>
       </div>
-    </div>`;
+    </div>`
 }

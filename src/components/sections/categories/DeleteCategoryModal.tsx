@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import Button from "@/components/components/Button";
-import ModalComponent from "../Modal";
+import Button from '@/components/components/Button'
+import ModalComponent from '../Modal'
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-};
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+}
 
 const DeleteCategoryModal: React.FC<Props> = ({
   isOpen,
@@ -32,7 +32,7 @@ const DeleteCategoryModal: React.FC<Props> = ({
         Você tem certeza que irá deletar esta categoria?
       </p>
     </ModalComponent>
-  );
-};
+  )
+}
 
-export default DeleteCategoryModal;
+export default DeleteCategoryModal

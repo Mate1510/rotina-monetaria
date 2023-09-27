@@ -1,40 +1,40 @@
-"use client";
+'use client'
 
-import Button from "@/components/components/Button";
-import Input from "@/components/components/Input";
-import Image from "next/image";
-import React, { useState } from "react";
-import Link from "next/link";
-import { signIn, signOut } from "next-auth/react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useRouter } from "next/navigation";
+import Button from '@/components/components/Button'
+import Input from '@/components/components/Input'
+import Image from 'next/image'
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { signIn, signOut } from 'next-auth/react'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { useRouter } from 'next/navigation'
 
 interface User {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 const UserLogin = () => {
-  const [data, setData] = useState<User>({ email: "", password: "" });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [data, setData] = useState<User>({ email: '', password: '' })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const router = useRouter();
+  const router = useRouter()
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
-    const response = await signIn<"credentials">("credentials", {
+    const response = await signIn<'credentials'>('credentials', {
       ...data,
       redirect: false,
-    });
+    })
 
-    if (response?.error !== null || response?.error === "Session required") {
+    if (response?.error !== null || response?.error === 'Session required') {
       console.log(response)
       //Tratamento de erros
     } else {
       console.log(response)
-      router.push("/");
+      router.push('/')
     }
 
     // setTimeout(() => {
@@ -42,21 +42,21 @@ const UserLogin = () => {
     // }, 5000);
 
     setData({
-      email: "",
-      password: "",
-    });
-    setIsLoading(false);
-  };
+      email: '',
+      password: '',
+    })
+    setIsLoading(false)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
-  };
+    setData(prev => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
+  }
 
   const handleGoogleClick = () => {
-    signIn("google", { callbackUrl: "/" });
-  };
+    signIn('google', { callbackUrl: '/' })
+  }
 
   return (
     <div className="border border-primaryOrange rounded-lg">
@@ -71,7 +71,7 @@ const UserLogin = () => {
 
         <div className="flex flex-col items-center justify-center gap-5">
           <form
-            onSubmit={(handleSubmit)}
+            onSubmit={handleSubmit}
             className="w-full flex flex-col items-center justify-center gap-5"
           >
             <Input
@@ -97,7 +97,7 @@ const UserLogin = () => {
               />
               <div className="flex justify-end">
                 <Link
-                  href={"/forget-password"}
+                  href={'/forget-password'}
                   className="text-right mb-3 cursor-pointer font-medium text-sm text-blue-500"
                 >
                   Esqueceu a senha?
@@ -141,7 +141,7 @@ const UserLogin = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UserLogin;
+export default UserLogin

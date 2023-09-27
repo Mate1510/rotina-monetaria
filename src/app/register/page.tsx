@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import UserRegister from "@/components/sections/user/UserRegister";
-import React from "react";
+import UserRegister from '@/components/sections/user/UserRegister'
+import React from 'react'
 
 const RegisterPage = () => {
   return (
@@ -29,7 +29,7 @@ const RegisterPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RegisterPage;
+export default RegisterPage

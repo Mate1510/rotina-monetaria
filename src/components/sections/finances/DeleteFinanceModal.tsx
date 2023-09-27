@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import React from "react";
-import ModalComponent from "@/components/sections/Modal";
-import Button from "@/components/components/Button";
+import React from 'react'
+import ModalComponent from '@/components/sections/Modal'
+import Button from '@/components/components/Button'
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-};
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+}
 
 const DeleteFinanceModal: React.FC<Props> = ({
   isOpen,
@@ -33,7 +33,7 @@ const DeleteFinanceModal: React.FC<Props> = ({
         Você tem certeza que irá deletar esta finança?
       </p>
     </ModalComponent>
-  );
-};
+  )
+}
 
-export default DeleteFinanceModal;
+export default DeleteFinanceModal

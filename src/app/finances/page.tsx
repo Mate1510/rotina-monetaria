@@ -1,6 +1,6 @@
-import React from "react";
-import InsertFinances from "@/components/sections/finances/InsertFinances";
-import FinanceTableExtended from "@/components/sections/finances/FinanceTableExtended";
+import React from 'react'
+import InsertFinances from '@/components/sections/finances/InsertFinances'
+import FinanceTableExtended from '@/components/sections/finances/FinanceTableExtended'
 
 const FinancesPage = () => {
   return (
@@ -8,7 +8,7 @@ const FinancesPage = () => {
       <InsertFinances />
       <FinanceTableExtended />
     </div>
-  );
-};
+  )
+}
 
-export default FinancesPage;
+export default FinancesPage

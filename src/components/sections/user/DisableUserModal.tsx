@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import React from "react";
-import ModalComponent from "@/components/sections/Modal";
-import Button from "@/components/components/Button";
+import React from 'react'
+import ModalComponent from '@/components/sections/Modal'
+import Button from '@/components/components/Button'
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-};
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+}
 
 const DisableUserModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
   return (
@@ -31,7 +31,7 @@ const DisableUserModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
         conta novamente.
       </p>
     </ModalComponent>
-  );
-};
+  )
+}
 
-export default DisableUserModal;
+export default DisableUserModal

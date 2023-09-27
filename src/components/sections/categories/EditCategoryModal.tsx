@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { Category } from "@/categories";
-import { useEffect, useState } from "react";
-import ModalComponent from "../Modal";
-import Button from "@/components/components/Button";
-import Input from "@/components/components/Input";
-import { CirclePicker } from "react-color";
-import { Color } from "@/enum";
-import Select from "@/components/components/Select";
+import { Category } from '@/categories'
+import { useEffect, useState } from 'react'
+import ModalComponent from '../Modal'
+import Button from '@/components/components/Button'
+import Input from '@/components/components/Input'
+import { CirclePicker } from 'react-color'
+import { Color } from '@/enum'
+import Select from '@/components/components/Select'
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  category: Category;
-  onSave: (updatedCategory: Category) => void;
-};
+  isOpen: boolean
+  onClose: () => void
+  category: Category
+  onSave: (updatedCategory: Category) => void
+}
 
 const EditCategoryModal: React.FC<Props> = ({
   isOpen,
@@ -22,29 +22,29 @@ const EditCategoryModal: React.FC<Props> = ({
   category,
   onSave,
 }) => {
-  const [updatedCategory, setUpdatedCategory] = useState<Category>(category);
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [updatedCategory, setUpdatedCategory] = useState<Category>(category)
+  const [showColorPicker, setShowColorPicker] = useState(false)
 
   useEffect(() => {
-    setUpdatedCategory(category);
-  }, [category]);
+    setUpdatedCategory(category)
+  }, [category])
 
   const handleSave = () => {
-    onSave(updatedCategory);
-    onClose();
-  };
+    onSave(updatedCategory)
+    onClose()
+  }
 
   const getColorName = (hexCode: string): string => {
     const colorName = Object.keys(Color).find(
-      (color) => Color[color as keyof typeof Color] === hexCode
-    );
-    return colorName ?? "";
-  };
+      color => Color[color as keyof typeof Color] === hexCode,
+    )
+    return colorName ?? ''
+  }
 
   const handleColorChange = (color: any) => {
-    setUpdatedCategory({ ...updatedCategory, color: getColorName(color.hex) });
-    setShowColorPicker(false);
-  };
+    setUpdatedCategory({ ...updatedCategory, color: getColorName(color.hex) })
+    setShowColorPicker(false)
+  }
 
   return (
     <ModalComponent
@@ -66,7 +66,7 @@ const EditCategoryModal: React.FC<Props> = ({
             placeholder="Nome da Categoria"
             className="w-full"
             value={updatedCategory.name}
-            onChange={(e) =>
+            onChange={e =>
               setUpdatedCategory({ ...updatedCategory, name: e.target.value })
             }
           />
@@ -105,7 +105,7 @@ const EditCategoryModal: React.FC<Props> = ({
                 placeholder="Tipo Transação"
                 className="w-full"
                 value={updatedCategory.transactionType}
-                onChange={(e) =>
+                onChange={e =>
                   setUpdatedCategory({
                     ...updatedCategory,
                     transactionType: e.target.value,
@@ -120,7 +120,7 @@ const EditCategoryModal: React.FC<Props> = ({
         </div>
       </div>
     </ModalComponent>
-  );
-};
+  )
+}
 
-export default EditCategoryModal;
+export default EditCategoryModal

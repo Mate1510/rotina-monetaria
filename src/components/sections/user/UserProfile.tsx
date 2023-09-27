@@ -1,86 +1,86 @@
-"use client";
+'use client'
 
-import Button from "@/components/components/Button";
-import Input from "@/components/components/Input";
-import axios from "axios";
-import { getSession, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { MdAddCircleOutline, MdOutlineAccountCircle } from "react-icons/md";
-import DisableUserModal from "./DisableUserModal";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useRouter } from "next/navigation";
+import Button from '@/components/components/Button'
+import Input from '@/components/components/Input'
+import axios from 'axios'
+import { getSession, signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { MdAddCircleOutline, MdOutlineAccountCircle } from 'react-icons/md'
+import DisableUserModal from './DisableUserModal'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { useRouter } from 'next/navigation'
 
 interface User {
-  image: string;
-  name: string;
-  password: string;
-  passwordConfirmation: string;
+  image: string
+  name: string
+  password: string
+  passwordConfirmation: string
 }
 
 const UserProfile = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
   const [data, setData] = useState<User>({
-    image: session?.user?.image || "",
-    name: session?.user?.name || "",
-    password: "",
-    passwordConfirmation: "",
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [userDisable, setUserDisable] = useState<User | null>(null);
-  const [isUserOAuth, setIsUserOAuth] = useState<boolean>(false);
+    image: session?.user?.image || '',
+    name: session?.user?.name || '',
+    password: '',
+    passwordConfirmation: '',
+  })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [userDisable, setUserDisable] = useState<User | null>(null)
+  const [isUserOAuth, setIsUserOAuth] = useState<boolean>(false)
 
   const handleEditName = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
-      const userId  = session?.user?.userId;
+      const userId = session?.user?.userId
 
       const response = await axios.put(`/api/user/${userId}`, {
         name: data.name,
-      });
+      })
 
-      signOut();
+      signOut()
     } catch (error) {
       // Tratativa de Erros
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
 
       setData({
-        image: session?.user?.image ?? "",
-        name: session?.user?.name ?? "",
-        password: "",
-        passwordConfirmation: "",
-      });
+        image: session?.user?.image ?? '',
+        name: session?.user?.name ?? '',
+        password: '',
+        passwordConfirmation: '',
+      })
     }
-  };
+  }
 
   const handleEditPassword = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
-      const userId = session?.user?.userId;
+      const userId = session?.user?.userId
 
       const response = await axios.put(`/api/user/${userId}`, {
         password: data.password,
-      });
+      })
 
-      signOut();
+      signOut()
     } catch (error) {
       // Tratativa de Erros
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
 
       setData({
-        image: session?.user?.image ?? "",
-        name: session?.user?.name ?? "",
-        password: "",
-        passwordConfirmation: "",
-      });
+        image: session?.user?.image ?? '',
+        name: session?.user?.name ?? '',
+        password: '',
+        passwordConfirmation: '',
+      })
     }
-  };
+  }
 
   /*SE FOR IMPLEMENTAR TROCA DE IMAGEM const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -88,70 +88,70 @@ const UserProfile = () => {
     };*/
 
   const handleDisableClick = (user: User) => {
-    setUserDisable(user);
-  };
+    setUserDisable(user)
+  }
 
   const handleConfirmDisable = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
-      const userId  = session?.user?.userId;
+      const userId = session?.user?.userId
 
-      const response = await axios.delete(`/api/user/${userId}`);
+      const response = await axios.delete(`/api/user/${userId}`)
 
-      signOut();
+      signOut()
     } catch (error) {
       // Tratativa de Erros
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
 
       setData({
-        image: session?.user?.image ?? "",
-        name: session?.user?.name ?? "",
-        password: "",
-        passwordConfirmation: "",
-      });
+        image: session?.user?.image ?? '',
+        name: session?.user?.name ?? '',
+        password: '',
+        passwordConfirmation: '',
+      })
     }
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prev) => {
-      console.log(e.target.name);
-      return { ...prev, [e.target.name]: e.target.value };
-    });
-  };
+    setData(prev => {
+      console.log(e.target.name)
+      return { ...prev, [e.target.name]: e.target.value }
+    })
+  }
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (status === 'unauthenticated') {
       //Tratativa de Erros
-      console.error("User not authenticated.");
-      router.push("/login");
-      return;
+      console.error('User not authenticated.')
+      router.push('/login')
+      return
     }
 
     if (!session) {
-      return;
+      return
     }
 
     const fetchUserOAuth = async () => {
       try {
-        const userId = session?.user?.userId;
+        const userId = session?.user?.userId
 
         const userOAuthresponse = await axios.get(
-          `/api/get-user-info/oauth-account?userid=${userId}`
-        );
-        const userOAuth = userOAuthresponse.data.userOAuth;
+          `/api/get-user-info/oauth-account?userid=${userId}`,
+        )
+        const userOAuth = userOAuthresponse.data.userOAuth
 
         if (userOAuth) {
-          setIsUserOAuth(true);
+          setIsUserOAuth(true)
         }
       } catch (error) {
         //Tratativa de Erros
       }
-    };
+    }
 
-    fetchUserOAuth();
-  }, [router, session, status]);
+    fetchUserOAuth()
+  }, [router, session, status])
 
   return (
     <div className="flex flex-col gap-y-10 border border-primaryOrange rounded-lg p-10 min-w-max">
@@ -160,8 +160,8 @@ const UserProfile = () => {
           {session?.user?.image ? (
             <Image
               className="rounded-full border-2 border-primaryOrange"
-              src={session?.user?.image ?? ""}
-              alt={session?.user?.name ?? ""}
+              src={session?.user?.image ?? ''}
+              alt={session?.user?.name ?? ''}
               width={120}
               height={120}
             ></Image>
@@ -292,7 +292,7 @@ const UserProfile = () => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default UserProfile;
+export default UserProfile

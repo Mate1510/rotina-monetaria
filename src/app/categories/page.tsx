@@ -1,6 +1,6 @@
-import React from "react";
-import InsertCategories from "@/components/sections/categories/InsertCategories";
-import CategoriesTableExtended from "@/components/sections/categories/CategoriesTableExtended";
+import React from 'react'
+import InsertCategories from '@/components/sections/categories/InsertCategories'
+import CategoriesTableExtended from '@/components/sections/categories/CategoriesTableExtended'
 
 const CategoriesPage = () => {
   return (
@@ -8,7 +8,7 @@ const CategoriesPage = () => {
       <InsertCategories />
       <CategoriesTableExtended />
     </div>
-  );
-};
+  )
+}
 
-export default CategoriesPage;
+export default CategoriesPage

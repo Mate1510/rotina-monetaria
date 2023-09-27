@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import React from "react";
-import ResetPassword from "@/components/sections/user/ResetPassword";
+import React from 'react'
+import ResetPassword from '@/components/sections/user/ResetPassword'
 
 const ResetPasswordPage = () => {
   return (
@@ -29,7 +29,7 @@ const ResetPasswordPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResetPasswordPage;
+export default ResetPasswordPage

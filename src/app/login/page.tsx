@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import UserLogin from "@/components/sections/user/UserLogin";
-import React from "react";
+import UserLogin from '@/components/sections/user/UserLogin'
+import React from 'react'
 
 const LoginPage = () => {
   return (
@@ -26,7 +26,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

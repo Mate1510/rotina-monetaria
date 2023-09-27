@@ -1,129 +1,129 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from "chart.js";
-import axios from "axios";
-import { Line } from "react-chartjs-2";
-import { useSession } from "next-auth/react";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import axios from 'axios'
+import { Line } from 'react-chartjs-2'
+import { useSession } from 'next-auth/react'
 
 ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+)
 
 const UserLastEntryLineChart = () => {
-    const [chartData, setChartData] = useState({
-        labels: [] as any,
-        datasets: [] as any,
-    });
-    const [chartOptions, setChartOptions] = useState({});
+  const [chartData, setChartData] = useState({
+    labels: [] as any,
+    datasets: [] as any,
+  })
+  const [chartOptions, setChartOptions] = useState({})
 
-    const { data: session } = useSession();
+  const { data: session } = useSession()
 
-    useEffect(() => {
-        const months = [
-            "Janeiro",
-            "Fevereiro",
-            "Março",
-            "Abril",
-            "Maio",
-            "Junho",
-            "Julho",
-            "Agosto",
-            "Setembro",
-            "Outubro",
-            "Novembro",
-            "Dezembro",
-        ];
+  useEffect(() => {
+    const months = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ]
 
-        if (!session) {
-            console.error("User not authenticated.");
-            return;
+    if (!session) {
+      console.error('User not authenticated.')
+      return
+    }
+
+    const fetchData = async () => {
+      try {
+        const userRole = session?.user?.role
+        const isAdmin: boolean = userRole === 'ADMIN' ? true : false
+
+        if (!isAdmin) {
+          return
         }
 
-        const fetchData = async () => {
-            try {
-                const userRole = session?.user?.role;
-                const isAdmin: boolean = userRole === "ADMIN" ? true : false;
+        const params = { isadmin: isAdmin }
+        const response = await axios.get(
+          '/api/get-user-info/users-last-entry',
+          { params },
+        )
+        const lastEntries = response.data
 
-                if (!isAdmin) {
-                    return;
-                }
+        const monthlyCounts = Array(12).fill(0)
 
-                const params = { isadmin: isAdmin };
-                const response = await axios.get(
-                    "/api/get-user-info/users-last-entry",
-                    { params }
-                );
-                const lastEntries = response.data;
+        lastEntries.forEach((entry: any) => {
+          if (entry.lastEntry) {
+            const date = new Date(entry.lastEntry)
+            const month = date.getMonth()
+            monthlyCounts[month]++
+          }
+        })
 
-                const monthlyCounts = Array(12).fill(0);
+        setChartData({
+          labels: months,
+          datasets: [
+            {
+              label: 'Últimos Acessos',
+              data: monthlyCounts,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              fill: false,
+            },
+          ],
+        })
 
-                lastEntries.forEach((entry: any) => {
-                    if (entry.lastEntry) {
-                        const date = new Date(entry.lastEntry);
-                        const month = date.getMonth();
-                        monthlyCounts[month]++;
-                    }
-                });
+        setChartOptions({
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: `Últimos Acessos de Usuários`,
+            },
+          },
+        })
+      } catch (error) {
+        console.error(`Erro ao coletar últimos acessos: ${error}`)
+      }
+    }
 
-                setChartData({
-                    labels: months,
-                    datasets: [
-                        {
-                            label: "Últimos Acessos",
-                            data: monthlyCounts,
-                            borderColor: "rgba(75, 192, 192, 1)",
-                            backgroundColor: "rgba(75, 192, 192, 0.5)",
-                            fill: false,
-                        },
-                    ],
-                });
+    fetchData()
+  }, [session])
 
-                setChartOptions({
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                        },
-                    },
-                    plugins: {
-                        legend: {
-                            position: "top",
-                        },
-                        title: {
-                            display: true,
-                            text: `Últimos Acessos de Usuários`,
-                        },
-                    },
-                });
-            } catch (error) {
-                console.error(`Erro ao coletar últimos acessos: ${error}`);
-            }
-        };
+  return (
+    <div className="w-full bg-white p-5 rounded-lg border-primaryOrange border-2">
+      <Line data={chartData} options={chartOptions} />
+    </div>
+  )
+}
 
-        fetchData();
-    }, [session]);
-
-    return (
-        <div className="w-full bg-white p-5 rounded-lg border-primaryOrange border-2">
-            <Line data={chartData} options={chartOptions} />
-        </div>
-    );
-};
-
-export default UserLastEntryLineChart;
+export default UserLastEntryLineChart

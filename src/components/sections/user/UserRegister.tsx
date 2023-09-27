@@ -1,59 +1,59 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import Button from "@/components/components/Button";
-import Input from "@/components/components/Input";
-import Image from "next/image";
-import axios from "axios";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { signIn } from "next-auth/react";
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Button from '@/components/components/Button'
+import Input from '@/components/components/Input'
+import Image from 'next/image'
+import axios from 'axios'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { signIn } from 'next-auth/react'
 
 interface User {
-  name: string;
-  email: string;
-  password: string;
-  passwordConfirmation: string;
+  name: string
+  email: string
+  password: string
+  passwordConfirmation: string
 }
 
 const UserRegister = () => {
   const [data, setData] = useState<User>({
-    name: "",
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+    name: '',
+    email: '',
+    password: '',
+    passwordConfirmation: '',
+  })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const router = useRouter();
+  const router = useRouter()
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
-    const { name, email, password, passwordConfirmation } = data;
+    const { name, email, password, passwordConfirmation } = data
 
     if (password !== passwordConfirmation) {
       //Tratativa de Erro senhas não coincidem
-      return;
+      return
     }
 
     try {
-      const response = await axios.post("/api/user", {
+      const response = await axios.post('/api/user', {
         name,
         email,
         password,
-      });
+      })
 
-      const userData = response.data;
+      const userData = response.data
 
       if (response.status !== 200) {
         //tratativa de erros
       } else {
-        router.push("/login");
+        router.push('/login')
       }
     } catch (error) {
-      console.error("Error while creating the user.", error);
+      console.error('Error while creating the user.', error)
     }
 
     // setTimeout(() => {
@@ -61,23 +61,23 @@ const UserRegister = () => {
     // }, 5000);
 
     setData({
-      name: "",
-      email: "",
-      password: "",
-      passwordConfirmation: "",
-    });
-    setIsLoading(false);
-  };
+      name: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+    })
+    setIsLoading(false)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
-  };
+    setData(prev => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
+  }
 
   const handleGoogleClick = () => {
-    signIn("google", { callbackUrl: "/" });
-  };
+    signIn('google', { callbackUrl: '/' })
+  }
 
   return (
     <div className="border border-primaryOrange rounded-lg">
@@ -172,7 +172,7 @@ const UserRegister = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UserRegister;
+export default UserRegister

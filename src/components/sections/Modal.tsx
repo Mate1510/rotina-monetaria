@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import React from "react";
-import Modal from "react-modal";
-import Button from "../components/Button";
+import React from 'react'
+import Modal from 'react-modal'
+import Button from '../components/Button'
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-  modalTitle: string;
-  actionButton: React.ReactNode;
-};
+  isOpen: boolean
+  onClose: () => void
+  children: React.ReactNode
+  modalTitle: string
+  actionButton: React.ReactNode
+}
 
 const ModalComponent: React.FC<Props> = ({
   isOpen,
   onClose,
   children,
   modalTitle,
-  actionButton
+  actionButton,
 }) => {
   return (
     <Modal
@@ -26,16 +26,16 @@ const ModalComponent: React.FC<Props> = ({
       className="flex flex-col gap-5 p-5 border-primaryOrange border-2 rounded-lg items-center justify-center bg-white mx-auto w-2/5"
       style={{
         overlay: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.95)",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.95)',
         },
         content: {
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
         },
       }}
     >
@@ -56,7 +56,7 @@ const ModalComponent: React.FC<Props> = ({
         </Button>
       </div>
     </Modal>
-  );
-};
+  )
+}
 
-export default ModalComponent;
+export default ModalComponent

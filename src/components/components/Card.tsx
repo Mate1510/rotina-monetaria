@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react'
 
 type CardProps = {
-  title: string;
-  value: string | number;
-  Icon: React.ComponentType<{ className?: string; size?: number }>;
-};
+  title: string
+  value: string | number
+  Icon: React.ComponentType<{ className?: string; size?: number }>
+}
 
 const Card: React.FC<CardProps> = ({ title, value, Icon }) => {
   return (
@@ -16,7 +16,7 @@ const Card: React.FC<CardProps> = ({ title, value, Icon }) => {
         <h5 className="text-lg text-constrastBlack">{value}</h5>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card

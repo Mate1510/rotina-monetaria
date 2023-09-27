@@ -1,59 +1,59 @@
-"use client";
+'use client'
 
-import Button from "@/components/components/Button";
-import Input from "@/components/components/Input";
-import Image from "next/image";
-import React, { useState } from "react";
-import { signIn } from "next-auth/react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { useRouter } from "next/navigation";
-import axios from "axios";
+import Button from '@/components/components/Button'
+import Input from '@/components/components/Input'
+import Image from 'next/image'
+import React, { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { useRouter } from 'next/navigation'
+import axios from 'axios'
 
 interface UserEmail {
-  email: string;
+  email: string
 }
 
 const ForgetPassword = () => {
-  const [data, setData] = useState<UserEmail>({ email: "" });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [data, setData] = useState<UserEmail>({ email: '' })
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const router = useRouter();
+  const router = useRouter()
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
-      const { email } = data;
+      const { email } = data
 
-      const response = await axios.post("/api/forget-password", {
+      const response = await axios.post('/api/forget-password', {
         email,
-      });
+      })
 
-      const responseData = await response.data;
+      const responseData = await response.data
 
       if (response.status == 200) {
-        router.push("/login");
+        router.push('/login')
       } else {
         // Tratamento de Erros
-        console.error(responseData);
+        console.error(responseData)
       }
     } catch (error) {
       // Tratamento de Erros
-      console.error(error);
+      console.error(error)
     } finally {
       setData({
-        email: "",
-      });
-      setIsLoading(false);
+        email: '',
+      })
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
-  };
+    setData(prev => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
+  }
 
   return (
     <div className="border border-primaryOrange rounded-lg p-">
@@ -100,7 +100,7 @@ const ForgetPassword = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ForgetPassword;
+export default ForgetPassword
