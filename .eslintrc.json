@@ -1,31 +1,8 @@
 {
-    "extends": [
-        "next/core-web-vitals",
-        "plugin:react/recommended",
-        "plugin:jsx-a11y/recommended"
-    ],
+    "extends": "next/core-web-vitals",
     "rules": {
-        "react/react-in-jsx-scope": "off",
-        "react/prop-types": "off",
-        "curly": "error",
-        "eqeqeq": [
-            "error",
-            "always"
-        ],
-        "no-console": "warn"
-    },
-    "settings": {
-        "import/resolver": {
-            "node": {
-                "moduleDirectory": [
-                    "node_modules",
-                    "src/"
-                ]
-            }
-        }
-    },
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint"
-    ]
+        "no-console": "error",
+        "no-unused-vars": "error",
+        "no-unreachable": "error"
+    }
 }
