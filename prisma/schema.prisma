@@ -48,6 +48,7 @@ model Goal {
     name             String
     finalGoalValue   Decimal  @db.Decimal(9, 2)
     currentGoalValue Decimal  @db.Decimal(9, 2)
+    finalGoalDate    DateTime
     color            Color    @default(BLACK)
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
