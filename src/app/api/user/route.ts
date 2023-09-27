@@ -2,11 +2,9 @@ import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 
-export async function GET(req) {
+export async function GET(req: NextRequest) {
   const isAdmin = req.nextUrl.searchParams.get('isadmin')
   const currentPage = req.nextUrl.searchParams.get('page') || '1'
-
-  console.log("Erro Forjado!")
 
   if (isAdmin !== 'true') {
     return NextResponse.json({
@@ -27,7 +25,6 @@ export async function GET(req) {
     })
 
     return NextResponse.json(users, { status: 200 })
-    const count = 0;
   } catch (error) {
     return NextResponse.json({
       error: 'Falha em coletar usuários.\nErro: ' + error,
