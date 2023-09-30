@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt'
 import { seedCategories } from './seedCategories'
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma as any),
+  adapter: PrismaAdapter(prisma as any) as any,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
         },
         name: { label: 'Name', type: 'text', placeholder: 'Nome' },
       },
-      async authorize(credentials, req): Promise<any> {
+      async authorize(credentials): Promise<any> {
         if (!credentials?.email || !credentials.password) {
           throw new Error('No credentials passed')
         }
@@ -83,7 +83,7 @@ export const authOptions: NextAuthOptions = {
 
       return token
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       return {
         ...session,
         user: {
