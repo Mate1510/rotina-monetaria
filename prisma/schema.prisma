@@ -22,10 +22,10 @@ model FinanceTransaction {
     User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
 
-    category   Category @relation(fields: [categoryId], references: [id])
+    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
     categoryId String
 
-    Goal   Goal?   @relation(fields: [goalId], references: [id])
+    Goal   Goal?   @relation(fields: [goalId], references: [id], onDelete: Cascade)
     goalId String?
 }
 
@@ -36,6 +36,7 @@ model Category {
     transactionType TransactionType
     createdAt       DateTime        @default(now())
     updatedAt       DateTime        @updatedAt
+    isHidden        Boolean         @default(false)
 
     User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
@@ -124,7 +125,7 @@ model PasswordResetToken {
     token     String   @unique
     expiresAt DateTime
 
-    user User @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Status {
