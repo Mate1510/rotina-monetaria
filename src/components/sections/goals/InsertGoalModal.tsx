@@ -27,13 +27,11 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
   })
 
   const [showColorPicker, setShowColorPicker] = useState(false)
-  const [colorName, setColorName] = useState('ORANGE')
 
   const { data: session } = useSession()
 
   const handleSubmit = async () => {
     if (!session) {
-      console.error('User not authenticated.')
       return
     }
 
@@ -49,25 +47,34 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
       const createdGoal = responseGoal.data
 
       if (createdGoal.error) {
+        //Tratamento de Erro
         console.error(createdGoal.error)
-      } else {
-        const finance = {
-          name: createdGoal.name,
-          value: createdGoal.currentGoalValue,
-          type: 'EXPENSE',
-          userId: userId,
-          date: new Date(),
-          // categoryId: /* ID da categoria apropriada */,
-          goalId: createdGoal.id,
-        }
-        await axios.post(`/api/finances/`, finance)
-
-        onGoalAdded(createdGoal)
-        onClose()
+        return
       }
-    } catch (error) {
-      console.error('Failed to add goal')
-    }
+
+      const categoryResponse = await axios.get(
+        `/api/categories/goal-category?userid=${userId}`,
+      )
+      const { categoryId } = categoryResponse.data
+      if (!categoryId) {
+        //Tratamento de Erros
+        return
+      }
+
+      const finance = {
+        name: createdGoal.name + " - Meta",
+        value: createdGoal.currentGoalValue,
+        type: 'EXPENSE',
+        userId: userId,
+        date: new Date(),
+        categoryId: categoryId,
+        goalId: createdGoal.id,
+      }
+      await axios.post(`/api/finances/`, finance)
+
+      onGoalAdded(createdGoal)
+      onClose()
+    } catch (error) {}
   }
 
   const getColorName = (hexCode: string): string => {

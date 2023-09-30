@@ -33,7 +33,12 @@ const CategoryTable = () => {
         )
 
         const categoriesData: Category[] = await categoriesResponse.data
-        setCategories(categoriesData)
+
+        console.log(categoriesData)
+
+        if (Array.isArray(categoriesData)) {
+          setCategories(categoriesData)
+        }
       } catch (error) {
         console.error('Failed to fetch categories: ', error)
       }
