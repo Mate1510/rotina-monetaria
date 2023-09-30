@@ -15,6 +15,13 @@ export async function PUT(
 
     const categoryData: CategoryInput = await req.json()
 
+    if (categoryData.isHidden) {
+      return NextResponse.json({
+        error: 'Não é permitido modificar ou excluir esta categoria.',
+        status: 403,
+      })
+    }
+
     const updatedCategory = await prisma.category.update({
       where: { id: categoryId },
       data: categoryData,
@@ -37,6 +44,17 @@ export async function DELETE(
 
     if (!categoryId) {
       return NextResponse.json({ error: 'ID inválido.', status: 400 })
+    }
+
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId },
+    });
+
+    if (!category || category.isHidden) {
+      return NextResponse.json({
+        error: 'Não é permitido modificar ou excluir esta categoria.',
+        status: 403,
+      })
     }
 
     await prisma.category.delete({ where: { id: categoryId } })

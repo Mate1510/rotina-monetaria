@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const categories: Category[] = await prisma.category.findMany({
-      where: { userId: userId },
+      where: { userId: userId, isHidden: false, },
       orderBy: {
         name: 'asc',
       },

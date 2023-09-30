@@ -51,6 +51,13 @@ export async function seedCategories(userId: string) {
         color: 'BLUE',
         userId: userId,
       },
+      {
+        name: 'Meta',
+        transactionType: 'EXPENSE',
+        color: 'BLACK',
+        isHidden: true,
+        userId: userId,
+      },
     ],
   })
 }
