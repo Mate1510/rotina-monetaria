@@ -78,6 +78,7 @@ const EditGoalModal: React.FC<Props> = ({ isOpen, onClose, goal, onSave }) => {
                   currentGoalValue: value,
                 })
               }
+              disabled={true}
             />
           </div>
 
