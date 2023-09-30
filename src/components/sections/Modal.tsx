@@ -9,7 +9,7 @@ type Props = {
   onClose: () => void
   children: React.ReactNode
   modalTitle: string
-  actionButton: React.ReactNode
+  actionButton?: React.ReactNode
 }
 
 const ModalComponent: React.FC<Props> = ({
