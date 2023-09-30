@@ -66,7 +66,10 @@ const Finances = () => {
           `/api/categories?userid=${userId}`,
         )
         const categoriesData = categoriesResponse.data
-        setCategories(categoriesData)
+
+        if (Array.isArray(categoriesData)) {
+          setCategories(categoriesData)
+        }
       } catch (error) {
         console.error('Failed to fetch categories:', error)
       }
@@ -101,6 +104,7 @@ const Finances = () => {
 
           <div className="col-span-3">
             <Select
+              title="Categorias"
               placeholder="Categorias"
               className="w-full"
               value={category}
@@ -127,6 +131,7 @@ const Finances = () => {
 
           <div className="col-span-5">
             <Select
+              title="Tipo Transação"
               placeholder="Tipo Transação"
               className="w-full"
               value={type}
