@@ -5,6 +5,7 @@ import CardSection from "@/components/sections/homepage/CardSection";
 import CategoriesSection from "@/components/sections/homepage/CategoriesSection";
 import ChartsSection from "@/components/sections/homepage/ChartsSection";
 import FinanceTable from "@/components/sections/homepage/FinanceTable";
+import GoalsSection from "@/components/sections/homepage/GoalSection";
 import { useSession } from "next-auth/react";
 
 export default function Home() {
@@ -26,8 +27,8 @@ export default function Home() {
             </div>
             <ChartsSection />
             <div className="w-4/5 flex">
-                <CategoriesSection />
-                <span className="border-2 border-constrastBlack bg-constrastBlack m-6 my-20"></span>
+                <GoalsSection />
+                <span className="border-2 border-constrastBlack bg-constrastBlack mx-auto my-20"></span>
                 <CategoriesSection />
             </div>
         </main>
