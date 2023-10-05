@@ -1,4 +1,4 @@
-import GoalsSection from '@/components/sections/goals/GoalSection'
+import GoalsSection from '@/components/sections/goals/GoalSectionExtended'
 import React from 'react'
 
 const GoalsPage = () => {
