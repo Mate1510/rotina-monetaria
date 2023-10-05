@@ -136,14 +136,14 @@ const GoalCard = ({
           <div className="flex gap-3">
             <MdEdit
               className="text-primaryOrange cursor-pointer"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<Element, MouseEvent>) => {
                 handleInnerClick(e)
                 handleEditClick(goal)
               }}
             />
             <MdDelete
               className="text-primaryOrange cursor-pointer"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<Element, MouseEvent>) => {
                 handleInnerClick(e)
                 handleDeleteClick(goal.id)
               }}
