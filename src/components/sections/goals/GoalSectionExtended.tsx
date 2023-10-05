@@ -7,35 +7,26 @@ import axios from 'axios'
 import GoalCard from './GoalCard'
 import { MdAdd } from 'react-icons/md'
 import InsertGoalModal from './InsertGoalModal'
+import useFetchGoals from '@/data/useFetchGoals'
 
-const GoalsSection = () => {
+const GoalsSectionExtended = () => {
   const [goals, setGoals] = useState<Goal[]>([])
   const [isInsertModalOpen, setIsInsertModalOpen] = useState(false)
   const [updateCount, setUpdateCount] = useState(0)
 
   const { data: session } = useSession()
+  const { data: goalsData } = useFetchGoals(updateCount)
 
   useEffect(() => {
     if (!session) {
-      console.error('User not authenticated.')
+      //Tratamento de Erro
       return
     }
 
-    const fetchGoals = async () => {
-      try {
-        const userId = session?.user?.userId
-
-        const goalsResponse = await axios.get(`/api/goals?userid=${userId}`)
-
-        const goalsData: Goal[] = await goalsResponse.data
-        setGoals(goalsData)
-      } catch (error) {
-        console.error('Failed to fetch goals: ', error)
-      }
+    if (Array.isArray(goalsData)) {
+      setGoals(goalsData)
     }
-
-    fetchGoals()
-  }, [session, updateCount])
+  }, [session, updateCount, goalsData])
 
   const handleAddClick = () => {
     setIsInsertModalOpen(true)
@@ -94,4 +85,4 @@ const GoalsSection = () => {
   )
 }
 
-export default GoalsSection
+export default GoalsSectionExtended
