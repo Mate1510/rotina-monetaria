@@ -24,7 +24,6 @@ const Finances = () => {
 
   const handleSubmit = async () => {
     if (!session) {
-      console.error('User not authenticated.')
       return
     }
 
@@ -79,7 +78,7 @@ const Finances = () => {
   }, [session])
 
   return (
-    <div className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm">
+    <div data-testid="insert-finances" className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm">
       <h3 className="text-center text-constrastBlack font-semibold text-lg">
         Insira suas finanças:
       </h3>
