@@ -10,12 +10,9 @@ const config = {
   testEnvironment: 'jest-environment-jsdom',
   preset: 'ts-jest',
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1"
+    '^@/enum$': '<rootDir>/types/enum.ts',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
-  reporters: [
-    "default",
-    ["jest-junit", { outputDirectory: "test-results/junit" }]
-  ]
 }
 
 module.exports = createJestConfig(config)
