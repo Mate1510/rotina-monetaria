@@ -105,7 +105,7 @@ const CategoryTable = () => {
   }
 
   return (
-    <div className="min-w-full w-full">
+    <div data-testid="categories-table-extended" className="min-w-full w-full">
       <div className="min-w-full overflow-x-auto rounded-2xl bg-primaryOrange p-0.5 no-scrollbar">
         <table className="w-full bg-white overflow-hidden rounded-2xl">
           <thead className="bg-primaryOrange text-left text-white font-medium text-base">

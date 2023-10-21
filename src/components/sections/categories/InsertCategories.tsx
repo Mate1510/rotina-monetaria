@@ -59,7 +59,7 @@ const InsertCategories = () => {
   }
 
   return (
-    <div className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm lg:w-3/5">
+    <div data-testid="insert-categories" className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm lg:w-3/5">
       <h3 className="text-center text-constrastBlack font-semibold text-lg">
         Crie sua própria Categoria:
       </h3>
