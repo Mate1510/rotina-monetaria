@@ -15,7 +15,7 @@ const CategoriesSection = () => {
   const categories = categoriesData.slice(0, 8)
 
   return (
-    <div className="bg-white w-full flex flex-col gap-10 mb-5 p-10 px-12">
+    <div data-testid="categories-homepage" className="bg-white w-full flex flex-col gap-10 mb-5 p-10 px-12">
       <Link
         href="/categories"
         className="flex self-center text-constrastBlack font-semibold text-2xl md:text-3xl hover:underline"

@@ -54,7 +54,7 @@ const FinanceTable = () => {
   }
 
   return (
-    <div className="min-w-full">
+    <div data-testid="finance-table-homepage" className="min-w-full">
       <div className="flex items-center justify-center mb-3">
         <MdOutlineNavigateBefore
           onClick={handlePrevMonth}

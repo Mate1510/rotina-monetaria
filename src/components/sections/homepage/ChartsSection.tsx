@@ -8,7 +8,7 @@ const ChartsSection = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <div className="bg-primaryOrange w-full my-5 p-5 md:p-10">
+    <div data-testid="charts-homepage" className="bg-primaryOrange w-full my-5 p-5 md:p-10">
       <div className="w-4/5 flex flex-col gap-10 mx-auto">
         <Link
           href="/charts"
