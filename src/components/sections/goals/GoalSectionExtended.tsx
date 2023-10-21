@@ -44,7 +44,7 @@ const GoalsSectionExtended = () => {
   }
 
   return (
-    <div className="min-w-full w-full flex flex-wrap gap-5">
+    <div data-testid="goals-section-extended" className="min-w-full w-full flex flex-wrap gap-5">
       <div
         onClick={handleAddClick}
         className="transition-all duration-300 ease-in-out transform hover:scale-105 container flex flex-col items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-5 w-full md:w-[19vw] h-[28vh] cursor-pointer shadow-sm"
