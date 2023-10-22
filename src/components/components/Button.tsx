@@ -15,7 +15,7 @@ function Button({ className, variant = 'primary', ...props }: ButtonProps) {
 
   const _className = twMerge(
     variantClasses[variant],
-    'appearance-none rounded-lg p-2 text-sm font-medium shadow transition-all',
+    'appearance-none rounded-lg p-2 text-sm font-medium shadow transition-all transform transition-transform duration-300 hover:scale-105',
     className,
   )
 

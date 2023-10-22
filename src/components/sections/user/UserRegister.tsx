@@ -158,17 +158,25 @@ const UserRegister = () => {
             <div className="min-w-full h-[1px] bg-primaryOrange"></div>
           </div>
 
-          <span
-            className="border border-primaryOrange rounded-full p-2 cursor-pointer"
-            onClick={handleGoogleClick}
-          >
-            <Image
-              src="https://authjs.dev/img/providers/google.svg"
-              alt="Logo Google"
-              width={24}
-              height={24}
-            ></Image>
-          </span>
+          <div className="flex gap-3 items-center justify-center transform transition-transform duration-300 hover:scale-110">
+            <span
+              className="border border-primaryOrange rounded-full p-2 cursor-pointer"
+              onClick={handleGoogleClick}
+            >
+              <Image
+                src="https://authjs.dev/img/providers/google.svg"
+                alt="Logo Google"
+                width={24}
+                height={24}
+              ></Image>
+            </span>
+            <p
+              onClick={handleGoogleClick}
+              className="text-constrastBlack cursor-pointer"
+            >
+              Continue com o Google
+            </p>
+          </div>
         </div>
       </div>
     </div>
