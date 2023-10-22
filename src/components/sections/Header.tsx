@@ -13,7 +13,7 @@ const Header = () => {
   const [menuIsOpen, setMenuIsOpen] = React.useState(false)
   const { data: session, status } = useSession()
 
-  const pathname = usePathname()
+  const pathname = usePathname() || "";
   const currentPage = pathname.split('/')[1]
   let changeColor = false
 
@@ -38,7 +38,7 @@ const Header = () => {
       }`}
     >
       <div className="flex mx-auto p-6 justify-between items-center lg:w-4/5">
-        <Link href="/" className="cursor-pointer">
+        <Link href="/" className="cursor-pointer transform transition-transform duration-300 hover:scale-110">
           <Image
             src={changeColor ? '/Logo white.svg' : '/Logo.svg'}
             alt={'Rotina Monetária'}
@@ -52,33 +52,33 @@ const Header = () => {
             <div className="flex items-center gap-5">
               <Link
                 href="/finances"
-                className="text-primaryOrange font-semibold text-lg hover:text-xl hover:underline"
+                className="text-primaryOrange font-semibold text-lg transform transition-transform duration-300 hover:scale-110"
               >
                 Finanças
               </Link>
               <Link
                 href="/categories"
-                className="text-primaryOrange font-semibold text-lg hover:text-xl hover:underline"
+                className="text-primaryOrange font-semibold text-lg transform transition-transform duration-300 hover:scale-110"
               >
                 Categorias
               </Link>
               <Link
                 href="/goals"
-                className="text-primaryOrange font-semibold text-lg hover:text-xl hover:underline"
+                className="text-primaryOrange font-semibold text-lg transform transition-transform duration-300 hover:scale-110"
               >
                 Metas
               </Link>
               <Link
                 href="/charts"
-                className="text-primaryOrange font-semibold text-lg hover:text-xl hover:underline"
+                className="text-primaryOrange font-semibold text-lg transform transition-transform duration-300 hover:scale-110"
               >
                 Estatísticas
               </Link>
 
-              {session.user.role === 'ADMIN' && (
+              {session?.user?.role === 'ADMIN' && (
                 <Link
                   href="/control-panel"
-                  className="text-primaryOrange font-semibold text-lg hover:text-xl hover:underline"
+                  className="text-primaryOrange font-semibold text-lg transform transition-transform duration-300 hover:scale-110"
                 >
                   Usuários
                 </Link>
@@ -136,6 +136,7 @@ const Header = () => {
               className="cursor-pointer text-primaryOrange"
               size={24}
               onClick={handleMenuClick}
+              aria-label="menu-button"
             />
             {menuIsOpen && (
               <div className="absolute top-16 right-1 rounded-lg shadow-md bg-primaryOrange flex flex-col justify-center items-center">
@@ -164,7 +165,7 @@ const Header = () => {
                   Estatísticas
                 </Link>
 
-                {session.user.role === 'ADMIN' && (
+                {session?.user?.role === 'ADMIN' && (
                   <Link
                     href="/control-panel"
                     className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
