@@ -27,19 +27,19 @@ describe('Home Page', () => {
     it('Should render main components when session is active', () => {
       ;(useSession as jest.Mock).mockReturnValue({
         data: {
-          session: {
-            id: 'mocked-id',
-            sessionToken: 'mocked-session-token',
-            userId: 'mocked-user-id',
-            expires: '2022-12-31T23:59:59.999Z',
-            user: {
-              name: 'Mock Name',
-            },
+          id: 'mocked-id',
+          sessionToken: 'mocked-session-token',
+          userId: 'mocked-user-id',
+          expires: '2022-12-31T23:59:59.999Z',
+          user: {
+            name: 'Mock Name',
           },
         },
       })
+
       render(<Home />)
-      expect(screen.getByText('Bem vindo(a),')).toBeInTheDocument()
+
+      expect(screen.getByText('Bem vindo(a), Mock Name')).toBeInTheDocument()
       expect(screen.getByTestId('insert-finances')).toBeInTheDocument()
       expect(screen.getByTestId('card-section-homepage')).toBeInTheDocument()
       expect(screen.getByTestId('finance-table-homepage')).toBeInTheDocument()
