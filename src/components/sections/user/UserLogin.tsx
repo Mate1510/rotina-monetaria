@@ -3,9 +3,10 @@
 import Button from '@/components/components/Button'
 import Input from '@/components/components/Input'
 import Image from 'next/image'
+import { toast } from 'react-toastify'
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { signIn, signOut } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useRouter } from 'next/navigation'
 
@@ -17,11 +18,41 @@ interface User {
 const UserLogin = () => {
   const [data, setData] = useState<User>({ email: '', password: '' })
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [emailError, setEmailError] = useState<string | null>(null)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
 
-  const router = useRouter()
+  const { push } = useRouter()
+
+  const validate = (): boolean => {
+    let isValid = true
+
+    if (!data.email) {
+      setEmailError('Por favor, insira um e-mail.')
+      isValid = false
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      setEmailError('É preciso inserir um e-mail válido.')
+      isValid = false
+    } else {
+      setEmailError(null)
+    }
+
+    if (!data.password) {
+      setPasswordError('Por favor, insira uma senha.')
+      isValid = false
+    } else {
+      setPasswordError(null)
+    }
+
+    return isValid
+  }
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
+
+    if (!validate()) {
+      return
+    }
+
     setIsLoading(true)
 
     const response = await signIn<'credentials'>('credentials', {
@@ -30,16 +61,11 @@ const UserLogin = () => {
     })
 
     if (response?.error !== null || response?.error === 'Session required') {
-      console.log(response)
-      //Tratamento de erros
+      toast.error(response?.error)
     } else {
-      console.log(response)
-      router.push('/')
+      toast.success('Login bem sucedido! 👌')
+      push('/')
     }
-
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 5000);
 
     setData({
       email: '',
@@ -83,6 +109,8 @@ const UserLogin = () => {
               disabled={isLoading}
               onChange={handleChange}
               className="w-full"
+              error={Boolean(emailError)}
+              errorMessage={emailError!}
             />
 
             <div className="w-full flex flex-col gap-1">
@@ -94,6 +122,8 @@ const UserLogin = () => {
                 disabled={isLoading}
                 onChange={handleChange}
                 className="w-full"
+                error={Boolean(passwordError)}
+                errorMessage={passwordError!}
               />
               <div className="flex justify-end">
                 <Link
@@ -139,7 +169,12 @@ const UserLogin = () => {
                 height={24}
               ></Image>
             </span>
-            <p onClick={handleGoogleClick} className='text-constrastBlack cursor-pointer'>Continue com o Google</p>
+            <p
+              onClick={handleGoogleClick}
+              className="text-constrastBlack cursor-pointer"
+            >
+              Continue com o Google
+            </p>
           </div>
         </div>
       </div>

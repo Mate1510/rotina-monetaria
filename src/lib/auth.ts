@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<any> {
         if (!credentials?.email || !credentials.password) {
-          throw new Error('No credentials passed')
+          throw new Error('Nenhuma credencial foi passada!')
         }
 
         const user = await prisma.user.findUnique({
@@ -36,11 +36,11 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!user || !user.password) {
-          throw new Error('No user found with this credentials')
+          throw new Error('Usuário ou senha inválidos!')
         }
 
         if (user.status == 'INACTIVE') {
-          throw new Error('The user is inactive!')
+          throw new Error('O usuário está inativo!')
         }
 
         const isPasswordValid = await bcrypt.compare(
@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
         )
 
         if (!isPasswordValid) {
-          throw new Error('Invalid password')
+          throw new Error('Usuário ou senha inválidos!')
         }
 
         return user
