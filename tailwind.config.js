@@ -14,7 +14,7 @@ module.exports = {
       },
       colors: {
         primaryOrange: "#EE4B1F",
-        orangeDarker: "#B1320F",
+        orangeDarker: "#CB370F",
         constrastGray: "#D9D9D9",
         constrastBlack: "#1E1E1E",
         textGray: "#A3A3A3",
