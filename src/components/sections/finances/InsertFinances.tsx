@@ -80,9 +80,9 @@ const Finances = () => {
   return (
     <div
       data-testid="insert-finances"
-      className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm"
+      className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm transform transition-transform duration-300 hover:scale-105"
     >
-      <h3 className="text-center text-constrastBlack font-semibold text-lg">
+      <h3 className="text-center text-constrastBlack font-semibold text-2xl">
         Insira suas finanças:
       </h3>
 
