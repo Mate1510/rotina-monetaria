@@ -2,47 +2,35 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 
 const Footer = () => {
-  const pathname = usePathname()
-  const currentPage = pathname.split('/')[1]
-  let changeColor = false
-
-  if (null) {
-    changeColor = true
-  } else {
-    changeColor = false
-  }
-
   return (
-    <div
-      className={`flex ${
-        changeColor ? 'bg-white' : 'bg-primaryOrange'
-      } bottom-0 py-14 px-6 justify-center relative`}
-    >
-      <div className="relative w-[200px] h-[75px] self-center mr-4">
-        <Image
-          src={changeColor ? '/Logo.svg' : '/Logo white.svg'}
-          alt={'Rotina Monetária'}
-          fill
-        ></Image>
+    <div className="flex bg-primaryOrange bottom-0 py-14 px-6 justify-center relative">
+      <div className="relative w-[200px] h-[75px] self-center mr-4 transform transition-transform duration-300 hover:scale-110">
+        <Image src={'/Logo white.svg'} alt={'Rotina Monetária'} fill></Image>
       </div>
 
-      <span
-        className={`border-2 ${
-          changeColor ? 'bg-primaryOrange border-primaryOrange' : 'bg-white'
-        } mx-6 absolute top-8 bottom-8`}
-      ></span>
+      <span className="border-2 bg-white mx-6 absolute top-8 bottom-8"></span>
 
-      <div
-        className={`flex flex-col gap-3 ${
-          changeColor ? 'text-primaryOrange' : 'text-white'
-        } font-semibold text-lg self-center ml-4`}
-      >
-        <h4>Feedback</h4>
-        <h4>Email</h4>
-        <h4>© 2023 Mateus Abreu</h4>
+      <div className="flex flex-col gap-3 text-white font-semibold text-lg self-center ml-4">
+        <Link
+          href="https://www.google.com/"
+          target="blank"
+          rel="noopener noreferrer"
+          className="transform transition-transform duration-300 hover:scale-105"
+        >
+          Feedback
+        </Link>
+        <Link
+          href="mailto:mateusabreucn@gmail.com"
+          className="transform transition-transform duration-300 hover:scale-105"
+        >
+          Email
+        </Link>
+        <h4 className="transform transition-transform duration-300 hover:scale-105">
+          © 2023 Mateus Abreu
+        </h4>
       </div>
     </div>
   )
