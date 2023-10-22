@@ -45,7 +45,7 @@ const Finances = () => {
       } else {
         console.log('Finance created:', data)
       }
-      window.location.reload()
+      // window.location.reload()
     } catch (error) {
       console.error('Failed to add finance:', error)
     }
@@ -78,7 +78,10 @@ const Finances = () => {
   }, [session])
 
   return (
-    <div data-testid="insert-finances" className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm">
+    <div
+      data-testid="insert-finances"
+      className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm"
+    >
       <h3 className="text-center text-constrastBlack font-semibold text-lg">
         Insira suas finanças:
       </h3>
