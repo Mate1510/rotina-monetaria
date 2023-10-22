@@ -1,17 +1,12 @@
-'use client'
-
 import './globals.css'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import Provider from './Provider'
 import Header from '@/components/sections/Header'
 import Footer from '@/components/sections/Footer'
-import { usePathname } from 'next/navigation'
-import { checkIsPublicRoute } from '@/routes/check-is-public-route'
-import PrivateRoute from '@/routes/private-route'
-import { checkIsAdminRoute } from '@/routes/check-is-admin-route'
-import AdminRoute from '@/routes/admin-route'
-import PublicRoute from '@/routes/public-route'
+import LayoutHelper from './layoutHelper'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -30,25 +25,26 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname()
-
-  const isPublicPage = checkIsPublicRoute(pathname)
-  const isAdminPage = checkIsAdminRoute(pathname)
-
   return (
     <html lang="en">
       <Provider>
         <body className={`${poppins.className} mx-auto flex-col `}>
           <Header />
-          <div className="container min-h-screen flex-grow lg:max-w-screen-2xl lg:mx-auto my-10">
-            {isPublicPage ? (
-              <PublicRoute>{children}</PublicRoute>
-            ) : isAdminPage ? (
-              <AdminRoute>{children}</AdminRoute>
-            ) : (
-              <PrivateRoute>{children}</PrivateRoute>
-            )}
-          </div>
+
+          <LayoutHelper>{children}</LayoutHelper>
+
+          <ToastContainer
+            position="bottom-left"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover={false}
+            theme="dark"
+          />
           <Footer />
         </body>
       </Provider>
