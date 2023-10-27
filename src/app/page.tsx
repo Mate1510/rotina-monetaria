@@ -25,7 +25,6 @@ export default function Home() {
           Bem vindo(a), {session?.user?.name}
         </h1>
         <Finances />
-        <CardSection />
         <FinanceTable />
       </div>
 

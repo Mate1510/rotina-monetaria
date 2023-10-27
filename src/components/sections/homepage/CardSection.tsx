@@ -1,16 +1,50 @@
-'use client'
-
+import React, { useEffect, useState } from 'react'
 import Card from '@/components/components/Card'
-import React from 'react'
+import axios from 'axios'
 
 import { MdTrendingUp, MdTrendingDown, MdAttachMoney } from 'react-icons/md'
 
-const CardSection = () => {
+const CardSection = ({
+  month,
+  year,
+  userid,
+}: {
+  month: number
+  year: number
+  userid: string | undefined
+}) => {
+  const [incomes, setIncomes] = useState<number>(0)
+  const [expenses, setExpenses] = useState<number>(0)
+  const [balance, setBalance] = useState<number>(0)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/api/finance-cards', {
+          params: {
+            month,
+            year,
+            userid,
+          },
+        })
+
+        const { totalIncome, totalExpense, total } = response.data
+        setIncomes(totalIncome)
+        setExpenses(totalExpense)
+        setBalance(total)
+      } catch (error) {
+        console.error('Erro ao buscar resumo financeiro:', error)
+      }
+    }
+
+    fetchData()
+  }, [month, userid, year])
+
   return (
-    <div data-testid="card-section-homepage" className="container flex flex-wrap gap-5">
-      <Card title="Receitas" value="R$10.000,00" Icon={MdTrendingUp} />
-      <Card title="Despesas" value="R$1.000,00" Icon={MdTrendingDown} />
-      <Card title="Total" value="R$9.000,00" Icon={MdAttachMoney} />
+    <div className='flex flex-col gap-10 mt-10 mb-16 px-16 md:flex-row'>
+      <Card title="Receitas" value={`R$${incomes}`} Icon={MdTrendingUp} className='flex-grow'/>
+      <Card title="Despesas" value={`R$${expenses}`} Icon={MdTrendingDown} className='flex-grow'/>
+      <Card title="Total" value={`R$${balance}`} Icon={MdAttachMoney} className='flex-grow'/>
     </div>
   )
 }

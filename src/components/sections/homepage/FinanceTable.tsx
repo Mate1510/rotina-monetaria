@@ -7,6 +7,7 @@ import { TransactionType } from '@/enum'
 import { MdOutlineNavigateNext, MdOutlineNavigateBefore } from 'react-icons/md'
 import useFetchFinances from '@/data/useFetchFinances'
 import { Finance } from '@/finance'
+import CardSection from './CardSection'
 
 const FinanceTable = () => {
   const [finances, setFinances] = useState<Finance[]>([])
@@ -55,6 +56,8 @@ const FinanceTable = () => {
 
   return (
     <div data-testid="finance-table-homepage" className="min-w-full">
+      <CardSection month={month} year={year} userid={session?.user?.userId} />
+
       <div className="flex items-center justify-center mb-3">
         <MdOutlineNavigateBefore
           onClick={handlePrevMonth}
