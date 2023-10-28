@@ -13,7 +13,7 @@ const Header = () => {
   const [menuIsOpen, setMenuIsOpen] = React.useState(false)
   const { data: session, status } = useSession()
 
-  const pathname = usePathname() || "";
+  const pathname = usePathname() || ''
   const currentPage = pathname.split('/')[1]
   let changeColor = false
 
@@ -21,7 +21,9 @@ const Header = () => {
     currentPage == 'register' ||
     currentPage == 'login' ||
     currentPage == 'forget-password' ||
-    currentPage == 'reset-password'
+    currentPage == 'reset-password' ||
+    currentPage == 'verify-email' ||
+    currentPage == 'resend-email'
   ) {
     changeColor = true
   } else {
@@ -38,7 +40,10 @@ const Header = () => {
       }`}
     >
       <div className="flex mx-auto p-6 justify-between items-center lg:w-4/5">
-        <Link href="/" className="cursor-pointer transform transition-transform duration-300 hover:scale-110">
+        <Link
+          href="/"
+          className="cursor-pointer transform transition-transform duration-300 hover:scale-110"
+        >
           <Image
             src={changeColor ? '/Logo white.svg' : '/Logo.svg'}
             alt={'Rotina Monetária'}
