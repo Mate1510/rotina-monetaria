@@ -15,5 +15,7 @@ export const APP_ROUTES = {
     register: '/register',
     forgetPassword: '/forget-password',
     resetPassword: '/reset-password',
+    verifyEmail: '/verify-email',
+    resendEmail: '/resend-email',
   },
 }
