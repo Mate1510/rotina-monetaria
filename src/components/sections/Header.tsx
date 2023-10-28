@@ -8,23 +8,18 @@ import { HiOutlineMenuAlt3 } from 'react-icons/hi'
 import { MdLogout, MdOutlineAccountCircle } from 'react-icons/md'
 import AuthButton from './user/AuthButton'
 import { usePathname } from 'next/navigation'
+import { checkIsPublicRoute } from '@/routes/check-is-public-route'
 
 const Header = () => {
   const [menuIsOpen, setMenuIsOpen] = React.useState(false)
   const { data: session, status } = useSession()
 
   const pathname = usePathname() || ''
-  const currentPage = pathname.split('/')[1]
   let changeColor = false
 
-  if (
-    currentPage == 'register' ||
-    currentPage == 'login' ||
-    currentPage == 'forget-password' ||
-    currentPage == 'reset-password' ||
-    currentPage == 'verify-email' ||
-    currentPage == 'resend-email'
-  ) {
+  const isPublicPage = checkIsPublicRoute(pathname)
+
+  if (isPublicPage) {
     changeColor = true
   } else {
     changeColor = false
@@ -115,7 +110,7 @@ const Header = () => {
               </div>
             </div>
           )}
-          {status === 'unauthenticated' && <AuthButton page={currentPage} />}
+          {status === 'unauthenticated' && <AuthButton />}
         </div>
 
         {status === 'authenticated' && (
@@ -192,7 +187,7 @@ const Header = () => {
 
         {status === 'unauthenticated' && (
           <div className="lg:hidden">
-            <AuthButton page={currentPage} />
+            <AuthButton  />
           </div>
         )}
       </div>
