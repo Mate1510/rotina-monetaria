@@ -7,13 +7,26 @@ import { emailValidationTemplate } from '@/lib/emailValidationTemplate'
 export async function POST(req: NextRequest) {
   const { email } = await req.json()
 
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+  if (!emailRegex.test(email)) {
+    return NextResponse.json({ message: 'E-mail inválido.', status: 400 })
+  }
+
   try {
     const user = await prisma.user.findUnique({ where: { email } })
 
     if (!user) {
       return NextResponse.json({
-        message: 'Usuário não encontrado com este e-mail.',
-        status: 404,
+        message:
+          'Se o e-mail estiver associado a uma conta, um link de verificação será reenviado.',
+        status: 400,
+      })
+    }
+
+    if (user.password === null) {
+      return NextResponse.json({
+        message: 'Esta conta não permite alteração de senha.',
+        status: 403,
       })
     }
 
@@ -27,7 +40,7 @@ export async function POST(req: NextRequest) {
       data: {
         userId: user.id,
         token,
-        expiresAt: new Date(Date.now() + 3600000), // Expira em 1 hora
+        expiresAt: new Date(Date.now() + 3600000),
       },
     })
 
@@ -52,10 +65,10 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail(mailOptions)
 
     return NextResponse.json({
-      message: 'E-mail de verificação reenviado com sucesso.',
+      message:
+        'Se o e-mail estiver associado a uma conta, um link de verificação será reenviado.',
       status: 200,
     })
-
   } catch (error) {
     return NextResponse.json({
       message: 'Erro interno do servidor.',

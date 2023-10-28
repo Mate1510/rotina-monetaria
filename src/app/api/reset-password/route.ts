@@ -47,7 +47,7 @@ export async function PUT(req: NextRequest) {
   })
 
   return NextResponse.json({
-    message: 'Senha reiniciada com sucesso.',
+    message: 'Senha redefinida com sucesso.',
     status: 200,
   })
 }
