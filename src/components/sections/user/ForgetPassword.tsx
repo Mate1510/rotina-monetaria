@@ -2,12 +2,11 @@
 
 import Button from '@/components/components/Button'
 import Input from '@/components/components/Input'
-import Image from 'next/image'
 import React, { useState } from 'react'
-import { signIn } from 'next-auth/react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 interface UserEmail {
   email: string
@@ -16,31 +15,46 @@ interface UserEmail {
 const ForgetPassword = () => {
   const [data, setData] = useState<UserEmail>({ email: '' })
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [errors, setErrors] = useState<{ email?: string }>({})
 
-  const router = useRouter()
+  const { push } = useRouter()
+
+  const validateEmail = (email: string) => {
+    const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+    return regex.test(email)
+  }
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setErrors({})
+
+    if (!data.email || !validateEmail(data.email)) {
+      setErrors({ email: 'Por favor, insira um e-mail válido.' })
+      setIsLoading(false)
+      return
+    }
 
     try {
-      const { email } = data
+      const response = await axios.post('/api/forget-password', data)
 
-      const response = await axios.post('/api/forget-password', {
-        email,
-      })
-
-      const responseData = await response.data
-
-      if (response.status == 200) {
-        router.push('/login')
+      if (response.data.status === 403) {
+        toast.error(response.data.message)
+        setTimeout(() => {
+          push('/login')
+        }, 5000)
+      } else if (response.status === 200) {
+        toast.success(response.data.message)
+        setTimeout(() => {
+          push('/login')
+        }, 5000)
       } else {
-        // Tratamento de Erros
-        console.error(responseData)
+        toast.warn(response.data.message || 'Erro ao enviar o e-mail.')
       }
     } catch (error) {
-      // Tratamento de Erros
-      console.error(error)
+      toast.error(
+        'Não foi possível enviar o e-mail! Tente novamente mais tarde.',
+      )
     } finally {
       setData({
         email: '',
@@ -81,6 +95,8 @@ const ForgetPassword = () => {
               value={data.email}
               disabled={isLoading}
               onChange={handleChange}
+              error={!!errors.email}
+              errorMessage={errors.email}
               className="w-full"
             />
 

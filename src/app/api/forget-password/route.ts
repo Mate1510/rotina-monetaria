@@ -12,16 +12,24 @@ export async function POST(req: NextRequest) {
   const emailData = await req.json()
   const { email } = emailData
 
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+  if (!emailRegex.test(email)) {
+    return NextResponse.json({ message: 'E-mail inválido.', status: 400 })
+  }
+
   const user = await prisma.user.findUnique({ where: { email: email } })
 
   if (!user) {
-    return NextResponse.json('Usuário não encontrado.', { status: 400 })
+    return NextResponse.json({
+      message:
+        'Se o e-mail estiver associado a uma conta, um link de redefinição será enviado.',
+      status: 200,
+    })
   }
 
   if (user.password === null) {
     return NextResponse.json({
-      message:
-        'Este usuário foi criado com oAuth e não pode alterar sua senha.',
+      message: 'Esta conta não permite alteração de senha.',
       status: 403,
     })
   }
@@ -54,7 +62,7 @@ export async function POST(req: NextRequest) {
       },
     } as nodemailer.TransportOptions);*/
 
-  var transporter = nodemailer.createTransport({
+  let transporter = nodemailer.createTransport({
     host: 'sandbox.smtp.mailtrap.io',
     port: 2525,
     auth: {
@@ -72,16 +80,17 @@ export async function POST(req: NextRequest) {
     html: resetPasswordTemplate(resetUrl),
   }
 
-  await transporter.sendMail(mailOptions, function (error) {
-    if (error) {
-      console.log('Erro: ' + error)
-    } else {
-      console.log('E-mail enviado com sucesso.')
-    }
-  })
+  try {
+    await transporter.sendMail(mailOptions)
 
-  return NextResponse.json(
-    'E-mail de redefinição de senha enviado com sucesso.',
-    { status: 200 },
-  )
+    return NextResponse.json({
+      message: 'Se o e-mail estiver associado a uma conta, um link de redefinição será enviado.',
+      status: 200,
+    })
+  } catch (error) {
+    return NextResponse.json({
+      message: 'Erro ao enviar o e-mail. Tente novamente mais tarde.',
+      status: 500,
+    })
+  }
 }
