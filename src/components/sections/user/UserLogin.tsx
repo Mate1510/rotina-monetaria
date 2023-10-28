@@ -132,7 +132,7 @@ const UserLogin = () => {
                 />
                 <div className="flex justify-end">
                   <Link
-                    href={'/forget-password'}
+                    href={'/send-email/forget-password'}
                     className="text-right mb-3 cursor-pointer font-medium text-sm text-blue-500"
                   >
                     Esqueceu a senha?
@@ -186,7 +186,7 @@ const UserLogin = () => {
       </div>
       <div className="flex justify-end">
         <Link
-          href={'/resend-email'}
+          href={'/send-email/email-verification'}
           className="text-right mt-3 mr-3 cursor-pointer font-medium text-sm text-blue-500"
         >
           Reenviar E-mail de Verificação

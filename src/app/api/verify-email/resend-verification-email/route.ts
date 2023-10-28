@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    const verificationUrl = `http://localhost:3000/verify-email?token=${token}`
+    const verificationUrl = `http://localhost:3000/from-email/verify-email?token=${token}`
 
     let mailOptions = {
       from: 'contato@rotinamonetaria.com',
