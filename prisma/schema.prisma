@@ -100,15 +100,16 @@ model User {
     sessions      Session[]
 
     // My Project
-    createdAt          DateTime             @default(now())
-    updatedAt          DateTime             @updatedAt
-    lastEntry          DateTime?
-    status             Status               @default(ACTIVE)
-    role               Role                 @default(USER)
-    transactions       FinanceTransaction[]
-    categories         Category[]
-    goals              Goal[]
-    PasswordResetToken PasswordResetToken?
+    createdAt              DateTime                @default(now())
+    updatedAt              DateTime                @updatedAt
+    lastEntry              DateTime?
+    status                 Status                  @default(ACTIVE)
+    role                   Role                    @default(USER)
+    transactions           FinanceTransaction[]
+    categories             Category[]
+    goals                  Goal[]
+    PasswordResetToken     PasswordResetToken?
+    EmailVerificationToken EmailVerificationToken?
 }
 
 model VerificationToken {
@@ -120,6 +121,15 @@ model VerificationToken {
 }
 
 model PasswordResetToken {
+    id        Int      @id @default(autoincrement())
+    userId    String   @unique
+    token     String   @unique
+    expiresAt DateTime
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailVerificationToken {
     id        Int      @id @default(autoincrement())
     userId    String   @unique
     token     String   @unique
