@@ -39,6 +39,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Usuário ou senha inválidos!')
         }
 
+        if (!user.emailVerified) {
+          throw new Error('Por favor, verifique seu e-mail antes de fazer login!');
+        }
+
         if (user.status == 'INACTIVE') {
           throw new Error('O usuário está inativo!')
         }
