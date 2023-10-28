@@ -8,12 +8,20 @@ import Image from 'next/image'
 import axios from 'axios'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { signIn } from 'next-auth/react'
+import { toast } from 'react-toastify'
 
 interface User {
   name: string
   email: string
   password: string
   passwordConfirmation: string
+}
+
+type ErrorsType = {
+  name?: string
+  email?: string
+  password?: string
+  passwordConfirmation?: string
 }
 
 const UserRegister = () => {
@@ -24,8 +32,53 @@ const UserRegister = () => {
     passwordConfirmation: '',
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [errors, setErrors] = useState<ErrorsType>({})
 
   const router = useRouter()
+
+  const validate = (): boolean => {
+    const newErrors: ErrorsType = {}
+    let isValid = true
+
+    if (!data.name) {
+      newErrors.name = 'Nome é obrigatório.'
+      isValid = false
+    }
+
+    if (!data.email) {
+      newErrors.email = 'E-mail é obrigatório.'
+      isValid = false
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      newErrors.email = 'E-mail inválido.'
+      isValid = false
+    }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
+
+    if (!data.password) {
+      newErrors.password = 'Senha é obrigatória.'
+      isValid = false
+    } else if (!passwordRegex.test(data.password)) {
+      newErrors.password =
+        'A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'
+      isValid = false
+    }
+
+    if (data.password !== data.passwordConfirmation) {
+      newErrors.passwordConfirmation = 'As senhas não coincidem.'
+      toast.error("As senhas não coincidem! 😔")
+      isValid = false
+    }
+
+    setErrors(newErrors)
+
+    if (!isValid) {
+      setIsLoading(false)
+    }
+
+    return isValid
+  }
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
@@ -33,8 +86,7 @@ const UserRegister = () => {
 
     const { name, email, password, passwordConfirmation } = data
 
-    if (password !== passwordConfirmation) {
-      //Tratativa de Erro senhas não coincidem
+    if (!validate()) {
       return
     }
 
@@ -47,18 +99,16 @@ const UserRegister = () => {
 
       const userData = response.data
 
-      if (response.status !== 200) {
-        //tratativa de erros
+      if (userData.status !== 200) {
+        toast.error(userData.error)
       } else {
+        toast.warn("Verifique seu e-mail para realizar Login!")
+        toast.success('Registro bem sucedido! 👌')
         router.push('/login')
       }
     } catch (error) {
-      console.error('Error while creating the user.', error)
+      toast.error('Erro ao criar o usuário. 🤯')
     }
-
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 5000);
 
     setData({
       name: '',
@@ -103,6 +153,8 @@ const UserRegister = () => {
               disabled={isLoading}
               onChange={handleChange}
               className="w-full"
+              error={Boolean(errors.name)}
+              errorMessage={errors.name}
             />
 
             <Input
@@ -114,6 +166,8 @@ const UserRegister = () => {
               disabled={isLoading}
               onChange={handleChange}
               className="w-full"
+              error={Boolean(errors.email)}
+              errorMessage={errors.email}
             />
 
             <Input
@@ -124,6 +178,8 @@ const UserRegister = () => {
               disabled={isLoading}
               onChange={handleChange}
               className="w-full"
+              error={Boolean(errors.password)}
+              errorMessage={errors.password}
             />
 
             <Input
@@ -134,6 +190,8 @@ const UserRegister = () => {
               disabled={isLoading}
               onChange={handleChange}
               className="w-full"
+              error={Boolean(errors.passwordConfirmation)}
+              errorMessage={errors.passwordConfirmation}
             />
 
             <Button
