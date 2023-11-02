@@ -142,14 +142,16 @@ const CategoryTable = () => {
                   </td>
                 )}
                 <td className="py-2 px-4 border-b">
-                  <div className="flex gap-8 items-center">
+                  <div className="flex items-center justify-center gap-5">
                     <MdEdit
-                      className="text-primaryOrange cursor-pointer"
+                      className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
                       onClick={() => handleEditClick(category)}
+                      size={20}
                     />
                     <MdDelete
-                      className="text-primaryOrange cursor-pointer"
+                      className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
                       onClick={() => handleDeleteClick(category)}
+                      size={20}
                     />
                   </div>
                 </td>

@@ -241,8 +241,9 @@ const UsersTable = () => {
                 <td className="py-2 px-4 border-b">
                   <div className="flex justify-around items-center">
                     <MdEdit
-                      className="text-primaryOrange cursor-pointer"
+                      className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
                       onClick={() => handleEditClick(user)}
+                      size={20}
                     />
                     {/* <MdDelete
                                             className="text-primaryOrange cursor-pointer"

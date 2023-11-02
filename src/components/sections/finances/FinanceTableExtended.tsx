@@ -99,15 +99,15 @@ const FinanceTable = () => {
       <div className="flex items-center justify-center mb-3">
         <MdOutlineNavigateBefore
           onClick={prevMonth}
-          className="text-primaryOrange cursor-pointer"
+          className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
           size={38}
         />
-        <h3 className="text-primaryOrange font-semibold text-2xl">{`${
-          monthNames[localMonth - 1]
-        }`}</h3>
+        <h3 className="text-primaryOrange font-semibold text-2xl">
+          {`${monthNames[localMonth - 1]}`}
+        </h3>
         <MdOutlineNavigateNext
           onClick={nextMonth}
-          className="text-primaryOrange cursor-pointer"
+          className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
           size={38}
         />
       </div>
@@ -193,14 +193,16 @@ const FinanceTable = () => {
                     {currencyFormatter.format(finance.value)}
                   </td>
                   <td className="py-2 px-4 border-b">
-                    <div className="flex justify-around items-center">
+                    <div className="flex items-center justify-center gap-5">
                       <MdEdit
-                        className="text-primaryOrange cursor-pointer"
+                        className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
                         onClick={() => handleEditClick(finance)}
+                        size={20}
                       />
                       <MdDelete
-                        className="text-primaryOrange cursor-pointer"
+                        className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
                         onClick={() => handleDeleteClick(finance)}
+                        size={20}
                       />
                     </div>
                   </td>
