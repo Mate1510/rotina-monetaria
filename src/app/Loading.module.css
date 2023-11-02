@@ -24,6 +24,7 @@
 .text {
   color: #fff;
   margin-top: 10px;
+  font-size: 1.5rem;
 }
 
 @keyframes spin {
