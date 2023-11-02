@@ -150,7 +150,7 @@ const UserLogin = () => {
                     className="text-white font-bold animate-spin"
                   />
                 )}
-                Entrar
+                {isLoading ? 'Entrando' : 'Entrar'}
               </Button>
             </form>
 

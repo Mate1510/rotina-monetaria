@@ -10,7 +10,8 @@ import Button from '@/components/components/Button'
 import axios from 'axios'
 import useFetchCategories from '@/data/useFetchCategories'
 import { toast } from 'react-toastify'
-import { FinanceContext } from '@/contexts/FinanceContext';
+import { FinanceContext } from '@/contexts/FinanceContext'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 interface FinanceData {
   name: string
@@ -30,7 +31,7 @@ const Finances = () => {
   })
   const [errors, setErrors] = useState<Partial<FinanceData>>({})
   const [loading, setLoading] = useState(false)
-  const { addFinance } = useContext(FinanceContext);
+  const { addFinance } = useContext(FinanceContext)
 
   const { data: session } = useSession()
   const { data: categories } = useFetchCategories()
@@ -77,7 +78,7 @@ const Finances = () => {
       })
 
       if (response.status === 200) {
-        addFinance(response.data);
+        addFinance(response.data)
         toast.success('Finança adicionada com sucesso!')
       } else {
         toast.error(response.data.error || response.data.message)
@@ -164,10 +165,16 @@ const Finances = () => {
           </div>
         </div>
         <Button
-          className="w-11/12 self-center mt-3"
+          className="w-11/12 self-center mt-3 flex gap-3 items-center justify-center"
           onClick={handleSubmit}
           disabled={loading}
         >
+          {loading && (
+            <AiOutlineLoading3Quarters
+              size={20}
+              className="text-white font-bold animate-spin"
+            />
+          )}
           {loading ? 'Carregando...' : 'Adicionar'}
         </Button>
       </div>
