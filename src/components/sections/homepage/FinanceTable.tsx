@@ -7,6 +7,7 @@ import CardSection from './CardSection'
 import { FinanceContext } from '@/contexts/FinanceContext'
 import styles from '@/app/LittleSpinner.module.css'
 import { toast } from 'react-toastify'
+import Link from 'next/link'
 
 const FinanceTable = () => {
   const [localMonth, setLocalMonth] = useState(new Date().getMonth() + 1)
@@ -72,15 +73,15 @@ const FinanceTable = () => {
       <div className="flex items-center justify-center mb-3">
         <MdOutlineNavigateBefore
           onClick={prevMonth}
-          className="text-primaryOrange cursor-pointer"
+          className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
           size={38}
         />
-        <h3 className="text-primaryOrange font-semibold text-2xl">{`${
-          monthNames[localMonth - 1]
-        }`}</h3>
+        <Link href={'/finances'} className="text-primaryOrange font-semibold text-2xl transform transition-transform duration-300 hover:scale-x-110 hover:mx-0.5">
+          {`${monthNames[localMonth - 1]}`}
+        </Link>
         <MdOutlineNavigateNext
           onClick={nextMonth}
-          className="text-primaryOrange cursor-pointer"
+          className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
           size={38}
         />
       </div>

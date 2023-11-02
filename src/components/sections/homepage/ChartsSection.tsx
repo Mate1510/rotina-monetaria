@@ -12,7 +12,7 @@ const ChartsSection = () => {
       <div className="w-4/5 flex flex-col gap-10 mx-auto">
         <Link
           href="/charts"
-          className="flex self-center text-white font-semibold text-2xl md:text-4xl hover:underline"
+          className="flex self-center text-white font-semibold text-2xl md:text-4xl transform transition-transform duration-300 hover:scale-110"
         >
           Estatísticas
         </Link>

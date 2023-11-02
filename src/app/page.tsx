@@ -20,7 +20,7 @@ export default function Home() {
   }
 
   return (
-    <main className="container flex min-h-screen flex-col items-center py-10 gap-y-12">
+    <main className="container flex min-h-screen flex-col items-center py-3 gap-y-12">
       <div className="w-4/5 flex flex-col items-center gap-12">
         <h1 className="text-primaryOrange font-semibold text-4xl self-start">
           Bem vindo(a), {session?.user?.name}
