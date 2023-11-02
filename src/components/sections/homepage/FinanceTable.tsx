@@ -62,7 +62,7 @@ const FinanceTable = () => {
   }, [error, localMonth, setMonth])
 
   return (
-    <div data-testid="finance-table-homepage" className="min-w-full">
+    <div data-testid="finance-table-homepage" className="min-w-full w-full">
       <CardSection
         month={localMonth}
         year={localYear}
@@ -85,7 +85,7 @@ const FinanceTable = () => {
         />
       </div>
 
-      <div className="min-w-full rounded-2xl bg-primaryOrange p-0.5">
+      <div className="min-w-full overflow-x-auto rounded-2xl bg-primaryOrange p-0.5 no-scrollbar">
         <table className="min-w-full bg-white overflow-hidden rounded-2xl">
           <thead className="bg-primaryOrange rounded-t-lg">
             <tr>
