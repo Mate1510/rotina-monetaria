@@ -12,8 +12,9 @@ import useFetchCategories from '@/data/useFetchCategories'
 import { toast } from 'react-toastify'
 import { FinanceContext } from '@/contexts/FinanceContext'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { TransactionType } from '@/enum'
 
-interface FinanceData {
+interface FinanceDataInputs {
   name: string
   value: string
   categoryId: string
@@ -21,27 +22,26 @@ interface FinanceData {
   type: string
 }
 
-const Finances = () => {
-  const [financeData, setFinanceData] = useState<FinanceData>({
+const InsertFinances = () => {
+  const [financeData, setFinanceData] = useState<FinanceDataInputs>({
     name: '',
     value: '',
     categoryId: '',
     date: null,
     type: '',
   })
-  const [errors, setErrors] = useState<Partial<FinanceData>>({})
-  const [loading, setLoading] = useState(false)
-  const { addFinance } = useContext(FinanceContext)
+  const [errors, setErrors] = useState<Partial<FinanceDataInputs>>({})
+  const { createFinance, loading } = useContext(FinanceContext)
 
   const { data: session } = useSession()
   const { data: categories } = useFetchCategories()
 
-  const handleChange = (field: keyof FinanceData, value: any) => {
+  const handleChange = (field: keyof FinanceDataInputs, value: any) => {
     setFinanceData(prev => ({ ...prev, [field]: value }))
   }
 
   const validateInputs = (): boolean => {
-    const newErrors: Partial<FinanceData> = {}
+    const newErrors: Partial<FinanceDataInputs> = {}
 
     if (!financeData.name.trim())
       newErrors.name = 'É necessário inserir um nome para a finança.'
@@ -60,34 +60,21 @@ const Finances = () => {
     if (!session) return
     if (!validateInputs()) return
 
-    setLoading(true)
+    createFinance({
+      name: financeData.name,
+      value: parseFloat(financeData.value),
+      categoryId: financeData.categoryId,
+      date: financeData.date instanceof Date ? financeData.date : new Date(),
+      type: financeData.type as TransactionType,
+    })
 
-    try {
-      const userId = session?.user?.userId
-      const response = await axios.post(`/api/finances/`, {
-        ...financeData,
-        userId: userId,
-      })
-
-      setFinanceData({
-        name: '',
-        value: '',
-        categoryId: '',
-        date: null,
-        type: '',
-      })
-
-      if (response.status === 200) {
-        addFinance(response.data)
-        toast.success('Finança adicionada com sucesso!')
-      } else {
-        toast.error(response.data.error || response.data.message)
-      }
-    } catch (error) {
-      toast.error('Erro ao adicionar finança!')
-    }
-
-    setLoading(false)
+    setFinanceData({
+      name: '',
+      value: '',
+      categoryId: '',
+      date: null,
+      type: '',
+    })
   }
 
   return (
@@ -182,4 +169,4 @@ const Finances = () => {
   )
 }
 
-export default Finances
+export default InsertFinances
