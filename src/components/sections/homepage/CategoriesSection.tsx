@@ -33,7 +33,7 @@ const CategoriesSection = () => {
               style={{
                 backgroundColor: Color[category.color as keyof typeof Color],
               }}
-              className="w-6 h-6 rounded-full group-hover:w-8 group-hover:h-8"
+              className="w-6 h-6 rounded-full transform transition-transform duration-300 group-hover:scale-125"
             ></div>
             <p className="text-lg group-hover:text-xl font-medium">
               {category.name}
