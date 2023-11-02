@@ -31,7 +31,7 @@ const InsertFinances = () => {
     type: '',
   })
   const [errors, setErrors] = useState<Partial<FinanceDataInputs>>({})
-  const { createFinance, loading } = useContext(FinanceContext)
+  const { createFinance, loading, error } = useContext(FinanceContext)
 
   const { data: session } = useSession()
   const { data: categories } = useFetchCategories()
@@ -76,6 +76,12 @@ const InsertFinances = () => {
       type: '',
     })
   }
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+    }
+  }, [error])
 
   return (
     <div

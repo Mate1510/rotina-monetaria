@@ -9,15 +9,15 @@ import { toast } from 'react-toastify'
 interface FinanceContextData {
   finances: Finance[]
   addFinance: (finance: Finance) => void
+  createFinance: (newFinance: Partial<FinanceInput>) => void
+  editFinance: (updatedFinance: Finance) => void
+  deleteFinance: (id: string) => void
   month?: number
   year?: number
   setMonth: (month: number) => void
   setYear: (year: number) => void
   loading: boolean
   error: string
-  editFinance: (updatedFinance: Finance) => void
-  deleteFinance: (id: string) => void
-  createFinance: (newFinance: Partial<FinanceInput>) => void
 }
 
 interface FinanceProviderProps {
@@ -87,6 +87,9 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
   }
 
   const editFinance = async (updatedFinance: Finance) => {
+    setLoading(true)
+    setError('')
+
     try {
       const response = await axios.put(
         `/api/finances/${updatedFinance.id}`,
@@ -99,11 +102,14 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
             finance.id === updatedFinance.id ? updatedFinance : finance,
           ),
         )
+        toast.success('Finança atualizada com sucesso!')
       } else {
-        throw new Error('Falha ao atualizar finança!')
+        setError('Falha ao atualizar finança!')
       }
     } catch (error) {
       setError('Ocorreu um erro! Tente novamente mais tarde.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -114,7 +120,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
       if (response.status === 200) {
         setFinances(finances.filter(finance => finance.id !== id))
       } else {
-        throw new Error('Falha ao deletar finança!')
+        setError('Falha ao deletar finança!')
       }
     } catch (error) {
       setError('Ocorreu um erro! Tente novamente mais tarde.')
