@@ -44,7 +44,7 @@ const Finances = () => {
     const newErrors: Partial<FinanceData> = {}
 
     if (!financeData.name.trim())
-      newErrors.name = 'É necessário inserir um título para a finança.'
+      newErrors.name = 'É necessário inserir um nome para a finança.'
     if (!financeData.value) newErrors.value = 'É necessário inserir um valor.'
     if (!financeData.categoryId)
       newErrors.categoryId = 'É necessário selecionar uma categoria.'

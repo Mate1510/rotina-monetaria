@@ -27,7 +27,7 @@ describe('Finances Component', () => {
       })
 
       expect(screen.getByTestId('insert-finances')).toBeInTheDocument()
-      expect(screen.getByPlaceholderText('Título')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('Nome')).toBeInTheDocument()
       expect(screen.getByPlaceholderText('R$')).toBeInTheDocument()
       expect(screen.getByPlaceholderText('Data')).toBeInTheDocument()
       expect(screen.getByText('Adicionar')).toBeInTheDocument()
@@ -49,7 +49,7 @@ describe('Finances Component', () => {
         expect(screen.getByTestId('insert-finances')).toBeInTheDocument()
       })
 
-      await userEvent.type(screen.getByPlaceholderText('Título'), 'Salary')
+      await userEvent.type(screen.getByPlaceholderText('Nome'), 'Salary')
       await userEvent.type(screen.getByPlaceholderText('R$'), '5000')
       await userEvent.selectOptions(
         screen.getByRole('combobox', { name: /categorias/i }),

@@ -53,7 +53,7 @@ const EditFinanceModal: React.FC<Props> = ({
     >
       <div className="flex flex-col gap-3 w-full">
         <Input
-          placeholder="Título"
+          placeholder="Nome"
           className="w-full"
           value={updatedFinance.name}
           onChange={e =>

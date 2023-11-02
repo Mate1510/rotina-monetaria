@@ -116,7 +116,7 @@ const FinanceTable = () => {
         <table className="min-w-full bg-white overflow-hidden rounded-2xl">
           <thead className="bg-primaryOrange text-left text-white font-medium text-base">
             <tr>
-              <th className="py-2 px-4 border-b font-medium">Título</th>
+              <th className="py-2 px-4 border-b font-medium">Nome</th>
               <th className="py-2 px-4 border-b font-medium">Categoria</th>
               <th className="py-2 px-4 border-b font-medium">Data</th>
               <th className="py-2 px-4 border-b font-medium">Tipo</th>
