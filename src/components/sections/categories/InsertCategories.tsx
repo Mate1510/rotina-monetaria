@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import Input from '@/components/components/Input'
 import { CirclePicker } from 'react-color'
 import Button from '@/components/components/Button'
@@ -8,41 +8,53 @@ import Select from '@/components/components/Select'
 import { Color } from '@/enum'
 import { useSession } from 'next-auth/react'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { CategoriesContext } from '@/contexts/CategoriesContext'
 
 const InsertCategories = () => {
+  const { createCategory, loading, error } = useContext(CategoriesContext)
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [selectedColor, setSelectedColor] = useState(Color.ORANGE)
   const [colorName, setColorName] = useState('ORANGE')
+  const [formErrors, setFormErrors] = useState({ name: '', type: '' })
 
   const { data: session } = useSession()
 
+  const validateInputs = () => {
+    const errors = { name: '', type: '' }
+    let formIsValid = true
+
+    if (!name) {
+      formIsValid = false
+      errors.name = 'Nome é obrigatório.'
+    }
+
+    if (!type) {
+      formIsValid = false
+      errors.type = 'Tipo é obrigatório.'
+    }
+
+    setFormErrors(errors)
+    return formIsValid
+  }
+
   const handleSubmit = async () => {
-    if (!session) {
-      console.error('User not authenticated.')
+    if (!validateInputs()) {
       return
     }
 
-    try {
-      const userId = session?.user?.userId
+    await createCategory({
+      name,
+      color: getColorName(selectedColor),
+      transactionType: type,
+    })
 
-      const response = await axios.post(`/api/categories/`, {
-        name: name,
-        color: colorName,
-        transactionType: type,
-        userId: userId,
-      })
-      const data = response.data
-
-      if (data.error) {
-        console.error(data.error)
-      } else {
-        console.log('Category created:', data)
-      }
-    } catch (error) {
-      console.error('Failed to add category')
-    }
+    setName('')
+    setType('')
+    setColorName(Color.ORANGE)
+    setSelectedColor(Color.ORANGE)
   }
 
   const getColorName = (hexCode: string): string => {
@@ -58,8 +70,17 @@ const InsertCategories = () => {
     setShowColorPicker(false)
   }
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+    }
+  }, [error])
+
   return (
-    <div data-testid="insert-categories" className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm lg:w-3/5">
+    <div
+      data-testid="insert-categories"
+      className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm lg:w-3/5"
+    >
       <h3 className="text-center text-constrastBlack font-semibold text-lg">
         Crie sua própria Categoria:
       </h3>
@@ -69,7 +90,12 @@ const InsertCategories = () => {
           placeholder="Nome da Categoria"
           className="w-full"
           value={name}
-          onChange={e => setName(e.target.value)}
+          onChange={e => {
+            setName(e.target.value)
+            setFormErrors(errors => ({ ...errors, name: '' }))
+          }}
+          error={!!formErrors.name}
+          errorMessage={formErrors.name}
         />
 
         <div className="grid grid-cols-12 gap-3 items-center">
@@ -77,6 +103,7 @@ const InsertCategories = () => {
             <Button
               className="bg-white text-textGray w-full flex items-center gap-3 hover:bg-textGray hover:text-white"
               onClick={() => setShowColorPicker(!showColorPicker)}
+              disabled={loading}
             >
               <span
                 className="w-8 h-8 rounded-full ml-3 border border-textGray"
@@ -103,7 +130,12 @@ const InsertCategories = () => {
               placeholder="Tipo Transação"
               className="w-full"
               value={type}
-              onChange={e => setType(e.target.value)}
+              onChange={e => {
+                setType(e.target.value)
+                setFormErrors(errors => ({ ...errors, type: '' }))
+              }}
+              error={!!formErrors.type}
+              errorMessage={formErrors.type}
             >
               <option value="INCOME">Receita</option>
               <option value="EXPENSE">Despesa</option>
@@ -111,10 +143,15 @@ const InsertCategories = () => {
           </div>
         </div>
 
-        <Button className="w-full self-center mt-3" onClick={handleSubmit}>
-          Adicionar
+        <Button
+          className="w-full self-center mt-3"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? 'Carregando...' : 'Adicionar'}
         </Button>
       </div>
+      {error && <p className="text-center text-red-500">{error}</p>}
     </div>
   )
 }

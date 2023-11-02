@@ -35,6 +35,11 @@ export async function POST(req: Request) {
 
   const categoryData: CategoryInput = await req.json()
 
+  const { name, color, transactionType, userId } = categoryData
+  if (!name || !color || !transactionType || !userId) {
+    return NextResponse.json({ error: 'Todos os campos são obrigatórios.', status: 400 })
+  }
+
   try {
     const category: Category = await prisma.category.create({
       data: categoryData,
