@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, ReactNode, useState, useEffect } from 'react'
 import axios from 'axios'
 import { Finance } from '@/finance'
@@ -12,6 +14,8 @@ interface FinanceContextData {
   setYear: (year: number) => void
   loading: boolean
   error: string
+  editFinance: (updatedFinance: Finance) => void
+  deleteFinance: (id: string) => void
 }
 
 interface FinanceProviderProps {
@@ -54,6 +58,41 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     setFinances([...finances, finance])
   }
 
+  const editFinance = async (updatedFinance: Finance) => {
+    try {
+      const response = await axios.put(
+        `/api/finances/${updatedFinance.id}`,
+        updatedFinance,
+      )
+
+      if (response.status === 200) {
+        setFinances(
+          finances.map(finance =>
+            finance.id === updatedFinance.id ? updatedFinance : finance,
+          ),
+        )
+      } else {
+        throw new Error('Falha ao atualizar finança!')
+      }
+    } catch (error) {
+      setError('Ocorreu um erro! Tente novamente mais tarde.')
+    }
+  }
+
+  const deleteFinance = async (id: string) => {
+    try {
+      const response = await axios.delete(`/api/finances/${id}`)
+
+      if (response.status === 200) {
+        setFinances(finances.filter(finance => finance.id !== id))
+      } else {
+        throw new Error('Falha ao deletar finança!')
+      }
+    } catch (error) {
+      setError('Ocorreu um erro! Tente novamente mais tarde.')
+    }
+  }
+
   return (
     <FinanceContext.Provider
       value={{
@@ -65,6 +104,8 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
         setYear,
         loading,
         error,
+        editFinance,
+        deleteFinance,
       }}
     >
       {children}

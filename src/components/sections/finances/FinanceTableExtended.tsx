@@ -1,29 +1,35 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { Finance } from '@/finance'
 import { MdOutlineNavigateNext, MdOutlineNavigateBefore } from 'react-icons/md'
-import axios from 'axios'
 import { Category } from '@/categories'
 import { MdTrendingUp, MdTrendingDown, MdDelete, MdEdit } from 'react-icons/md'
 import EditFinanceModal from './EditFinanceModal'
 import DeleteFinanceModal from './DeleteFinanceModal'
-import useFetchFinances from '@/data/useFetchFinances'
 import useFetchCategories from '@/data/useFetchCategories'
+import { FinanceContext } from '@/contexts/FinanceContext'
+import { toast } from 'react-toastify'
+import styles from '@/app/LittleSpinner.module.css'
 
 const FinanceTable = () => {
-  const [finances, setFinances] = useState<Finance[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [financeToEdit, setFinanceToEdit] = useState<Finance | null>(null)
-  const [financeToDelete, setFinanceToDelete] = useState<Finance | null>(null)
-  const [month, setMonth] = useState(new Date().getMonth() + 1)
-  const [year, setYear] = useState(new Date().getFullYear())
+  const [selectedFinance, setSelectedFinance] = useState<Finance | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [localMonth, setLocalMonth] = useState(new Date().getMonth() + 1)
 
-  const { data: dataFinances } = useFetchFinances(month, year)
-  const { data: dataCategories } = useFetchCategories()
-
+  const {
+    finances,
+    setMonth,
+    setYear,
+    loading,
+    error,
+    editFinance,
+    deleteFinance,
+  } = useContext(FinanceContext)
   const { data: session } = useSession()
+  const { data: categories } = useFetchCategories()
 
   const monthNames = [
     'Janeiro',
@@ -40,79 +46,47 @@ const FinanceTable = () => {
     'Dezembro',
   ]
 
+  const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+
   useEffect(() => {
-    if (!session) {
-      console.error('User not authenticated.')
-      return
-    }
+    setMonth(localMonth)
 
-    if (Array.isArray(dataFinances) && Array.isArray(dataCategories)) {
-      setFinances(dataFinances)
-      setCategories(dataCategories)
+    if (error) {
+      toast.error(error)
     }
-  }, [session, month, year, dataFinances, dataCategories])
+  }, [error, localMonth, setMonth])
 
-  const handlePrevMonth = () => {
-    setMonth(prevMonth => (prevMonth === 1 ? 12 : prevMonth - 1))
-    setYear(prevYear => (month === 1 ? prevYear - 1 : prevYear))
+  const prevMonth = () => {
+    setLocalMonth(prev => (prev === 1 ? 12 : prev - 1))
   }
 
-  const handleNextMonth = () => {
-    setMonth(prevMonth => (prevMonth === 12 ? 1 : prevMonth + 1))
-    setYear(prevYear => (month === 12 ? prevYear + 1 : prevYear))
+  const nextMonth = () => {
+    setLocalMonth(prev => (prev === 12 ? 1 : prev + 1))
   }
 
   const handleEditClick = (finance: Finance) => {
-    setFinanceToEdit(finance)
-  }
-
-  const handleSave = async (updatedFinance: Finance) => {
-    try {
-      const response = await axios.put(`/api/finances/${updatedFinance.id}`, {
-        name: updatedFinance.name,
-        value: updatedFinance.value,
-        categoryId: updatedFinance.categoryId,
-        date: updatedFinance.date,
-        type: updatedFinance.type,
-      })
-
-      if (!response) {
-        throw new Error('Failed to update finance data.')
-      }
-
-      const updatedFinances = finances.map(finance =>
-        finance.id === updatedFinance.id ? updatedFinance : finance,
-      )
-      setFinances(updatedFinances)
-    } catch (error) {
-      console.error(error)
-    }
-
-    setFinanceToEdit(null)
+    setSelectedFinance(finance)
+    setIsEditModalOpen(true)
   }
 
   const handleDeleteClick = (finance: Finance) => {
-    setFinanceToDelete(finance)
+    setSelectedFinance(finance)
+    setIsDeleteModalOpen(true)
   }
 
-  const handleConfirmDelete = async () => {
-    if (!financeToDelete) return
-
-    try {
-      const response = await axios.delete(`/api/finances/${financeToDelete.id}`)
-
-      if (!response) {
-        throw new Error('Failed to delete finance entry.')
-      }
-
-      const updatedFinances = finances.filter(
-        finance => finance.id !== financeToDelete.id,
-      )
-      setFinances(updatedFinances)
-    } catch (error) {
-      console.error(error)
+  const handleSave = (updatedFinance: Finance) => {
+    if (updatedFinance) {
+      editFinance(updatedFinance)
+      setIsEditModalOpen(false)
     }
-    setFinanceToDelete(null)
+  }
+
+  const handleConfirmDelete = () => {
+    deleteFinance(selectedFinance!.id)
+    setIsDeleteModalOpen(false)
   }
 
   const getCategoryName = (categoryId: string): string => {
@@ -124,15 +98,15 @@ const FinanceTable = () => {
     <div data-testid="finance-table-extended" className="min-w-full w-full">
       <div className="flex items-center justify-center mb-3">
         <MdOutlineNavigateBefore
-          onClick={handlePrevMonth}
+          onClick={prevMonth}
           className="text-primaryOrange cursor-pointer"
           size={38}
         />
         <h3 className="text-primaryOrange font-semibold text-2xl">{`${
-          monthNames[month - 1]
+          monthNames[localMonth - 1]
         }`}</h3>
         <MdOutlineNavigateNext
-          onClick={handleNextMonth}
+          onClick={nextMonth}
           className="text-primaryOrange cursor-pointer"
           size={38}
         />
@@ -154,78 +128,101 @@ const FinanceTable = () => {
           </thead>
 
           <tbody className="font-medium">
-            {finances.map(finance => (
-              <tr key={finance.id}>
-                <td className="py-2 px-4 border-b">{finance.name}</td>
-                <td className="py-2 px-4 border-b">
-                  {getCategoryName(finance.categoryId)}
-                </td>
-                <td className="py-2 px-4 border-b">
-                  {new Date(finance.date).toLocaleDateString()}
-                </td>
-                {finance.type === 'INCOME' ? (
-                  <td className="py-2 px-4 border-b text-green-500">
-                    <MdTrendingUp size={38} />
-                  </td>
-                ) : (
-                  <td className="py-2 px-4 border-b text-red-500">
-                    <MdTrendingDown size={38} />
-                  </td>
-                )}
-                <td
-                  className={`py-2 px-4 border-b ${
-                    finance.type === 'INCOME'
-                      ? 'text-green-500'
-                      : 'text-red-500'
-                  }`}
-                >
-                  {new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                  }).format(Number(finance.value))}
-                </td>
-                <td className="py-2 px-4 border-b">
-                  <div className="flex justify-around items-center">
-                    <MdEdit
-                      className="text-primaryOrange cursor-pointer"
-                      onClick={() => handleEditClick(finance)}
-                    />
-                    <MdDelete
-                      className="text-primaryOrange cursor-pointer"
-                      onClick={() => handleDeleteClick(finance)}
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
-
-            {finances.length === 0 && (
+            {loading ? (
               <tr>
                 <td
                   colSpan={6}
                   className="text-center text-constrastBlack font-medium text-lg"
                 >
-                  Suas finanças não chegaram aqui ainda... 😔
+                  <div className="flex gap-3 items-center justify-center">
+                    <div className={styles.spinner}></div>
+                    Carregando suas finanças... ⌛
+                  </div>
                 </td>
               </tr>
+            ) : error ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="text-center text-constrastBlack font-medium text-lg"
+                >
+                  <div className="flex gap-3 items-center justify-center">
+                    Tivemos um pequeno erro, recarregue a página 😢
+                  </div>
+                </td>
+              </tr>
+            ) : !finances || finances.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="text-center text-constrastBlack font-medium text-lg"
+                >
+                  Suas finanças não chegaram aqui ainda...
+                </td>
+              </tr>
+            ) : (
+              finances.map(finance => (
+                <tr key={finance.id}>
+                  <td className="py-2 px-4 border-b">
+                    <div className="truncate w-36">{finance.name}</div>
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="truncate w-36">
+                      {getCategoryName(finance.categoryId)}
+                    </div>
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    {new Date(finance.date).toLocaleDateString()}
+                  </td>
+                  {finance.type === 'INCOME' ? (
+                    <td className="py-2 px-4 border-b text-green-500">
+                      <MdTrendingUp size={38} />
+                    </td>
+                  ) : (
+                    <td className="py-2 px-4 border-b text-red-500">
+                      <MdTrendingDown size={38} />
+                    </td>
+                  )}
+                  <td
+                    className={`py-2 px-4 border-b ${
+                      finance.type === 'INCOME'
+                        ? 'text-green-500'
+                        : 'text-red-500'
+                    }`}
+                  >
+                    {currencyFormatter.format(finance.value)}
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="flex justify-around items-center">
+                      <MdEdit
+                        className="text-primaryOrange cursor-pointer"
+                        onClick={() => handleEditClick(finance)}
+                      />
+                      <MdDelete
+                        className="text-primaryOrange cursor-pointer"
+                        onClick={() => handleDeleteClick(finance)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
 
-        {financeToEdit && (
+        {selectedFinance && (
           <EditFinanceModal
-            isOpen={!!financeToEdit}
-            onClose={() => setFinanceToEdit(null)}
-            finance={financeToEdit}
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            finance={selectedFinance}
             onSave={handleSave}
             categories={categories}
           />
         )}
-
-        {financeToDelete && (
+        {selectedFinance && (
           <DeleteFinanceModal
-            isOpen={!!financeToDelete}
-            onClose={() => setFinanceToDelete(null)}
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
             onConfirm={handleConfirmDelete}
           />
         )}
