@@ -1,152 +1,174 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-
+import React, { useContext, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { Category } from '@/categories'
 import Input from '@/components/components/Input'
 import CurrencyInput from '@/components/components/CurrencyInput'
 import Select from '@/components/components/Select'
 import DatePicker from '@/components/components/DatePicker'
 import Button from '@/components/components/Button'
 import axios from 'axios'
+import useFetchCategories from '@/data/useFetchCategories'
+import { toast } from 'react-toastify'
+import { FinanceContext } from '@/contexts/FinanceContext';
+
+interface FinanceData {
+  name: string
+  value: string
+  categoryId: string
+  date: Date | null | string
+  type: string
+}
 
 const Finances = () => {
-  const [name, setName] = useState('')
-  const [value, setValue] = useState('')
-  const [category, setCategory] = useState('')
-  const [date, setDate] = useState<Date | null>(null)
-  const [type, setType] = useState('')
-
-  const [categories, setCategories] = useState<Category[]>([])
+  const [financeData, setFinanceData] = useState<FinanceData>({
+    name: '',
+    value: '',
+    categoryId: '',
+    date: null,
+    type: '',
+  })
+  const [errors, setErrors] = useState<Partial<FinanceData>>({})
+  const [loading, setLoading] = useState(false)
+  const { addFinance } = useContext(FinanceContext);
 
   const { data: session } = useSession()
+  const { data: categories } = useFetchCategories()
+
+  const handleChange = (field: keyof FinanceData, value: any) => {
+    setFinanceData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const validateInputs = (): boolean => {
+    const newErrors: Partial<FinanceData> = {}
+
+    if (!financeData.name.trim())
+      newErrors.name = 'É necessário inserir um título para a finança.'
+    if (!financeData.value) newErrors.value = 'É necessário inserir um valor.'
+    if (!financeData.categoryId)
+      newErrors.categoryId = 'É necessário selecionar uma categoria.'
+    if (!financeData.date) newErrors.date = 'É necessário inserir uma data.'
+    if (!financeData.type)
+      newErrors.type = 'É necessário selecionar um tipo de transação.'
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = async () => {
-    if (!session) {
-      return
-    }
+    if (!session) return
+    if (!validateInputs()) return
+
+    setLoading(true)
 
     try {
       const userId = session?.user?.userId
-
       const response = await axios.post(`/api/finances/`, {
-        name,
-        value,
-        date,
-        type,
+        ...financeData,
         userId: userId,
-        categoryId: category,
       })
-      const data = response.data
 
-      if (data.error) {
-        console.error(data.error)
+      setFinanceData({
+        name: '',
+        value: '',
+        categoryId: '',
+        date: null,
+        type: '',
+      })
+
+      if (response.status === 200) {
+        addFinance(response.data);
+        toast.success('Finança adicionada com sucesso!')
       } else {
-        console.log('Finance created:', data)
+        toast.error(response.data.error || response.data.message)
       }
-      // window.location.reload()
     } catch (error) {
-      console.error('Failed to add finance:', error)
+      toast.error('Erro ao adicionar finança!')
     }
+
+    setLoading(false)
   }
-
-  useEffect(() => {
-    if (!session) {
-      console.error('User not authenticated.')
-      return
-    }
-
-    const fetchCategories = async () => {
-      try {
-        const userId = session?.user?.userId
-
-        const categoriesResponse = await axios.get(
-          `/api/categories?userid=${userId}`,
-        )
-        const categoriesData = categoriesResponse.data
-
-        if (Array.isArray(categoriesData)) {
-          setCategories(categoriesData)
-        }
-      } catch (error) {
-        console.error('Failed to fetch categories:', error)
-      }
-    }
-
-    fetchCategories()
-  }, [session])
 
   return (
     <div
       data-testid="insert-finances"
-      className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm transform transition-transform duration-300 hover:scale-105"
+      className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm"
     >
       <h3 className="text-center text-constrastBlack font-semibold text-2xl">
         Insira suas finanças:
       </h3>
-
       <div className="flex flex-col gap-3">
         <Input
           placeholder="Título"
           className="w-full"
-          value={name}
-          onChange={e => setName(e.target.value)}
+          value={financeData.name}
+          onChange={e => handleChange('name', e.target.value)}
+          error={!!errors.name}
+          errorMessage={errors.name}
         />
-
         <div className="grid grid-cols-5 gap-3 w-full">
           <div className="col-span-2">
             <CurrencyInput
               placeholder="R$"
               className="w-full"
-              value={value}
-              onValueChange={val => setValue(val || '')}
+              value={financeData.value}
+              onValueChange={val => handleChange('value', val || '')}
+              error={!!errors.value}
+              errorMessage={errors.value}
             />
           </div>
-
           <div className="col-span-3">
             <Select
               title="Categorias"
               placeholder="Categorias"
               className="w-full"
-              value={category}
-              onChange={e => setCategory(e.target.value)}
+              value={financeData.categoryId}
+              onChange={e => handleChange('categoryId', e.target.value)}
+              error={!!errors.categoryId}
+              errorMessage={errors.categoryId}
             >
-              {categories.map((category, index) => (
-                <option key={index} value={category.id}>
+              {categories?.map(category => (
+                <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}
             </Select>
           </div>
         </div>
-
         <div className="grid grid-cols-12 gap-3">
           <div className="col-span-7">
             <DatePicker
               className="w-full"
-              selected={date}
-              onChange={setDate}
+              selected={financeData.date ? new Date(financeData.date) : null}
+              onChange={date => handleChange('date', date)}
               placeholderText="Data"
+              error={!!errors.date}
+              errorMessage={
+                errors.date ? 'É necessário inserir a data.' : undefined
+              }
             />
           </div>
-
           <div className="col-span-5">
             <Select
               title="Tipo Transação"
               placeholder="Tipo Transação"
               className="w-full"
-              value={type}
-              onChange={e => setType(e.target.value)}
+              value={financeData.type}
+              onChange={e => handleChange('type', e.target.value)}
+              error={!!errors.type}
+              errorMessage={errors.type}
             >
               <option value="INCOME">Receita</option>
               <option value="EXPENSE">Despesa</option>
             </Select>
           </div>
         </div>
-
-        <Button className="w-full self-center mt-3" onClick={handleSubmit}>
-          Adicionar
+        <Button
+          className="w-11/12 self-center mt-3"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? 'Carregando...' : 'Adicionar'}
         </Button>
       </div>
     </div>

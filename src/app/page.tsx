@@ -6,6 +6,7 @@ import CategoriesSection from '@/components/sections/homepage/CategoriesSection'
 import ChartsSection from '@/components/sections/homepage/ChartsSection'
 import FinanceTable from '@/components/sections/homepage/FinanceTable'
 import GoalsSection from '@/components/sections/homepage/GoalSection'
+import { FinanceProvider } from '@/contexts/FinanceContext'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
@@ -15,7 +16,7 @@ export default function Home() {
 
   if (!session) {
     push('/login')
-    return null;
+    return null
   }
 
   return (
@@ -24,8 +25,10 @@ export default function Home() {
         <h1 className="text-primaryOrange font-semibold text-4xl self-start">
           Bem vindo(a), {session?.user?.name}
         </h1>
-        <Finances />
-        <FinanceTable />
+        <FinanceProvider>
+          <Finances />
+          <FinanceTable />
+        </FinanceProvider>
       </div>
 
       <ChartsSection />
