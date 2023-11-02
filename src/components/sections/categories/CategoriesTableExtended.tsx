@@ -62,7 +62,7 @@ const CategoryTable = () => {
                 Nome da Categoria
               </th>
               <th className="py-2 px-4 border-b font-medium">Tipo</th>
-              <th className="py-2 px-4 border-b font-medium">Ações</th>
+              <th className="py-2 px-4 border-b font-medium text-center">Ações</th>
             </tr>
           </thead>
 
@@ -111,7 +111,7 @@ const CategoryTable = () => {
                       }}
                     ></span>
                   </td>
-                  <td className="py-2 px-4 border-b">{category.name}</td>
+                  <td className="py-2 px-4 border-b"><div className='truncate w-48'>{category.name}</div></td>
                   {category.transactionType === 'INCOME' ? (
                     <td className="py-2 px-4 border-b text-green-500">
                       <MdTrendingUp size={38} />

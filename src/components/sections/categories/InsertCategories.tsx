@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { CategoriesContext } from '@/contexts/CategoriesContext'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const InsertCategories = () => {
   const { createCategory, loading, error } = useContext(CategoriesContext)
@@ -81,7 +82,7 @@ const InsertCategories = () => {
       data-testid="insert-categories"
       className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm lg:w-3/5"
     >
-      <h3 className="text-center text-constrastBlack font-semibold text-lg">
+      <h3 className="text-center text-constrastBlack font-semibold text-2xl">
         Crie sua própria Categoria:
       </h3>
 
@@ -144,10 +145,16 @@ const InsertCategories = () => {
         </div>
 
         <Button
-          className="w-full self-center mt-3"
+          className="w-11/12 self-center mt-3"
           onClick={handleSubmit}
           disabled={loading}
         >
+          {loading && (
+            <AiOutlineLoading3Quarters
+              size={20}
+              className="text-white font-bold animate-spin"
+            />
+          )}
           {loading ? 'Carregando...' : 'Adicionar'}
         </Button>
       </div>
