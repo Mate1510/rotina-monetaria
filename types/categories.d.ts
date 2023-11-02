@@ -6,6 +6,6 @@ type Category = {
   color: Color
   transactionType: TransactionType
   userId: string
-  isHidden: boolean
+  isHidden?: boolean
 }
 type CategoryInput = Omit<Category, 'id'>

@@ -1,10 +1,9 @@
 import { TransactionType } from '@/enum'
-import { Decimal } from 'prisma'
 
 type Finance = {
   id: string
   name: string
-  value: Decimal
+  value: number
   type: TransactionType
   date: Date
   categoryId: string
