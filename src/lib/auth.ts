@@ -40,7 +40,9 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (!user.emailVerified) {
-          throw new Error('Por favor, verifique seu e-mail antes de fazer login!');
+          throw new Error(
+            'Por favor, verifique seu e-mail antes de fazer login!',
+          )
         }
 
         if (user.status == 'INACTIVE') {
@@ -61,7 +63,11 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ trigger, token, user, session }) {
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name
+      }
+
       if (user) {
         const existingUser = await prisma.user.findUnique({
           where: {
@@ -94,6 +100,7 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           userId: token.userId,
           role: token.role,
+          name: token.name,
         },
       }
     },
