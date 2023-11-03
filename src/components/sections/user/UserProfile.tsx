@@ -3,13 +3,13 @@
 import Button from '@/components/components/Button'
 import Input from '@/components/components/Input'
 import axios from 'axios'
-import { getSession, signOut, useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { MdAddCircleOutline, MdOutlineAccountCircle } from 'react-icons/md'
 import DisableUserModal from './DisableUserModal'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 interface User {
   image: string
@@ -19,8 +19,7 @@ interface User {
 }
 
 const UserProfile = () => {
-  const { data: session, status } = useSession()
-  const router = useRouter()
+  const { data: session, status, update } = useSession()
 
   const [data, setData] = useState<User>({
     image: session?.user?.image || '',
@@ -31,8 +30,38 @@ const UserProfile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [userDisable, setUserDisable] = useState<User | null>(null)
   const [isUserOAuth, setIsUserOAuth] = useState<boolean>(false)
+  const [errors, setErrors] = useState({
+    name: '',
+    password: '',
+    passwordConfirmation: '',
+  })
+
+  const validateName = () => {
+    if (!data.name.trim()) {
+      setErrors(prev => ({ ...prev, name: 'O nome não pode estar vazio.' }))
+      return false
+    }
+    return true
+  }
+
+  const validatePasswords = () => {
+    if (!data.password) {
+      setErrors(prev => ({ ...prev, password: 'A senha é obrigatória.' }))
+      return false
+    }
+
+    if (data.password !== data.passwordConfirmation) {
+      setErrors(prev => ({
+        ...prev,
+        passwordConfirmation: 'As senhas não correspondem.',
+      }))
+      return false
+    }
+    return true
+  }
 
   const handleEditName = async () => {
+    if (!validateName()) return
     setIsLoading(true)
 
     try {
@@ -42,9 +71,14 @@ const UserProfile = () => {
         name: data.name,
       })
 
-      signOut()
+      if (response.status === 200) {
+        update({ name: data.name})
+        toast.success('Nome de usuário alterado com sucesso!')
+      } else {
+        toast.error('Erro ao alterar nome de usuário!\nTente novamente mais tarde.')
+      }
     } catch (error) {
-      // Tratativa de Erros
+      toast.error('Erro ao atualizar o nome.')
     } finally {
       setIsLoading(false)
 
@@ -58,6 +92,7 @@ const UserProfile = () => {
   }
 
   const handleEditPassword = async () => {
+    if (!validatePasswords()) return
     setIsLoading(true)
 
     try {
@@ -67,9 +102,13 @@ const UserProfile = () => {
         password: data.password,
       })
 
-      signOut()
+      if (response.status === 200) {
+        toast.success('Senha de usuário alterada com sucesso!')
+      } else {
+        toast.error('Erro ao alterar senha de usuário!\nTente novamente mais tarde.')
+      }
     } catch (error) {
-      // Tratativa de Erros
+      toast.error('Erro ao atualizar a senha.')
     } finally {
       setIsLoading(false)
 
@@ -99,9 +138,14 @@ const UserProfile = () => {
 
       const response = await axios.delete(`/api/user/${userId}`)
 
-      signOut()
+      if (response.status === 200) {
+        toast.success('Usuário inativado com sucesso!\nRedirecionando...')
+        signOut()
+      } else {
+        toast.error('Erro ao inativar usuário!\nTente novamente mais tarde.')
+      }
     } catch (error) {
-      // Tratativa de Erros
+      toast.error('Falha ao desativar usuário!')
     } finally {
       setIsLoading(false)
 
@@ -115,20 +159,12 @@ const UserProfile = () => {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData(prev => {
-      console.log(e.target.name)
-      return { ...prev, [e.target.name]: e.target.value }
-    })
+    const { name, value } = e.target
+    setData(prev => ({ ...prev, [name]: value }))
+    setErrors(prev => ({ ...prev, [name]: '' }))
   }
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      //Tratativa de Erros
-      console.error('User not authenticated.')
-      router.push('/login')
-      return
-    }
-
     if (!session) {
       return
     }
@@ -146,12 +182,12 @@ const UserProfile = () => {
           setIsUserOAuth(true)
         }
       } catch (error) {
-        //Tratativa de Erros
+        toast.error('Falha ao verificar usuário!')
       }
     }
 
     fetchUserOAuth()
-  }, [router, session, status])
+  }, [session, status])
 
   return (
     <div className="flex flex-col gap-y-10 border border-primaryOrange rounded-lg p-10 min-w-max">
@@ -213,6 +249,8 @@ const UserProfile = () => {
             value={data.name}
             onChange={handleChange}
             disabled={isLoading}
+            error={!!errors.name}
+            errorMessage={errors.name}
           />
           <Button
             className="w-2/5 flex gap-3 items-center justify-center"
@@ -243,6 +281,8 @@ const UserProfile = () => {
             disabled={isLoading}
             onChange={handleChange}
             className="w-full"
+            error={!!errors.password}
+            errorMessage={errors.password}
           />
 
           <Input
@@ -253,6 +293,8 @@ const UserProfile = () => {
             disabled={isLoading}
             onChange={handleChange}
             className="w-full"
+            error={!!errors.passwordConfirmation}
+            errorMessage={errors.name}
           />
 
           <Button
