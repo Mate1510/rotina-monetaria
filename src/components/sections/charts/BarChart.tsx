@@ -51,7 +51,6 @@ const BarChart = ({ selectedYear }: { selectedYear?: number }) => {
         ];
 
         if (!session) {
-            console.error("User not authenticated.");
             return;
         }
 

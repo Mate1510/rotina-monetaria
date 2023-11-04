@@ -70,7 +70,6 @@ const RoundedCharts = ({
 
   useEffect(() => {
     if (!session) {
-      console.error('User not authenticated.')
       return
     }
 

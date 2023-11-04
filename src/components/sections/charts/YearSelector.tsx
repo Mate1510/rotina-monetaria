@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Select from '@/components/components/Select'
 import { useSession } from 'next-auth/react'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const YearSelector = ({
   selectedYear,
@@ -35,15 +36,13 @@ const YearSelector = ({
           (_, k) => k + data.minYear,
         )
 
-        console.log(yearsArray)
-
         if (yearsArray.length === 1 && yearsArray[0] === 0) {
           setYears(null)
         } else {
           setYears(yearsArray)
         }
       } catch (error) {
-        console.error('Erro ao buscar os anos:', error)
+        toast.error('Erro ao buscar os anos. Tente novamente mais tarde!')
       }
     }
 
