@@ -14,7 +14,8 @@ import { toast } from 'react-toastify'
 interface User {
   image: string
   name: string
-  password: string
+  currentPassword: string
+  newPassword: string
   passwordConfirmation: string
 }
 
@@ -24,7 +25,8 @@ const UserProfile = () => {
   const [data, setData] = useState<User>({
     image: session?.user?.image || '',
     name: session?.user?.name || '',
-    password: '',
+    currentPassword: '',
+    newPassword: '',
     passwordConfirmation: '',
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -32,7 +34,8 @@ const UserProfile = () => {
   const [isUserOAuth, setIsUserOAuth] = useState<boolean>(false)
   const [errors, setErrors] = useState({
     name: '',
-    password: '',
+    currentPassword: '',
+    newPassword: '',
     passwordConfirmation: '',
   })
 
@@ -44,20 +47,92 @@ const UserProfile = () => {
     return true
   }
 
-  const validatePasswords = () => {
-    if (!data.password) {
-      setErrors(prev => ({ ...prev, password: 'A senha é obrigatória.' }))
+  const validatePasswordChange = async () => {
+    if (!data.currentPassword) {
+      setErrors(prev => ({
+        ...prev,
+        currentPassword: 'A senha atual é obrigatória.',
+      }))
       return false
     }
 
-    if (data.password !== data.passwordConfirmation) {
+    const isCurrentPasswordValid = await checkCurrentPassword(
+      data.currentPassword,
+    )
+
+    if (!isCurrentPasswordValid) {
+      setErrors(prev => ({
+        ...prev,
+        currentPassword: 'A senha atual está incorreta.',
+      }))
+      return false
+    }
+
+    if (!data.newPassword) {
+      setErrors(prev => ({
+        ...prev,
+        newPassword: 'A nova senha é obrigatória.',
+      }))
+      return false
+    }
+
+    if (data.newPassword !== data.passwordConfirmation) {
       setErrors(prev => ({
         ...prev,
         passwordConfirmation: 'As senhas não correspondem.',
       }))
       return false
     }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
+
+    if (!passwordRegex.test(data.newPassword)) {
+      setErrors(prev => ({
+        ...prev,
+        newPassword:
+          'A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
+      }))
+      return false
+    }
+
+    if (!data.passwordConfirmation) {
+      setErrors(prev => ({
+        ...prev,
+        passwordConfirmation: 'A confirmação da nova senha é obrigatória.',
+      }))
+      return false
+    }
+
+    if (data.newPassword !== data.passwordConfirmation) {
+      setErrors(prev => ({
+        ...prev,
+        passwordConfirmation: 'As senhas não correspondem.',
+      }))
+      return false
+    }
+
     return true
+  }
+
+  const checkCurrentPassword = async (currentPassword: string) => {
+    try {
+      const userId = session?.user?.userId
+      const response = await axios.post('/api/verify-current-password', {
+        currentPassword,
+        userId,
+      })
+
+      if (response.data == true) {
+        return true
+      } else {
+        toast.error(response.data.message || response.data.error)
+        return false
+      }
+    } catch (error) {
+      toast.error('Erro ao verificar a senha atual!')
+      return false
+    }
   }
 
   const handleEditName = async () => {
@@ -68,14 +143,16 @@ const UserProfile = () => {
       const userId = session?.user?.userId
 
       const response = await axios.put(`/api/user/${userId}`, {
-        name: data.name,
+        name: data.name.trim(),
       })
 
       if (response.status === 200) {
-        update({ name: data.name})
+        update({ name: data.name.trim() })
         toast.success('Nome de usuário alterado com sucesso!')
       } else {
-        toast.error('Erro ao alterar nome de usuário!\nTente novamente mais tarde.')
+        toast.error(
+          'Erro ao alterar nome de usuário!\nTente novamente mais tarde.',
+        )
       }
     } catch (error) {
       toast.error('Erro ao atualizar o nome.')
@@ -85,27 +162,31 @@ const UserProfile = () => {
       setData({
         image: session?.user?.image ?? '',
         name: session?.user?.name ?? '',
-        password: '',
+        currentPassword: '',
+        newPassword: '',
         passwordConfirmation: '',
       })
     }
   }
 
   const handleEditPassword = async () => {
-    if (!validatePasswords()) return
+    const isPasswordChangeValid = await validatePasswordChange()
+    if (!isPasswordChangeValid) return
     setIsLoading(true)
 
     try {
       const userId = session?.user?.userId
 
       const response = await axios.put(`/api/user/${userId}`, {
-        password: data.password,
+        password: data.newPassword,
       })
 
       if (response.status === 200) {
         toast.success('Senha de usuário alterada com sucesso!')
       } else {
-        toast.error('Erro ao alterar senha de usuário!\nTente novamente mais tarde.')
+        toast.error(
+          'Erro ao alterar senha de usuário!\nTente novamente mais tarde.',
+        )
       }
     } catch (error) {
       toast.error('Erro ao atualizar a senha.')
@@ -115,7 +196,8 @@ const UserProfile = () => {
       setData({
         image: session?.user?.image ?? '',
         name: session?.user?.name ?? '',
-        password: '',
+        currentPassword: '',
+        newPassword: '',
         passwordConfirmation: '',
       })
     }
@@ -152,7 +234,8 @@ const UserProfile = () => {
       setData({
         image: session?.user?.image ?? '',
         name: session?.user?.name ?? '',
-        password: '',
+        currentPassword: '',
+        newPassword: '',
         passwordConfirmation: '',
       })
     }
@@ -190,22 +273,26 @@ const UserProfile = () => {
   }, [session, status])
 
   return (
-    <div className="flex flex-col gap-y-10 border border-primaryOrange rounded-lg p-10 min-w-max">
-      <div className="flex gap-5 items-center">
-        <div className="relative group">
-          {session?.user?.image ? (
-            <Image
-              className="rounded-full border-2 border-primaryOrange"
-              src={session?.user?.image ?? ''}
-              alt={session?.user?.name ?? ''}
-              width={120}
-              height={120}
-            ></Image>
-          ) : (
-            <MdOutlineAccountCircle size={120} className="text-primaryOrange" />
-          )}
+    <div className="border border-primaryOrange rounded-lg">
+      <div className="mx-auto bg-white rounded-lg flex flex-col gap-10 p-5">
+        <div className="flex gap-5 items-center">
+          <div className="relative group">
+            {session?.user?.image ? (
+              <Image
+                className="rounded-full border-2 border-primaryOrange"
+                src={session?.user?.image ?? ''}
+                alt={session?.user?.name ?? ''}
+                width={120}
+                height={120}
+              ></Image>
+            ) : (
+              <MdOutlineAccountCircle
+                size={120}
+                className="text-primaryOrange"
+              />
+            )}
 
-          {/*SE FOR IMPLEMENTAR A TROCA DE IMAGEM
+            {/*SE FOR IMPLEMENTAR A TROCA DE IMAGEM
           <Input
             type="file"
             accept="image/*"
@@ -225,114 +312,129 @@ const UserProfile = () => {
             </span>
           </div>
           */}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h1 className="text-constrastBlack text-2xl font-semibold whitespace-nowrap">
+              {session?.user?.name}
+            </h1>
+            <h1 className="text-constrastBlack text-lg font-medium whitespace-nowrap">
+              {session?.user?.email}
+            </h1>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <h1 className="text-constrastBlack text-2xl font-semibold whitespace-nowrap">
-            {session?.user?.name}
-          </h1>
-          <h1 className="text-constrastBlack text-lg font-medium whitespace-nowrap">
-            {session?.user?.email}
-          </h1>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <h2 className="text-primaryOrange text-lg font-medium">Editar Nome</h2>
-
-        <div className="flex gap-3">
-          <Input
-            placeholder="Novo nome"
-            className="w-full"
-            type="text"
-            name="name"
-            value={data.name}
-            onChange={handleChange}
-            disabled={isLoading}
-            error={!!errors.name}
-            errorMessage={errors.name}
-          />
-          <Button
-            className="w-2/5 flex gap-3 items-center justify-center"
-            onClick={handleEditName}
-          >
-            {isLoading && (
-              <AiOutlineLoading3Quarters
-                size={16}
-                className="text-white font-bold animate-spin"
-              />
-            )}
-            Editar
-          </Button>
-        </div>
-      </div>
-
-      {!isUserOAuth && (
         <div className="flex flex-col gap-3">
           <h2 className="text-primaryOrange text-lg font-medium">
-            Editar Senha
+            Editar Nome
           </h2>
 
-          <Input
-            placeholder="Nova Senha"
-            type="password"
-            name="password"
-            value={data.password}
-            disabled={isLoading}
-            onChange={handleChange}
-            className="w-full"
-            error={!!errors.password}
-            errorMessage={errors.password}
-          />
-
-          <Input
-            placeholder="Confirme a Senha"
-            type="password"
-            name="passwordConfirmation"
-            value={data.passwordConfirmation}
-            disabled={isLoading}
-            onChange={handleChange}
-            className="w-full"
-            error={!!errors.passwordConfirmation}
-            errorMessage={errors.name}
-          />
-
-          <Button
-            className="w-3/5 flex gap-3 self-center justify-center"
-            disabled={isLoading}
-            onClick={handleEditPassword}
-          >
-            {isLoading && (
-              <AiOutlineLoading3Quarters
-                size={16}
-                className="text-white font-bold animate-spin"
-              />
-            )}
-            Editar
-          </Button>
+          <div className="flex gap-3">
+            <Input
+              placeholder="Novo nome"
+              className="w-full"
+              type="text"
+              name="name"
+              value={data.name}
+              onChange={handleChange}
+              disabled={isLoading}
+              error={!!errors.name}
+              errorMessage={errors.name}
+            />
+            <Button
+              className="w-2/5 flex gap-3 items-center justify-center"
+              onClick={handleEditName}
+            >
+              {isLoading && (
+                <AiOutlineLoading3Quarters
+                  size={16}
+                  className="text-white font-bold animate-spin"
+                />
+              )}
+              Editar
+            </Button>
+          </div>
         </div>
-      )}
 
-      <Button
-        className="w-full mt-5 flex gap-3 self-center justify-center"
-        onClick={() => handleDisableClick(data)}
-      >
-        {isLoading && (
-          <AiOutlineLoading3Quarters
-            size={16}
-            className="text-white font-bold animate-spin"
+        {!isUserOAuth && (
+          <div className="flex flex-col gap-3">
+            <h2 className="text-primaryOrange text-lg font-medium">
+              Editar Senha
+            </h2>
+
+            <Input
+              placeholder="Senha Atual"
+              type="password"
+              name="currentPassword"
+              value={data.currentPassword}
+              disabled={isLoading}
+              onChange={handleChange}
+              className="w-full"
+              error={!!errors.currentPassword}
+              errorMessage={errors.currentPassword}
+            />
+
+            <Input
+              placeholder="Nova Senha"
+              type="password"
+              name="newPassword"
+              value={data.newPassword}
+              disabled={isLoading}
+              onChange={handleChange}
+              className="w-full"
+              error={!!errors.newPassword}
+              errorMessage={errors.newPassword}
+            />
+
+            <Input
+              placeholder="Confirme a Nova Senha"
+              type="password"
+              name="passwordConfirmation"
+              value={data.passwordConfirmation}
+              disabled={isLoading}
+              onChange={handleChange}
+              className="w-full"
+              error={!!errors.passwordConfirmation}
+              errorMessage={errors.passwordConfirmation}
+            />
+
+            <Button
+              className="w-3/5 flex gap-3 self-center justify-center"
+              disabled={isLoading}
+              onClick={handleEditPassword}
+            >
+              {isLoading && (
+                <AiOutlineLoading3Quarters
+                  size={16}
+                  className="text-white font-bold animate-spin"
+                />
+              )}
+              Editar
+            </Button>
+          </div>
+        )}
+
+        <Button
+          className="w-full mt-5 flex gap-3 self-center justify-center"
+          onClick={() => handleDisableClick(data)}
+        >
+          {isLoading && (
+            <AiOutlineLoading3Quarters
+              size={16}
+              className="text-white font-bold animate-spin"
+            />
+          )}
+          Desativar Conta
+        </Button>
+
+        {userDisable && (
+          <DisableUserModal
+            isOpen={!!userDisable}
+            onClose={() => setUserDisable(null)}
+            onConfirm={handleConfirmDisable}
           />
         )}
-        Desativar Conta
-      </Button>
-
-      {userDisable && (
-        <DisableUserModal
-          isOpen={!!userDisable}
-          onClose={() => setUserDisable(null)}
-          onConfirm={handleConfirmDisable}
-        />
-      )}
+      </div>
     </div>
   )
 }

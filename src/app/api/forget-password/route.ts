@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  const resetUrl = `http://localhost:3000/reset-password?token=${token}`
+  const resetUrl = `http://localhost:3000/from-email/reset-password?token=${token}`
 
   let mailOptions = {
     from: 'contato@rotinamonetaria.com',

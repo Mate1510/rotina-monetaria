@@ -26,7 +26,7 @@ const DisableUserModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
       }
     >
       <p className="text-lg text-constrastBlack font-medium text-center">
-        Você tem certeza que deseja desativar sua conta? Após realizar este
+        Você tem certeza que deseja desativar sua conta? <br />Após realizar este
         procedimento apenas os administradores do sistema conseguem ativar sua
         conta novamente.
       </p>
