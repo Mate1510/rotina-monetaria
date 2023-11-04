@@ -74,11 +74,11 @@ export function FinanceProvider({ children, selectedYear }: FinanceProviderProps
         userId: session.user.userId,
       })
 
-      if (response.status === 200) {
+      if (response.data.status === 400) {
+        toast.error(response.data.error || response.data.message)
+      } else {
         addFinance(response.data)
         toast.success('Finança adicionada com sucesso!')
-      } else {
-        toast.error(response.data.error || response.data.message)
       }
     } catch (error) {
       toast.error('Erro ao adicionar finança!')

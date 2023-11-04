@@ -66,6 +66,7 @@ export async function POST(req: Request) {
 
   const financeData: FinanceInput = await req.json()
 
+
   if (
     !financeData.name ||
     !financeData.value ||
@@ -80,6 +81,10 @@ export async function POST(req: Request) {
     })
   }
 
+  if (financeData.value) {
+    financeData.value = parseFloat(financeData.value.toString())
+  }
+
   if (financeData.value < 0 || financeData.value > 1000000) {
     return NextResponse.json({
       error: 'O valor deve estar entre R$0 e R$1.000.000,00.',
@@ -90,6 +95,24 @@ export async function POST(req: Request) {
   if (financeData.date) {
     const dateObject = new Date(financeData.date)
     financeData.date = dateObject
+  }
+
+  const category = await prisma.category.findUnique({
+    where: { id: financeData.categoryId },
+  });
+
+  if (!category) {
+    return NextResponse.json({
+      error: 'Categoria não encontrada!',
+      status: 400,
+    })
+  }
+
+  if (financeData.type !== category.transactionType) {
+    return NextResponse.json({
+      error: 'O tipo de transação da finança não corresponde ao tipo de transação da categoria!',
+      status: 400,
+    })
   }
 
   try {
