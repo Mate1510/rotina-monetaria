@@ -39,15 +39,15 @@ const ResendEmail = () => {
       )
 
       if (response.data.status === 403) {
-        toast.error(response.data.message)
+        toast.error(response.data.message + "\nRedirecionando...")
         setTimeout(() => {
           push('/login')
-        }, 5000)
+        }, 2000)
       } else if (response.status === 200) {
-        toast.success(response.data.message)
+        toast.success(response.data.message + "\nRedirecionando...")
         setTimeout(() => {
           push('/login')
-        }, 5000)
+        }, 2000)
       } else {
         toast.warn(response.data.message || 'Erro ao enviar o e-mail.')
       }

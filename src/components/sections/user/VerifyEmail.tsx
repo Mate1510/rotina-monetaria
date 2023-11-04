@@ -28,7 +28,7 @@ const VerifyEmail = () => {
           toast.success('E-mail verificado com sucesso! Redirecionando...')
           setTimeout(() => {
             push('/login')
-          }, 7000)
+          }, 6000)
         } else {
           throw new Error('Erro ao verificar o e-mail.')
         }
@@ -36,7 +36,7 @@ const VerifyEmail = () => {
         toast.error('Erro ao verificar o e-mail. Redirecionando...')
         setTimeout(() => {
           push('/login')
-        }, 5000)
+        }, 2000)
       }
     }
 
