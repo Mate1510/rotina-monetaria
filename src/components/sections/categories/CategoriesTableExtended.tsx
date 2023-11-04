@@ -9,7 +9,7 @@ import EditCategoryModal from './EditCategoryModal'
 import DeleteCategoryModal from './DeleteCategoryModal'
 import { Color } from '@/enum'
 import { CategoriesContext } from '@/contexts/CategoriesContext'
-import styles from '@/app/LittleSpinner.module.css'
+import styles from '@/app/style/LittleSpinner.module.css'
 import { toast } from 'react-toastify'
 
 const CategoryTable = () => {

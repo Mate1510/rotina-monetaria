@@ -1,4 +1,4 @@
-import '../globals.css'
+import '../../globals.css'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import Header from '@/components/sections/Header'
@@ -26,18 +26,18 @@ export default function RootLayout({
         </div>
 
         <ToastContainer
-            position="bottom-left"
-            autoClose={5000}
-            limit={4}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover={false}
-            theme="dark"
-          />
+          position="bottom-left"
+          autoClose={5000}
+          limit={4}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          theme="dark"
+        />
 
         <Footer />
       </body>

@@ -11,7 +11,7 @@ import DeleteFinanceModal from './DeleteFinanceModal'
 import useFetchCategories from '@/data/useFetchCategories'
 import { FinanceContext } from '@/contexts/FinanceContext'
 import { toast } from 'react-toastify'
-import styles from '@/app/LittleSpinner.module.css'
+import styles from '@/app/style/LittleSpinner.module.css'
 
 const FinanceTable = () => {
   const [selectedFinance, setSelectedFinance] = useState<Finance | null>(null)

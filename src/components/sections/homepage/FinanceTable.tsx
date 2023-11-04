@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { MdOutlineNavigateNext, MdOutlineNavigateBefore } from 'react-icons/md'
 import CardSection from './CardSection'
 import { FinanceContext } from '@/contexts/FinanceContext'
-import styles from '@/app/LittleSpinner.module.css'
+import styles from '@/app/style/LittleSpinner.module.css'
 import { toast } from 'react-toastify'
 import Link from 'next/link'
 
