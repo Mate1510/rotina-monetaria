@@ -4,6 +4,7 @@ import Input from '@/components/components/Input'
 import Button from '@/components/components/Button'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 interface UserResetPassword {
   password: string
@@ -16,53 +17,91 @@ const ResetPassword = () => {
     passwordConfirmation: '',
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [errors, setErrors] = useState({
+    password: '',
+    passwordConfirmation: '',
+  })
 
-  const router = useRouter()
+  const { push } = useRouter()
   const searchParams = useSearchParams()
 
   const token = searchParams.get('token')
 
+  const validatePasswords = () => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
+
+    if (!data.password) {
+      setErrors(prev => ({
+        ...prev,
+        password: 'A senha é obrigatória.',
+      }))
+      return false
+    }
+
+    if (!passwordRegex.test(data.password)) {
+      setErrors(prev => ({
+        ...prev,
+        password:
+          'A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
+      }))
+      return false
+    }
+
+    if (!data.passwordConfirmation) {
+      setErrors(prev => ({
+        ...prev,
+        passwordConfirmation: 'A confirmação de senha é obrigatória.',
+      }))
+      return false
+    }
+
+    if (data.password !== data.passwordConfirmation) {
+      setErrors(prev => ({
+        ...prev,
+        passwordConfirmation: 'As senhas não correspondem.',
+      }))
+      return false
+    }
+
+    return true
+  }
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
+    setErrors({ password: '', passwordConfirmation: '' })
+
+    if (!validatePasswords()) return
+
     setIsLoading(true)
 
     try {
-      const { password, passwordConfirmation } = data
-
-      if (password !== passwordConfirmation) {
-        //Tratativa de erro senha não coincide
-        return
-      }
-
       const response = await axios.put('/api/reset-password', {
-        password,
+        password: data.password,
         token,
       })
 
       const responseData = await response.data
 
       if (response.status == 200) {
-        router.push('/login')
+        toast.success('Senha redefinida com sucesso!\nRedirecionando...')
+        setTimeout(() => {
+          push('/login')
+        }, 2000)
       } else {
-        // Tratamento de Erros
-        console.error(responseData)
+        toast.error('Erro ao redefinir senha!')
       }
     } catch (error) {
-      // Tratamento de Erros
-      console.error(error)
+      toast.error('Erro ao redefinir senha!')
     } finally {
-      setData({
-        password: '',
-        passwordConfirmation: '',
-      })
       setIsLoading(false)
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData(prev => {
-      return { ...prev, [e.target.name]: e.target.value }
-    })
+    const { name, value } = e.target
+    setData(prev => ({ ...prev, [name]: value }))
+    setErrors(prev => ({ ...prev, [name]: '' }))
   }
 
   return (
@@ -91,6 +130,8 @@ const ResetPassword = () => {
               disabled={isLoading}
               onChange={handleChange}
               className="w-full"
+              error={!!errors.password}
+              errorMessage={errors.password}
             />
 
             <Input
@@ -101,6 +142,8 @@ const ResetPassword = () => {
               disabled={isLoading}
               onChange={handleChange}
               className="w-full"
+              error={!!errors.passwordConfirmation}
+              errorMessage={errors.passwordConfirmation}
             />
 
             <Button
