@@ -121,7 +121,7 @@ const InsertFinances = () => {
               error={!!errors.categoryId}
               errorMessage={errors.categoryId}
             >
-              {categories?.map(category => (
+              {categories && categories.map(category => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>

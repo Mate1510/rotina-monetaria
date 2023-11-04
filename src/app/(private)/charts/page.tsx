@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import RoundedCharts from '@/components/sections/charts/RoundedCharts'
-import YearSelector from '@/components/sections/charts/YearSelector'
+import YearSelector from '@/components/sections/YearSelector'
 import BarChart from '@/components/sections/charts/BarChart'
 import { TransactionType } from '@/enum'
 import LineChart from '@/components/sections/charts/LineChart'
@@ -11,6 +11,30 @@ const ChartsPage = () => {
   const [selectedYear, setSelectedYear] = useState<number>(
     new Date().getFullYear(),
   )
+  const [hasYears, setHasYears] = useState(true)
+
+  const handleYearsFetched = (years: number[] | null) => {
+    setHasYears(years !== null && years.length > 0)
+  }
+
+  if (!hasYears) {
+    return (
+      <div className="container flex min-h-screen flex-col items-center p-5 lg:max-w-screen-xl mx-auto">
+        <h1 className="text-primaryOrange font-semibold text-4xl mb-16">
+          Você não possui Estatísticas =(
+        </h1>
+        <div className="w-3/4 border border-primaryOrange rounded-lg flex flex-col items-center justify-center p-5">
+          <h2 className="text-primaryOrange text-2xl text-center font-semibold mb-5">
+            Sentimos muito, mas você ainda não possui nenhuma estatística.
+          </h2>
+          <h2 className="text-primaryOrange text-2xl text-center font-semibold">
+            Precisamos que você tenha pelo menos uma finança adicionada em nosso
+            sistema para gerar suas estatísticas.
+          </h2>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container flex min-h-screen flex-col items-center p-5 gap-12 lg:max-w-screen-xl lg:mx-auto">
@@ -18,15 +42,11 @@ const ChartsPage = () => {
         Suas Estatísticas
       </h1>
 
-      <div className="self-start">
-        <h3 className="text-constrastBlack mb-2 font-medium text-lg">
-          Ano da Consulta
-        </h3>
-        <YearSelector
-          selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
-        />
-      </div>
+      <YearSelector
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+        onYearsFetched={handleYearsFetched}
+      />
 
       <div className="flex flex-wrap gap-12">
         <RoundedCharts

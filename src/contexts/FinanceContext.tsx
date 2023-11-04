@@ -22,11 +22,12 @@ interface FinanceContextData {
 
 interface FinanceProviderProps {
   children: ReactNode
+  selectedYear: number
 }
 
 export const FinanceContext = createContext({} as FinanceContextData)
 
-export function FinanceProvider({ children }: FinanceProviderProps) {
+export function FinanceProvider({ children, selectedYear }: FinanceProviderProps) {
   const [finances, setFinances] = useState<Finance[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -42,7 +43,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
         setError('')
         try {
           const userId = session?.user?.userId
-          const params: { [key: string]: any } = { userid: userId, month, year }
+          const params: { [key: string]: any } = { userid: userId, month, year: selectedYear }
 
           const response = await axios.get('/api/finances', { params })
           const data = response.data
@@ -56,7 +57,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     }
 
     fetchData()
-  }, [session, month, year])
+  }, [session, month, selectedYear])
 
   const addFinance = (finance: Finance) => {
     setFinances([...finances, finance])

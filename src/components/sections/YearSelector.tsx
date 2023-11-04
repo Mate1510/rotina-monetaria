@@ -7,9 +7,11 @@ import { toast } from 'react-toastify'
 const YearSelector = ({
   selectedYear,
   setSelectedYear,
+  onYearsFetched,
 }: {
   selectedYear: number
   setSelectedYear: React.Dispatch<React.SetStateAction<number>>
+  onYearsFetched?: (years: number[] | null) => void
 }) => {
   const [years, setYears] = useState<number[] | null>([])
   const { data: session } = useSession()
@@ -38,8 +40,14 @@ const YearSelector = ({
 
         if (yearsArray.length === 1 && yearsArray[0] === 0) {
           setYears(null)
+          if (onYearsFetched) {
+            onYearsFetched(null)
+          }
         } else {
           setYears(yearsArray)
+          if (onYearsFetched) {
+            onYearsFetched(yearsArray)
+          }
         }
       } catch (error) {
         toast.error('Erro ao buscar os anos. Tente novamente mais tarde!')
@@ -47,10 +55,14 @@ const YearSelector = ({
     }
 
     fetchYears()
-  }, [session])
+  }, [onYearsFetched, session])
 
   return (
-    <div className="">
+    <div className="self-start">
+      <h3 className="text-constrastBlack mb-2 font-medium text-lg">
+        Ano da Consulta
+      </h3>
+
       <Select
         placeholder="Selecione o Ano"
         value={selectedYear}
