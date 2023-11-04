@@ -30,6 +30,13 @@ export async function POST(req: NextRequest) {
       })
     }
 
+    if (user.emailVerified !== null) {
+      return NextResponse.json({
+        message: 'Esta conta já foi verificada.',
+        status: 403,
+      })
+    }
+
     await prisma.emailVerificationToken.deleteMany({
       where: { userId: user.id },
     })
