@@ -7,6 +7,7 @@ import { Finance } from '@/finance'
 import { MdDelete } from 'react-icons/md'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-toastify'
+import DeleteContributionModal from './DeleteContributionModal'
 
 type ContributionTableModalProps = {
   isOpen: boolean
@@ -20,6 +21,9 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
   goalId,
 }) => {
   const [finances, setFinances] = useState<Finance[]>([])
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [contributionToDelete, setContributionToDelete] =
+    useState<Finance | null>(null)
 
   const { data: session } = useSession()
 
@@ -50,13 +54,24 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
     }
   }, [goalId, isOpen, session])
 
-  const handleDeleteClick = async (finance: Finance) => {
-    try {
-      await axios.delete(`/api/finances/${finance.id}`)
+  const handleDeleteClick = (finance: Finance) => {
+    setContributionToDelete(finance)
+    setIsDeleteModalOpen(true)
+  }
 
-      setFinances(prevFinances => prevFinances.filter(f => f.id !== finance.id))
-    } catch (error) {
-      toast.error('Erro ao deletar aporte. tente novamente mais tarde!')
+  const handleConfirmDelete = async () => {
+    if (contributionToDelete) {
+      try {
+        await axios.delete(`/api/finances/${contributionToDelete.id}`)
+
+        setFinances(prevFinances =>
+          prevFinances.filter(f => f.id !== contributionToDelete.id),
+        )
+      } catch (error) {
+        toast.error('Erro ao deletar aporte. tente novamente mais tarde!')
+      }
+
+      setIsDeleteModalOpen(false)
     }
   }
 
@@ -126,6 +141,12 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
           </tbody>
         </table>
       </div>
+
+      <DeleteContributionModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </ModalComponent>
   )
 }
