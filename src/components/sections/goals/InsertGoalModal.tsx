@@ -9,6 +9,7 @@ import ModalComponent from '../Modal'
 import { Goal, GoalInput } from '@/goal'
 import CurrencyInput from '@/components/components/CurrencyInput'
 import DatePicker from '@/components/components/DatePicker'
+import { toast } from 'react-toastify'
 
 type Props = {
   isOpen: boolean
@@ -19,21 +20,66 @@ type Props = {
 const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
   const [data, setData] = useState<GoalInput>({
     name: '',
-    color: Color.ORANGE,
+    color: 'ORANGE',
     currentGoalValue: '',
     finalGoalValue: '',
     finalGoalDate: '',
     userId: '',
   })
+  const [errors, setErrors] = useState({
+    name: '',
+    currentGoalValue: '',
+    finalGoalValue: '',
+    finalGoalDate: '',
+  })
+
+  const validateInputs = (): boolean => {
+    let isValid = true
+
+    const newErrors = {
+      name: '',
+      currentGoalValue: '',
+      finalGoalValue: '',
+      finalGoalDate: '',
+    }
+
+    if (!data.name.trim()) {
+      isValid = false
+      newErrors.name = 'Nome da meta é obrigatório.'
+    }
+
+    if (
+      !data.currentGoalValue ||
+      parseFloat(data.currentGoalValue) <= 0 ||
+      parseFloat(data.currentGoalValue) > 1000000
+    ) {
+      isValid = false
+      newErrors.currentGoalValue =
+        'Valor atual da meta é obrigatório, deve ser maior que zero e menor que R$1.000.000,00.'
+    }
+
+    if (!data.finalGoalValue || parseFloat(data.finalGoalValue) <= 0) {
+      isValid = false
+      newErrors.finalGoalValue =
+        'Valor final da meta é obrigatório e deve ser maior que zero.'
+    }
+
+    if (!data.finalGoalDate) {
+      isValid = false
+      newErrors.finalGoalDate = 'Data final da meta é obrigatória.'
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
 
   const [showColorPicker, setShowColorPicker] = useState(false)
 
   const { data: session } = useSession()
 
   const handleSubmit = async () => {
-    if (!session) {
-      return
-    }
+    if (!validateInputs()) return
+    if (!session) return
 
     try {
       const userId = session?.user?.userId
@@ -47,8 +93,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
       const createdGoal = responseGoal.data
 
       if (createdGoal.error) {
-        //Tratamento de Erro
-        console.error(createdGoal.error)
+        toast.error('Erro ao criar a meta!')
         return
       }
 
@@ -57,12 +102,12 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
       )
       const { categoryId } = categoryResponse.data
       if (!categoryId) {
-        //Tratamento de Erros
+        toast.error('Erro ao criar a meta!')
         return
       }
 
       const finance = {
-        name: createdGoal.name + " - Meta",
+        name: createdGoal.name + ' - Meta',
         value: createdGoal.currentGoalValue,
         type: 'EXPENSE',
         userId: userId,
@@ -72,9 +117,12 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
       }
       await axios.post(`/api/finances/`, finance)
 
+      toast.success('Meta criada com sucesso!')
       onGoalAdded(createdGoal)
       onClose()
-    } catch (error) {}
+    } catch (error) {
+      toast.error('Erro ao criar a meta!')
+    }
   }
 
   const getColorName = (hexCode: string): string => {
@@ -115,6 +163,8 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
           name="name"
           value={data.name}
           onChange={handleChange}
+          error={!!errors.name}
+          errorMessage={errors.name}
         />
 
         <div className="grid grid-cols-12 gap-3 items-center">
@@ -130,6 +180,8 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
                   currentGoalValue: value,
                 }))
               }
+              error={!!errors.currentGoalValue}
+              errorMessage={errors.currentGoalValue}
             />
           </div>
 
@@ -145,6 +197,8 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
                   finalGoalValue: value,
                 }))
               }
+              error={!!errors.finalGoalValue}
+              errorMessage={errors.finalGoalValue}
             />
           </div>
         </div>
@@ -161,6 +215,8 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
                 }))
               }
               placeholderText="Data Final"
+              error={!!errors.finalGoalDate}
+              errorMessage={errors.finalGoalDate}
             />
           </div>
 

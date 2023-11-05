@@ -19,7 +19,6 @@ const GoalsSectionExtended = () => {
 
   useEffect(() => {
     if (!session) {
-      //Tratamento de Erro
       return
     }
 
