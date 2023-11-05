@@ -10,6 +10,7 @@ import { AiOutlineConsoleSql } from 'react-icons/ai'
 import ContributionGoalModal from './contributions/ContributionGoalModal'
 import ContributionTableModal from './contributions/ContibutionTableModal'
 import { toast } from 'react-toastify'
+import { useGoals } from '@/contexts/GoalContext'
 
 const GoalCard = ({
   goal,
@@ -30,54 +31,15 @@ const GoalCard = ({
     goalCurrentValue: string
   } | null>(null)
   const progressPercentage = (goal.currentGoalValue / goal.finalGoalValue) * 100
+  const { deleteGoal, editGoal } = useGoals();
 
   const handleEditClick = (goal: Goal) => {
     setGoalToEdit(goal)
   }
 
   const handleSave = async (updatedGoal: Goal) => {
-    if (!updatedGoal) return
-
-    try {
-      const financeResponse = await axios.get(
-        `/api/finances/goal?goalid=${updatedGoal.id}`,
-      )
-      const financeData = financeResponse.data
-
-      const { currentGoalValue, ...rest } = updatedGoal
-      const response = await axios.put(`/api/goals/${updatedGoal.id}`, rest)
-
-      if (!response) {
-        toast.error('Falha ao atualizar a meta. Tente novamente mais tarde!')
-      }
-
-      const updatedFinance = {
-        ...financeData,
-        name: updatedGoal.name + ' - Meta',
-      }
-      const financeUpdateResponse = await axios.put(
-        `/api/finances/${financeData.id}`,
-        updatedFinance,
-      )
-
-      if (!financeUpdateResponse.data || financeUpdateResponse.data.error) {
-        toast.error(
-          'Falha ao atualizar a finança associada a meta. Tente novamente mais tarde!',
-        )
-      }
-
-      if (!financeData || financeData.error) {
-        toast.error('Falha ao coletar dados. Tente novamente mais tarde!')
-      }
-
-      toast.success('Meta atualizada com sucesso!')
-
-      onEdit(updatedGoal)
-    } catch (error) {
-      toast.error('Falha ao atualizar a meta. Tente novamente mais tarde!')
-    }
-
-    setGoalToEdit(null)
+    editGoal(updatedGoal);
+    setGoalToEdit(null);
   }
 
   const handleDeleteClick = (goalId: string) => {
@@ -86,22 +48,8 @@ const GoalCard = ({
 
   const handleConfirmDelete = async () => {
     if (!goalToDelete) return
-
-    try {
-      const response = await axios.delete(`/api/goals/${goal.id}`)
-
-      if (!response) {
-        toast.error('Falha ao deletar a meta. Tente novamente mais tarde!')
-      }
-
-      toast.success('Meta deletada com sucesso!')
-
-      onDelete()
-    } catch (error) {
-      toast.error('Falha ao deletar a meta. Tente novamente mais tarde!')
-    }
-
-    setGoalToDelete(null)
+    deleteGoal(goalToDelete);
+    setGoalToDelete(null);
   }
 
   const handleAddContributionClick = () => {

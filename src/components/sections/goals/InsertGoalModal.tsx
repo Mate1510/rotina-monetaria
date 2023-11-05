@@ -11,6 +11,7 @@ import CurrencyInput from '@/components/components/CurrencyInput'
 import DatePicker from '@/components/components/DatePicker'
 import { toast } from 'react-toastify'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { useGoals } from '@/contexts/GoalContext'
 
 type Props = {
   isOpen: boolean
@@ -33,7 +34,10 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
     finalGoalValue: '',
     finalGoalDate: '',
   })
-  const [loading, setLoading] = useState(false)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+
+  const { data: session } = useSession()
+  const { createGoal, loading } = useGoals();
 
   const validateInputs = (): boolean => {
     let isValid = true
@@ -75,59 +79,24 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
     return isValid
   }
 
-  const [showColorPicker, setShowColorPicker] = useState(false)
-
-  const { data: session } = useSession()
-
   const handleSubmit = async () => {
     if (!validateInputs()) return
     if (!session) return
 
-    setLoading(true)
-
     try {
-      const userId = session?.user?.userId
-
-      const responseGoal = await axios.post(`/api/goals/`, {
+      const newGoalData = {
         ...data,
-        userId: userId,
+        userId: session.user.userId,
         currentGoalValue: parseFloat(data.currentGoalValue || '0'),
         finalGoalValue: parseFloat(data.finalGoalValue || '0'),
-      })
-      const createdGoal = responseGoal.data
+      };
 
-      if (createdGoal.error) {
-        toast.error('Erro ao criar a meta!')
-        return
-      }
-
-      const categoryResponse = await axios.get(
-        `/api/categories/goal-category?userid=${userId}`,
-      )
-      const { categoryId } = categoryResponse.data
-      if (!categoryId) {
-        toast.error('Erro ao criar a meta!')
-        return
-      }
-
-      const finance = {
-        name: createdGoal.name + ' - Meta',
-        value: createdGoal.currentGoalValue,
-        type: 'EXPENSE',
-        userId: userId,
-        date: new Date(),
-        categoryId: categoryId,
-        goalId: createdGoal.id,
-      }
-      await axios.post(`/api/finances/`, finance)
+      createGoal(newGoalData);
 
       toast.success('Meta criada com sucesso!')
-      onGoalAdded(createdGoal)
+      onClose()
     } catch (error) {
       toast.error('Erro ao criar a meta!')
-    } finally {
-      setLoading(false)
-      onClose()
     }
   }
 
