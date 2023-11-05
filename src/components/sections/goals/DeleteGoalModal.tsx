@@ -9,7 +9,7 @@ type Props = {
   onConfirm: () => void
 }
 
-const DeleteCategoryModal: React.FC<Props> = ({
+const DeleteGoalModal: React.FC<Props> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -35,4 +35,4 @@ const DeleteCategoryModal: React.FC<Props> = ({
   )
 }
 
-export default DeleteCategoryModal
+export default DeleteGoalModal
