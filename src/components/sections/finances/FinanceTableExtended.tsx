@@ -91,7 +91,7 @@ const FinanceTable = () => {
 
   const getCategoryName = (categoryId: string): string => {
     const category = categories.find(category => category.id === categoryId)
-    return category ? category.name : 'Unknown'
+    return category ? category.name : 'Meta'
   }
 
   return (
@@ -190,7 +190,7 @@ const FinanceTable = () => {
                         : 'text-red-500'
                     }`}
                   >
-                    {currencyFormatter.format(finance.value)}
+                    {currencyFormatter.format(parseFloat(finance.value.toString()))}
                   </td>
                   <td className="py-2 px-4 border-b">
                     <div className="flex items-center justify-center gap-5">
