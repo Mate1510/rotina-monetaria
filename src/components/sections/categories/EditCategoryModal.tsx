@@ -52,13 +52,10 @@ const EditCategoryModal: React.FC<Props> = ({
 
   const handleSave = () => {
     if (!validateInputs()) return
-
     setLoading(true)
-
     onSave(updatedCategory)
-    onClose()
-
     setLoading(false)
+    onClose()
   }
 
   const getColorName = (hexCode: string): string => {
@@ -80,7 +77,7 @@ const EditCategoryModal: React.FC<Props> = ({
       modalTitle="Editar Categoria"
       actionButton={
         <Button
-          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
+        className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
           onClick={handleSave}
           disabled={loading}
         >

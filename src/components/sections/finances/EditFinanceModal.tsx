@@ -55,13 +55,10 @@ const EditFinanceModal: React.FC<Props> = ({
 
   const handleSave = () => {
     if (!validateInputs()) return
-
     setLoading(true)
-
     onSave(updatedFinance)
-    onClose()
-
     setLoading(false)
+    onClose()
   }
 
   return (
@@ -71,7 +68,7 @@ const EditFinanceModal: React.FC<Props> = ({
       modalTitle="Editar Finança"
       actionButton={
         <Button
-          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
+          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
           onClick={handleSave}
           disabled={loading}
         >
