@@ -20,6 +20,12 @@ interface GoalContextData {
   deleteGoal: (id: string) => void
   loading: boolean
   error: string
+  addContribution: (goalId: string, contributionValue: number) => void
+  deleteContribution: (
+    goalId: string,
+    financeId: string,
+    contributionValue: number,
+  ) => void
 }
 
 interface GoalProviderProps {
@@ -183,6 +189,38 @@ export function GoalProvider({ children }: GoalProviderProps) {
     }
   }
 
+  const addContribution = (goalId: string, contributionValue: number) => {
+    setGoals(
+      goals.map(goal => {
+        if (goal.id === goalId) {
+          return {
+            ...goal,
+            currentGoalValue: parseFloat(goal.currentGoalValue.toString()) + parseFloat(contributionValue.toString()),
+          }
+        }
+        return goal
+      }),
+    )
+  }
+
+  const deleteContribution = (
+    goalId: string,
+    financeId: string,
+    contributionValue: number,
+  ) => {
+    setGoals(
+      goals.map(goal => {
+        if (goal.id === goalId) {
+          return {
+            ...goal,
+            currentGoalValue: goal.currentGoalValue - contributionValue,
+          }
+        }
+        return goal
+      }),
+    )
+  }
+
   return (
     <GoalContext.Provider
       value={{
@@ -193,6 +231,8 @@ export function GoalProvider({ children }: GoalProviderProps) {
         editGoal,
         deleteGoal,
         createGoal,
+        addContribution,
+        deleteContribution,
       }}
     >
       {children}

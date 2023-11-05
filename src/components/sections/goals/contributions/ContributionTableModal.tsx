@@ -26,11 +26,10 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
   const [contributionToDelete, setContributionToDelete] =
     useState<Finance | null>(null)
   const { data: session } = useSession()
+  const { deleteContribution } = useGoals()
 
   useEffect(() => {
-    if (!session) {
-      return
-    }
+    if (!session) return
 
     const userId = session?.user.userId
 
@@ -68,6 +67,11 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
           prevFinances.filter(f => f.id !== contributionToDelete.id),
         )
 
+        deleteContribution(
+          goalId,
+          contributionToDelete.id,
+          parseFloat(contributionToDelete.value.toString()),
+        )
         toast.success('Aporte deletado com sucesso!')
       } catch (error) {
         toast.error('Erro ao deletar aporte. tente novamente mais tarde!')

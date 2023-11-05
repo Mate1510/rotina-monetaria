@@ -6,6 +6,7 @@ import ModalComponent from '../../Modal'
 import CurrencyInput from '@/components/components/CurrencyInput'
 import { toast } from 'react-toastify'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { useGoals } from '@/contexts/GoalContext'
 
 type Props = {
   isOpen: boolean
@@ -28,6 +29,7 @@ const ContributionGoalModal: React.FC<Props> = ({
     contributionValue: '',
   })
   const [loading, setLoading] = useState(false)
+  const { addContribution } = useGoals()
 
   const validateInputs = (): boolean => {
     let isValid = true
@@ -78,16 +80,28 @@ const ContributionGoalModal: React.FC<Props> = ({
         goalId: goalId,
       }
 
-      await axios.post(`/api/finances/`, finance)
+      const response = await axios.post(`/api/finances/`, finance)
 
-      toast.success('Aporte de meta criado com sucesso!')
+      if (response.status === 200) {
+        const updatedGoal = {
+          currentGoalValue:
+            parseFloat(goalCurrentValue) + parseFloat(contributionValue),
+        }
 
-      const updatedGoalValue =
-        parseFloat(goalCurrentValue) + parseFloat(contributionValue)
+        const goalResponse = await axios.put(
+          `/api/goals/${goalId}`,
+          updatedGoal,
+        )
 
-      await axios.put(`/api/goals/${goalId}`, {
-        currentGoalValue: updatedGoalValue,
-      })
+        if (goalResponse.status === 200) {
+          addContribution(goalId, parseFloat(contributionValue))
+          toast.success('Aporte de meta criado com sucesso!')
+        } else {
+          toast.error('Erro ao atualizar a meta!')
+        }
+      } else {
+        toast.error('Erro ao criar aporte!')
+      }
     } catch (error) {
       toast.error('Erro ao criar a meta!')
     } finally {
