@@ -8,6 +8,7 @@ import { MdDelete } from 'react-icons/md'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-toastify'
 import DeleteContributionModal from './DeleteContributionModal'
+import { useGoals } from '@/contexts/GoalContext'
 
 type ContributionTableModalProps = {
   isOpen: boolean
@@ -24,7 +25,6 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [contributionToDelete, setContributionToDelete] =
     useState<Finance | null>(null)
-
   const { data: session } = useSession()
 
   useEffect(() => {
@@ -67,6 +67,8 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
         setFinances(prevFinances =>
           prevFinances.filter(f => f.id !== contributionToDelete.id),
         )
+
+        toast.success('Aporte deletado com sucesso!')
       } catch (error) {
         toast.error('Erro ao deletar aporte. tente novamente mais tarde!')
       }
@@ -119,11 +121,13 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
                 </td>
                 <td className="py-2 px-4 border-b border-primaryOrange text-constrastBlack font-medium text-center">
                   <div className="flex justify-around items-center">
-                    <MdDelete
-                      className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
-                      onClick={() => handleDeleteClick(finance)}
-                      size={20}
-                    />
+                    {!finance.name.endsWith(' - Meta') && (
+                      <MdDelete
+                        className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
+                        onClick={() => handleDeleteClick(finance)}
+                        size={20}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>

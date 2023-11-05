@@ -8,7 +8,7 @@ import DeleteGoalModal from './DeleteGoalModal'
 import EditGoalModal from './EditGoalModal'
 import { AiOutlineConsoleSql } from 'react-icons/ai'
 import ContributionGoalModal from './contributions/ContributionGoalModal'
-import ContributionTableModal from './contributions/ContibutionTableModal'
+import ContributionTableModal from './contributions/ContributionTableModal'
 import { toast } from 'react-toastify'
 import { useGoals } from '@/contexts/GoalContext'
 
