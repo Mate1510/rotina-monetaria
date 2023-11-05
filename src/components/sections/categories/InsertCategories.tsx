@@ -40,9 +40,7 @@ const InsertCategories = () => {
   }
 
   const handleSubmit = async () => {
-    if (!validateInputs()) {
-      return
-    }
+    if (!validateInputs()) return
 
     await createCategory({
       name,

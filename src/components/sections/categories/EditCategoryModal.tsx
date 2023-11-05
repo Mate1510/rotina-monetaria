@@ -24,12 +24,32 @@ const EditCategoryModal: React.FC<Props> = ({
 }) => {
   const [updatedCategory, setUpdatedCategory] = useState<Category>(category)
   const [showColorPicker, setShowColorPicker] = useState(false)
+  const [formErrors, setFormErrors] = useState({ name: '', type: '' })
+
+  const validateInputs = () => {
+    const errors = { name: '', type: '' }
+    let formIsValid = true
+
+    if (!updatedCategory.name) {
+      formIsValid = false
+      errors.name = 'Nome é obrigatório.'
+    }
+
+    if (!updatedCategory.transactionType) {
+      formIsValid = false
+      errors.type = 'Tipo é obrigatório.'
+    }
+
+    setFormErrors(errors)
+    return formIsValid
+  }
 
   useEffect(() => {
     setUpdatedCategory(category)
   }, [category])
 
   const handleSave = () => {
+    if (!validateInputs()) return
     onSave(updatedCategory)
     onClose()
   }
