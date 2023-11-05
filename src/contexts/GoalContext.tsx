@@ -127,6 +127,19 @@ export function GoalProvider({ children }: GoalProviderProps) {
           goals.map(goal => (goal.id === updatedGoal.id ? updatedGoal : goal)),
         )
         toast.success('Meta atualizada com sucesso!')
+
+        const updateContributionsResponse = await axios.put(
+          `/api/goals/contributions/${updatedGoal.id}`,
+          {
+            goalName: updatedGoal.name,
+          },
+        )
+
+        if (updateContributionsResponse.status !== 200) {
+          toast.error(
+            'Não foi possível excluírmos os aportes dessa meta. Exclua manualmente.',
+          )
+        }
       } else {
         setError('Falha ao atualizar meta!')
       }
@@ -149,16 +162,22 @@ export function GoalProvider({ children }: GoalProviderProps) {
 
   const deleteGoal = async (id: string) => {
     try {
-      const response = await axios.delete(`/api/goals/${id}`)
+      const deleteGoalResponse = await axios.delete(`/api/goals/${id}`)
 
-      if (response.status === 200) {
+      if (deleteGoalResponse.status === 200) {
         setGoals(goals.filter(goal => goal.id !== id))
         toast.success('Meta excluída com sucesso!')
+
+        const deleteContributionsResponse = await axios.delete(
+          `/api/goals/contributions/${id}`,
+        )
+
+        if (deleteContributionsResponse.status !== 200) {
+          toast.error('Falha ao excluir aportes! Exclua manualmente.')
+        }
       } else {
         setError('Falha ao deletar meta!')
       }
-
-      await axios.delete(`/api/finances/goal?goalid=${id}`);
     } catch (error) {
       setError('Ocorreu um erro! Tente novamente mais tarde.')
     }

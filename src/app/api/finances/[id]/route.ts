@@ -44,6 +44,37 @@ export async function DELETE(
       return NextResponse.json({ error: 'ID inválido.', status: 400 })
     }
 
+    const finance = await prisma.financeTransaction.findUnique({
+      where: { id: financeId },
+    })
+
+    if (!finance) {
+      return NextResponse.json({
+        error: 'Finança não encontrada.',
+        status: 404,
+      });
+    }
+
+    if (finance.goalId !== null) {
+      const goal = await prisma.goal.findUnique({
+        where: { id: finance.goalId },
+      });
+
+      if (!goal) {
+        return NextResponse.json({
+          error: 'Meta associada ao aporte não encontrada.',
+          status: 404,
+        });
+      }
+
+      const updatedGoalValue = parseFloat(goal.currentGoalValue.toString()) - parseFloat(finance.value.toString());
+
+      await prisma.goal.update({
+        where: { id: finance.goalId },
+        data: { currentGoalValue: updatedGoalValue },
+      });
+    }
+
     await prisma.financeTransaction.delete({
       where: { id: financeId },
     })
