@@ -21,8 +21,6 @@ const InsertCategories = () => {
   const [colorName, setColorName] = useState('ORANGE')
   const [formErrors, setFormErrors] = useState({ name: '', type: '' })
 
-  const { data: session } = useSession()
-
   const validateInputs = () => {
     const errors = { name: '', type: '' }
     let formIsValid = true
