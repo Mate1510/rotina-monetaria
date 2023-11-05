@@ -14,7 +14,7 @@ import { FinanceContext } from '@/contexts/FinanceContext'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { TransactionType } from '@/enum'
 
-interface FinanceDataInputs {
+export interface FinanceDataInputs {
   name: string
   value: string
   categoryId: string

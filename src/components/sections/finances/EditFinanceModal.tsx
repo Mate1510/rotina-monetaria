@@ -10,6 +10,7 @@ import Button from '@/components/components/Button'
 import { Category } from '@/categories'
 import { TransactionType } from '@/enum'
 import ModalComponent from '@/components/sections/Modal'
+import { FinanceDataInputs } from './InsertFinances'
 
 type Props = {
   isOpen: boolean
@@ -27,12 +28,31 @@ const EditFinanceModal: React.FC<Props> = ({
   categories,
 }) => {
   const [updatedFinance, setUpdatedFinance] = useState<Finance>(finance)
+  const [errors, setErrors] = useState<Partial<FinanceDataInputs>>({})
+
+  const validateInputs = (): boolean => {
+    const newErrors: Partial<FinanceDataInputs> = {}
+
+    if (!updatedFinance.name.trim())
+      newErrors.name = 'É necessário inserir um nome para a finança.'
+    if (!updatedFinance.value)
+      newErrors.value = 'É necessário inserir um valor.'
+    if (!updatedFinance.categoryId)
+      newErrors.categoryId = 'É necessário selecionar uma categoria.'
+    if (!updatedFinance.date) newErrors.date = 'É necessário inserir uma data.'
+    if (!updatedFinance.type)
+      newErrors.type = 'É necessário selecionar um tipo de transação.'
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   useEffect(() => {
     setUpdatedFinance(finance)
   }, [finance])
 
   const handleSave = () => {
+    if (!validateInputs()) return
     onSave(updatedFinance)
     onClose()
   }
@@ -62,6 +82,8 @@ const EditFinanceModal: React.FC<Props> = ({
               name: e.target.value,
             })
           }
+          error={!!errors.name}
+          errorMessage={errors.name}
         />
 
         <div className="grid grid-cols-5 gap-3 w-full">
@@ -76,6 +98,8 @@ const EditFinanceModal: React.FC<Props> = ({
                   value: parseFloat(val || '0'),
                 })
               }
+              error={!!errors.value}
+              errorMessage={errors.value}
             />
           </div>
 
@@ -90,6 +114,8 @@ const EditFinanceModal: React.FC<Props> = ({
                   categoryId: e.target.value,
                 })
               }
+              error={!!errors.categoryId}
+              errorMessage={errors.categoryId}
             >
               {categories.map((category, index) => (
                 <option key={index} value={category.id}>
@@ -112,6 +138,10 @@ const EditFinanceModal: React.FC<Props> = ({
                 })
               }
               placeholderText="Data"
+              error={!!errors.date}
+              errorMessage={
+                errors.date ? 'É necessário inserir a data.' : undefined
+              }
             />
           </div>
 
@@ -126,6 +156,8 @@ const EditFinanceModal: React.FC<Props> = ({
                   type: e.target.value as TransactionType,
                 })
               }
+              error={!!errors.type}
+              errorMessage={errors.type}
             >
               <option value="INCOME">Receita</option>
               <option value="EXPENSE">Despesa</option>
