@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { useRouter } from 'next/navigation'
+import { MdOutlineInfo } from 'react-icons/md'
 
 interface User {
   email: string
@@ -191,6 +192,14 @@ const UserLogin = () => {
         >
           Reenviar E-mail de Verificação
         </Link>
+      </div>
+
+      <div className="rounded-lg bg-red-500 flex gap-3 items-center p-3 mt-10">
+        <MdOutlineInfo className="text-white" size={50}></MdOutlineInfo>
+        <p className="text-white text-sm">
+          Desabilitamos a validação de e-mail temporariamente para uma melhor
+          experiência do usuário durantes os testes.
+        </p>
       </div>
     </>
   )
