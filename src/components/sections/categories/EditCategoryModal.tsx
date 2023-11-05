@@ -8,6 +8,7 @@ import Input from '@/components/components/Input'
 import { CirclePicker } from 'react-color'
 import { Color } from '@/enum'
 import Select from '@/components/components/Select'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 type Props = {
   isOpen: boolean
@@ -25,6 +26,7 @@ const EditCategoryModal: React.FC<Props> = ({
   const [updatedCategory, setUpdatedCategory] = useState<Category>(category)
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [formErrors, setFormErrors] = useState({ name: '', type: '' })
+  const [loading, setLoading] = useState(false)
 
   const validateInputs = () => {
     const errors = { name: '', type: '' }
@@ -50,8 +52,13 @@ const EditCategoryModal: React.FC<Props> = ({
 
   const handleSave = () => {
     if (!validateInputs()) return
+
+    setLoading(true)
+
     onSave(updatedCategory)
     onClose()
+
+    setLoading(false)
   }
 
   const getColorName = (hexCode: string): string => {
@@ -75,8 +82,15 @@ const EditCategoryModal: React.FC<Props> = ({
         <Button
           className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
           onClick={handleSave}
+          disabled={loading}
         >
-          Salvar
+          {loading && (
+            <AiOutlineLoading3Quarters
+              size={20}
+              className="text-white font-bold animate-spin"
+            />
+          )}
+          {loading ? 'Carregando...' : 'Salvar'}
         </Button>
       }
     >

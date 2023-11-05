@@ -11,6 +11,7 @@ import { Category } from '@/categories'
 import { TransactionType } from '@/enum'
 import ModalComponent from '@/components/sections/Modal'
 import { FinanceDataInputs } from './InsertFinances'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 type Props = {
   isOpen: boolean
@@ -29,6 +30,7 @@ const EditFinanceModal: React.FC<Props> = ({
 }) => {
   const [updatedFinance, setUpdatedFinance] = useState<Finance>(finance)
   const [errors, setErrors] = useState<Partial<FinanceDataInputs>>({})
+  const [loading, setLoading] = useState(false)
 
   const validateInputs = (): boolean => {
     const newErrors: Partial<FinanceDataInputs> = {}
@@ -53,8 +55,13 @@ const EditFinanceModal: React.FC<Props> = ({
 
   const handleSave = () => {
     if (!validateInputs()) return
+
+    setLoading(true)
+
     onSave(updatedFinance)
     onClose()
+
+    setLoading(false)
   }
 
   return (
@@ -66,8 +73,15 @@ const EditFinanceModal: React.FC<Props> = ({
         <Button
           className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
           onClick={handleSave}
+          disabled={loading}
         >
-          Salvar
+          {loading && (
+            <AiOutlineLoading3Quarters
+              size={20}
+              className="text-white font-bold animate-spin"
+            />
+          )}
+          {loading ? 'Carregando...' : 'Salvar'}
         </Button>
       }
     >
