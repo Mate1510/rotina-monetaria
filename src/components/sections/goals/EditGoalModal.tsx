@@ -134,7 +134,7 @@ const EditGoalModal: React.FC<Props> = ({ isOpen, onClose, goal, onSave }) => {
           <div className="col-span-6">
             <CurrencyInput
               placeholder="Valor Inicial R$"
-              className="w-full"
+              className="w-full disabled:bg-constrastGray disabled:border-constrastBlack"
               value={updatedGoal.currentGoalValue}
               onValueChange={value =>
                 setUpdatedGoal({
