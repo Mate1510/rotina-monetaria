@@ -7,8 +7,9 @@ import { MdAdd, MdDelete, MdEdit } from 'react-icons/md'
 import DeleteGoalModal from './DeleteGoalModal'
 import EditGoalModal from './EditGoalModal'
 import { AiOutlineConsoleSql } from 'react-icons/ai'
-import ContributionGoalModal from './ContributionGoalModal'
-import ContributionTableModal from './ContibutionTableModal'
+import ContributionGoalModal from './contributions/ContributionGoalModal'
+import ContributionTableModal from './contributions/ContibutionTableModal'
+import { toast } from 'react-toastify'
 
 const GoalCard = ({
   goal,
@@ -47,7 +48,7 @@ const GoalCard = ({
       const response = await axios.put(`/api/goals/${updatedGoal.id}`, rest)
 
       if (!response) {
-        throw new Error('Failed to update goal data.')
+        toast.error('Falha ao atualizar a meta. Tente novamente mais tarde!')
       }
 
       const updatedFinance = {
@@ -60,16 +61,20 @@ const GoalCard = ({
       )
 
       if (!financeUpdateResponse.data || financeUpdateResponse.data.error) {
-        throw new Error('Failed to update the associated finance data.')
+        toast.error(
+          'Falha ao atualizar a finança associada a meta. Tente novamente mais tarde!',
+        )
       }
 
       if (!financeData || financeData.error) {
-        throw new Error('Failed to get finance data.')
+        toast.error('Falha ao coletar dados. Tente novamente mais tarde!')
       }
+
+      toast.success('Meta atualizada com sucesso!')
 
       onEdit(updatedGoal)
     } catch (error) {
-      console.error(error)
+      toast.error('Falha ao atualizar a meta. Tente novamente mais tarde!')
     }
 
     setGoalToEdit(null)
@@ -86,12 +91,14 @@ const GoalCard = ({
       const response = await axios.delete(`/api/goals/${goal.id}`)
 
       if (!response) {
-        throw new Error('Failed to delete goal data.')
+        toast.error('Falha ao deletar a meta. Tente novamente mais tarde!')
       }
+
+      toast.success('Meta deletada com sucesso!')
 
       onDelete()
     } catch (error) {
-      console.error(error)
+      toast.error('Falha ao deletar a meta. Tente novamente mais tarde!')
     }
 
     setGoalToDelete(null)
