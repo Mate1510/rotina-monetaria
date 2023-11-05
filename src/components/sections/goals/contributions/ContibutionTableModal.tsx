@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import ModalComponent from '../Modal'
+import ModalComponent from '../../Modal'
 import { Finance } from '@/finance'
 import { MdDelete } from 'react-icons/md'
 import { useSession } from 'next-auth/react'
+import { toast } from 'react-toastify'
 
 type ContributionTableModalProps = {
   isOpen: boolean
@@ -41,7 +42,7 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
             setFinances(goalFinances)
           }
         } catch (error) {
-          console.error("Error fetching goal's finances:", error)
+          toast.error('Erro ao coletar aportes. Tente novamente mais tarde!')
         }
       }
 
@@ -52,10 +53,10 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
   const handleDeleteClick = async (finance: Finance) => {
     try {
       await axios.delete(`/api/finances/${finance.id}`)
-      // Update the finances state to reflect the deletion
+
       setFinances(prevFinances => prevFinances.filter(f => f.id !== finance.id))
     } catch (error) {
-      console.error('Error deleting the finance:', error)
+      toast.error('Erro ao deletar aporte. tente novamente mais tarde!')
     }
   }
 
@@ -75,7 +76,10 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
               <th className="py-2 px-4 border-b text-white font-medium text-lg text-center">
                 Valor
               </th>
-              <th className="py-2 px-4 border-b font-medium text-center">
+              <th className="py-2 px-4 border-b text-white font-medium text-lg text-center">
+                Data
+              </th>
+              <th className="py-2 px-4 border-b text-white font-medium text-center">
                 Excluir
               </th>
             </tr>
@@ -93,14 +97,17 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
                   {new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
-                  }).format(finance.value)}
+                  }).format(parseFloat(finance.value.toString()))}
                 </td>
-
+                <td className="py-2 px-4 border-b border-primaryOrange text-constrastBlack font-medium text-center">
+                  {new Date(finance.date).toLocaleDateString()}
+                </td>
                 <td className="py-2 px-4 border-b border-primaryOrange text-constrastBlack font-medium text-center">
                   <div className="flex justify-around items-center">
                     <MdDelete
-                      className="text-primaryOrange cursor-pointer"
+                      className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
                       onClick={() => handleDeleteClick(finance)}
+                      size={20}
                     />
                   </div>
                 </td>
@@ -109,7 +116,7 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
             {finances.length === 0 && (
               <tr>
                 <td
-                  colSpan={3}
+                  colSpan={4}
                   className="text-center text-constrastBlack font-medium text-lg"
                 >
                   Suas finanças não chegaram aqui ainda...
