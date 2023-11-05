@@ -9,6 +9,7 @@ import { Color } from '@/enum'
 import { Goal } from '@/goal'
 import CurrencyInput from '@/components/components/CurrencyInput'
 import DatePicker from '@/components/components/DatePicker'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 type Props = {
   isOpen: boolean
@@ -20,14 +21,70 @@ type Props = {
 const EditGoalModal: React.FC<Props> = ({ isOpen, onClose, goal, onSave }) => {
   const [updatedGoal, setUpdatedGoal] = useState<Goal>(goal)
   const [showColorPicker, setShowColorPicker] = useState(false)
+  const [errors, setErrors] = useState({
+    name: '',
+    currentGoalValue: '',
+    finalGoalValue: '',
+    finalGoalDate: '',
+  })
+  const [loading, setLoading] = useState(false)
+
+  const validateInputs = (): boolean => {
+    let isValid = true
+
+    const newErrors = {
+      name: '',
+      currentGoalValue: '',
+      finalGoalValue: '',
+      finalGoalDate: '',
+    }
+
+    if (!updatedGoal.name.trim()) {
+      isValid = false
+      newErrors.name = 'Nome da meta é obrigatório.'
+    }
+
+    if (
+      !updatedGoal.currentGoalValue ||
+      parseFloat(updatedGoal.currentGoalValue) <= 0 ||
+      parseFloat(updatedGoal.currentGoalValue) > 1000000
+    ) {
+      isValid = false
+      newErrors.currentGoalValue =
+        'Valor atual da meta é obrigatório, deve ser maior que zero e menor que R$1.000.000,00.'
+    }
+
+    if (
+      !updatedGoal.finalGoalValue ||
+      parseFloat(updatedGoal.finalGoalValue) <= 0
+    ) {
+      isValid = false
+      newErrors.finalGoalValue =
+        'Valor final da meta é obrigatório e deve ser maior que zero.'
+    }
+
+    if (!updatedGoal.finalGoalDate) {
+      isValid = false
+      newErrors.finalGoalDate = 'Data final da meta é obrigatória.'
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
 
   useEffect(() => {
     setUpdatedGoal(goal)
   }, [goal])
 
   const handleSave = () => {
+    if (!validateInputs()) return
+
+    setLoading(true)
+
     onSave(updatedGoal)
     onClose()
+
+    setLoading(false)
   }
 
   const getColorName = (hexCode: string): string => {
@@ -51,8 +108,15 @@ const EditGoalModal: React.FC<Props> = ({ isOpen, onClose, goal, onSave }) => {
         <Button
           className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
           onClick={handleSave}
+          disabled={loading}
         >
-          Salvar
+          {loading && (
+            <AiOutlineLoading3Quarters
+              size={20}
+              className="text-white font-bold animate-spin"
+            />
+          )}
+          {loading ? 'Carregando...' : 'Salvar'}
         </Button>
       }
     >

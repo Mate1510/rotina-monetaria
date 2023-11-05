@@ -10,6 +10,7 @@ import { Goal, GoalInput } from '@/goal'
 import CurrencyInput from '@/components/components/CurrencyInput'
 import DatePicker from '@/components/components/DatePicker'
 import { toast } from 'react-toastify'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 type Props = {
   isOpen: boolean
@@ -32,6 +33,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
     finalGoalValue: '',
     finalGoalDate: '',
   })
+  const [loading, setLoading] = useState(false)
 
   const validateInputs = (): boolean => {
     let isValid = true
@@ -81,6 +83,8 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
     if (!validateInputs()) return
     if (!session) return
 
+    setLoading(true)
+
     try {
       const userId = session?.user?.userId
 
@@ -119,9 +123,11 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
 
       toast.success('Meta criada com sucesso!')
       onGoalAdded(createdGoal)
-      onClose()
     } catch (error) {
       toast.error('Erro ao criar a meta!')
+    } finally {
+      setLoading(false)
+      onClose()
     }
   }
 
@@ -149,10 +155,17 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
       modalTitle="Adicionar Meta"
       actionButton={
         <Button
-          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
+        className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
           onClick={handleSubmit}
+          disabled={loading}
         >
-          Adicionar
+          {loading && (
+            <AiOutlineLoading3Quarters
+              size={20}
+              className="text-white font-bold animate-spin"
+            />
+          )}
+          {loading ? 'Carregando...' : 'Adicionar'}
         </Button>
       }
     >
