@@ -92,8 +92,6 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
       };
 
       createGoal(newGoalData);
-
-      toast.success('Meta criada com sucesso!')
       onClose()
     } catch (error) {
       toast.error('Erro ao criar a meta!')
