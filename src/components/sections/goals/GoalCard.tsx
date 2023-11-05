@@ -183,7 +183,7 @@ const GoalCard = ({
             <div className="h-3 rounded-full bg-gray-200">
               <div
                 style={{
-                  width: `${progressPercentage}%`,
+                  width: `${Math.min((progressPercentage.toFixed(2), 100.00))}%`,
                   backgroundColor: `${
                     Color[goal.color as string as keyof typeof Color]
                   }`,
