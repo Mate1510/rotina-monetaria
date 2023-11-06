@@ -6,7 +6,7 @@ type Goal = {
   name: string
   finalGoalValue: Decimal
   currentGoalValue: Decimal
-  finalGoalDate: Date | string
+  finalGoalDate: Date | null
   color: Color
   userId: string
 }

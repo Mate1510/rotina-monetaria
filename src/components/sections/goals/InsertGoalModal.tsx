@@ -24,7 +24,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
     color: 'ORANGE',
     currentGoalValue: '',
     finalGoalValue: '',
-    finalGoalDate: '',
+    finalGoalDate: null,
     userId: '',
   })
   const [errors, setErrors] = useState({
@@ -186,7 +186,9 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
           <div className="col-span-7">
             <DatePicker
               className="w-full"
-              selected={data.finalGoalDate ? new Date(data.finalGoalDate) : ''}
+              selected={
+                data.finalGoalDate ? new Date(data.finalGoalDate) : null
+              }
               onChange={date =>
                 setData(prevData => ({
                   ...prevData,
