@@ -6,8 +6,6 @@ export async function GET(req: NextRequest) {
   const year = Number(req.nextUrl.searchParams.get('year'))
   const userId = req.nextUrl.searchParams.get('userid')
 
-  console.log(month, year, userId)
-
   if (!userId) {
     return NextResponse.json({
       error: 'Usuário não autenticado ou inexistente.',

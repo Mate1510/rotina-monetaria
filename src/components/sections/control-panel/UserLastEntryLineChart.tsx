@@ -14,6 +14,7 @@ import {
 import axios from 'axios'
 import { Line } from 'react-chartjs-2'
 import { useSession } from 'next-auth/react'
+import { toast } from 'react-toastify'
 
 ChartJS.register(
   CategoryScale,
@@ -50,10 +51,7 @@ const UserLastEntryLineChart = () => {
       'Dezembro',
     ]
 
-    if (!session) {
-      console.error('User not authenticated.')
-      return
-    }
+    if (!session) return
 
     const fetchData = async () => {
       try {
@@ -112,7 +110,7 @@ const UserLastEntryLineChart = () => {
           },
         })
       } catch (error) {
-        console.error(`Erro ao coletar últimos acessos: ${error}`)
+        toast.error(`Erro ao coletar últimos acessos.`)
       }
     }
 

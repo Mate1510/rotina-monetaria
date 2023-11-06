@@ -3,6 +3,7 @@ import Card from '@/components/components/Card'
 import axios from 'axios'
 
 import { MdTrendingUp, MdTrendingDown, MdAttachMoney } from 'react-icons/md'
+import { toast } from 'react-toastify'
 
 const CardSection = ({
   month,
@@ -33,7 +34,7 @@ const CardSection = ({
         setExpenses(totalExpense)
         setBalance(total)
       } catch (error) {
-        console.error('Erro ao buscar resumo financeiro:', error)
+        toast.error('Erro ao buscar resumo financeiro.')
       }
     }
 

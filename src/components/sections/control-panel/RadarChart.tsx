@@ -13,6 +13,7 @@ import {
 import { Radar } from 'react-chartjs-2'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
+import { toast } from 'react-toastify'
 
 ChartJS.register(
   RadialLinearScale,
@@ -32,10 +33,7 @@ export function RadarChart() {
   const { data: session } = useSession()
 
   useEffect(() => {
-    if (!session) {
-      console.error('User not authenticated.')
-      return
-    }
+    if (!session) return
 
     const fetchData = async () => {
       try {
@@ -74,7 +72,7 @@ export function RadarChart() {
           ],
         })
       } catch (error) {
-        console.error('Erro ao coletar informações dos usuários: ', error)
+        toast.error('Erro ao coletar informações dos usuários.')
       }
     }
 
