@@ -24,7 +24,7 @@ const ModalComponent: React.FC<Props> = ({
       ariaHideApp={false}
       isOpen={isOpen}
       onRequestClose={onClose}
-      className="flex flex-col gap-5 p-5 border-primaryOrange border-2 rounded-lg items-center justify-center bg-white mx-auto w-2/5"
+      className="flex flex-col gap-5 p-5 border-primaryOrange border-2 rounded-lg items-center justify-center bg-white mx-auto w-11/12 md:w-10/12 lg:w-2/5"
       style={{
         overlay: {
           display: 'flex',

@@ -17,14 +17,14 @@ const ChartsSection = () => {
           Estatísticas
         </Link>
 
-        <div className="flex flex-col md:flex-row justify-center items-center gap-10">
+        <div className="flex flex-col lg:flex-row justify-center items-center gap-10">
           <div className="w-full md:w-auto text-center">
             <h2 className="text-white font-medium text-lg md:text-xl mb-3">
               {`Mês de ${currentMonth}`}
             </h2>
             <RoundedCharts />
           </div>
-          <div className="w-full md:w-auto flex-grow text-center">
+          <div className="w-full lg:w-auto flex-grow text-center">
             <h2 className="text-white font-medium text-lg md:text-xl mb-3">
               {`Ano de ${currentYear}`}
             </h2>

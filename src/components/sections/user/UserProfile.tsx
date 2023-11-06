@@ -273,26 +273,24 @@ const UserProfile = () => {
   }, [session, status])
 
   return (
-    <div className="border border-primaryOrange rounded-lg">
+    <div className="border border-primaryOrange rounded-lg lg:m-0 lg:p-0 mx-2 p-2">
       <div className="mx-auto bg-white rounded-lg flex flex-col gap-10 p-5">
-        <div className="flex gap-5 items-center">
+        <div className="flex flex-col md:flex-row gap-2 items-center w-full">
           <div className="relative group">
             {session?.user?.image ? (
               <Image
-                className="rounded-full border-2 border-primaryOrange"
+                className="rounded-full border-2 border-primaryOrange w-[100px] h-[100px]"
                 src={session?.user?.image ?? ''}
                 alt={session?.user?.name ?? ''}
-                width={120}
-                height={120}
+                fill
               ></Image>
             ) : (
               <MdOutlineAccountCircle
-                size={120}
-                className="text-primaryOrange"
+                className="text-primaryOrange w-[100px] h-[100px]"
               />
             )}
 
-            {/*SE FOR IMPLEMENTAR A TROCA DE IMAGEM
+          {/*SE FOR IMPLEMENTAR A TROCA DE IMAGEM
           <Input
             type="file"
             accept="image/*"
@@ -314,11 +312,11 @@ const UserProfile = () => {
           */}
           </div>
 
-          <div className="flex flex-col gap-2">
-            <h1 className="text-constrastBlack text-2xl font-semibold whitespace-nowrap">
+          <div className="flex flex-col gap-y-2">
+            <h1 className="text-constrastBlack text-lg lg:text-xl font-semibold">
               {session?.user?.name}
             </h1>
-            <h1 className="text-constrastBlack text-lg font-medium whitespace-nowrap">
+            <h1 className="text-constrastBlack text-sm lg:text-base font-medium truncate w-56 md:w-44 lg:w-48">
               {session?.user?.email}
             </h1>
           </div>

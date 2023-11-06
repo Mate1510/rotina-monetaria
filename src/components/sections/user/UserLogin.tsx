@@ -91,14 +91,14 @@ const UserLogin = () => {
 
   return (
     <>
-      <div className="border border-primaryOrange rounded-lg">
+      <div className="border border-primaryOrange rounded-lg lg:m-0 lg:p-0 mx-6 p-2">
         <div className="mx-auto bg-white rounded-lg p-5 flex flex-col gap-5">
           <div className="flex flex-col gap-1 mb-3 items-center">
-            <h3 className="text-center text-constrastBlack font-semibold text-xl">
+            <h3 className="text-center text-constrastBlack font-semibold text-lg md:text-xl">
               Faça seu Login:
             </h3>
 
-            <p className="text-sm">Faça login com suas credenciais</p>
+            <p className="text-xs md:text-sm text-center">Faça login com suas credenciais</p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-5">
@@ -188,15 +188,15 @@ const UserLogin = () => {
       <div className="flex justify-end">
         <Link
           href={'/send-email/email-verification'}
-          className="text-right mt-3 mr-3 cursor-pointer font-medium text-sm text-blue-500"
+          className="text-right mt-3 mr-7 lg:mr-3 cursor-pointer font-medium text-xs md:text-sm text-blue-500"
         >
           Reenviar E-mail de Verificação
         </Link>
       </div>
 
-      <div className="rounded-lg bg-red-500 flex gap-3 items-center p-3 mt-10">
-        <MdOutlineInfo className="text-white" size={50}></MdOutlineInfo>
-        <p className="text-white text-sm">
+      <div className="rounded-lg bg-red-500 flex gap-3 items-center p-3 mt-10 mx-6 lg:mx-0">
+        <MdOutlineInfo className="text-white w-[50px] h-[50px]"></MdOutlineInfo>
+        <p className="text-white text-xs lg:text:sm">
           Desabilitamos a validação de e-mail temporariamente para uma melhor
           experiência do usuário durantes os testes.
         </p>

@@ -12,7 +12,7 @@ const FinancesPage = () => {
   )
 
   return (
-    <div className="container flex min-h-screen flex-col items-center p-5 gap-12 lg:max-w-screen-xl lg:mx-auto">
+    <div className="container flex flex-col items-center p-5 gap-12 lg:max-w-screen-xl lg:mx-auto">
       <FinanceProvider selectedYear={selectedYear}>
         <YearSelector
           selectedYear={selectedYear}

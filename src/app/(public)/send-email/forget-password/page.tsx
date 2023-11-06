@@ -5,7 +5,7 @@ import React from 'react'
 
 const ForgetPasswordPage = () => {
   return (
-    <div className="w-4/5 mx-auto relative py-48 md:py-0 flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="w-4/5 mx-auto h-[70vh] relative py-10 md:py-0 flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       {/* Coluna da Esquerda */}
       <div className="relative hidden h-full flex-col p-10 text-white lg:flex">
       <div className="flex items-center text-3xl font-semibold mt-10">

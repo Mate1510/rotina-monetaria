@@ -88,7 +88,7 @@ const InsertFinances = () => {
       data-testid="insert-finances"
       className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm"
     >
-      <h3 className="text-center text-constrastBlack font-semibold text-2xl">
+      <h3 className="text-center text-constrastBlack font-semibold text-lg md:text-2xl">
         Insira suas finanças:
       </h3>
       <div className="flex flex-col gap-3">

@@ -77,7 +77,7 @@ const EditCategoryModal: React.FC<Props> = ({
       modalTitle="Editar Categoria"
       actionButton={
         <Button
-        className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
+          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
           onClick={handleSave}
           disabled={loading}
         >
@@ -105,11 +105,11 @@ const EditCategoryModal: React.FC<Props> = ({
           <div className="grid grid-cols-12 gap-3 items-center">
             <div className="col-span-7 flex flex-col gap-3">
               <Button
-                className="bg-white text-textGray w-full flex items-center gap-3 hover:bg-textGray hover:text-white"
+                className="bg-white text-textGray w-full flex items-center gap-3 hover:bg-textGray hover:text-white text-sm md:text-base"
                 onClick={() => setShowColorPicker(!showColorPicker)}
               >
                 <span
-                  className="w-8 h-8 rounded-full ml-3 border border-textGray"
+                  className="hidden md:flex md:w-8 md:h-8 rounded-full ml-3 border border-textGray"
                   style={{
                     backgroundColor:
                       Color[updatedCategory.color as keyof typeof Color],
@@ -119,7 +119,7 @@ const EditCategoryModal: React.FC<Props> = ({
               </Button>
 
               {showColorPicker && (
-                <div className="w-full mx-auto p-3 bg-white border border-primaryOrange rounded-lg">
+                <div className="w-full md:w-3/4 mx-auto md:mx-0 p-3 bg-white border border-primaryOrange rounded-lg">
                   <CirclePicker
                     colors={Object.values(Color)}
                     onChange={handleColorChange}

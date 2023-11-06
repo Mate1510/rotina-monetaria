@@ -19,9 +19,9 @@ export default function Home() {
   }
 
   return (
-    <main className="container flex min-h-screen flex-col items-center py-3 gap-y-12">
-      <div className="w-4/5 flex flex-col items-center gap-12">
-        <h1 className="text-primaryOrange font-semibold text-4xl self-start">
+    <main className="flex min-h-screen flex-col items-center py-3 gap-y-5 md:gap-y-8 lg:gap-y-12">
+      <div className="w-11/12 lg:w-4/5 flex flex-col items-center gap-5 md:gap-8 lg:gap-12">
+        <h1 className="text-primaryOrange font-semibold text-lg md:text-2xl lg:text-4xl self-start">
           Bem vindo(a), {session?.user?.name}
         </h1>
         <FinanceProvider selectedYear={new Date().getFullYear()}>
@@ -32,9 +32,9 @@ export default function Home() {
 
       <ChartsSection />
 
-      <div className="w-4/5 flex flex-col md:flex-row">
+      <div className="w-11/12 lg:w-4/5 flex flex-col lg:flex-row">
         <GoalsSection />
-        <span className="border-2 border-constrastBlack bg-constrastBlack mx-auto my-20"></span>
+        <span className="border-2 border-constrastBlack bg-constrastBlack mx-24 md:mx-32 lg:mx-auto my-10"></span>
         <CategoriesSection />
       </div>
     </main>

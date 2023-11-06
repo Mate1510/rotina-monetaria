@@ -4,7 +4,7 @@ import React from 'react'
 
 const GoalsPage = () => {
   return (
-    <div className="container flex min-h-screen flex-col items-center p-5 gap-12 lg:max-w-screen-xl lg:mx-auto">
+    <div className="container flex min-h-[62vh] flex-col items-center p-5 gap-12 lg:max-w-screen-xl lg:mx-auto">
       <GoalProvider>
         <GoalsSectionExtended />
       </GoalProvider>

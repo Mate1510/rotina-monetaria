@@ -7,7 +7,7 @@ import UserProfile from '@/components/sections/user/UserProfile'
 const UserProfilePage = () => {
   const { data: session } = useSession()
   return (
-    <div className="w-4/5 mx-auto relative py-48 md:py-0 flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="w-4/5 mx-auto relative py-10 md:py-0 flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       {/* Coluna da Esquerda */}
       <div className="p-2 bg-white rounded-3xl my-10 py-14">
         <div className="mx-auto flex w-full flex-col justify-center py-0 sm:w-[350px]">

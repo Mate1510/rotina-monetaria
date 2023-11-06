@@ -130,14 +130,14 @@ const UserRegister = () => {
   }
 
   return (
-    <div className="border border-primaryOrange rounded-lg">
+    <div className="border border-primaryOrange rounded-lg lg:m-0 lg:p-0 mx-6 p-2">
       <div className="mx-auto bg-white rounded-lg p-5 flex flex-col gap-5">
         <div className="flex flex-col gap-1 mb-3 items-center">
-          <h3 className="text-center text-constrastBlack font-semibold text-xl">
+          <h3 className="text-center text-constrastBlack font-semibold text-lg md:text-xl">
             Cadastre-se:
           </h3>
 
-          <p className="text-sm">Faça seu cadastro com as credenciais</p>
+          <p className="text-xs md:text-sm text-center">Faça seu cadastro com as credenciais</p>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-5">

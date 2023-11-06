@@ -15,15 +15,15 @@ const CategoriesSection = () => {
   const categories = categoriesData.slice(0, 8)
 
   return (
-    <div data-testid="categories-homepage" className="bg-white w-full flex flex-col gap-10 mb-5 p-10 px-12">
+    <div data-testid="categories-homepage" className="bg-white w-full flex flex-col gap-10 mb-5 justify-center items-center mt-5 md:mt-0">
       <Link
         href="/categories"
-        className="flex self-center text-constrastBlack font-semibold text-2xl md:text-3xl transform transition-transform duration-300 hover:scale-110"
+        className="self-center text-constrastBlack font-semibold text-2xl md:text-3xl transform transition-transform duration-300 hover:scale-110"
       >
         Suas Categorias
       </Link>
 
-      <div className="columns-2 gap-12">
+      <div className="md:columns-2 gap-3">
         {categories.map(category => (
           <div
             key={category.id}

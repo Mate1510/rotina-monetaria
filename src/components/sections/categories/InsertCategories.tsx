@@ -78,7 +78,7 @@ const InsertCategories = () => {
       data-testid="insert-categories"
       className="container flex flex-col bg-constrastGray p-8 rounded-xl gap-5 shadow-sm lg:w-3/5"
     >
-      <h3 className="text-center text-constrastBlack font-semibold text-2xl">
+      <h3 className="text-center text-constrastBlack font-semibold text-lg md:text-2xl">
         Crie sua própria Categoria:
       </h3>
 
@@ -98,19 +98,19 @@ const InsertCategories = () => {
         <div className="grid grid-cols-12 gap-3 items-center">
           <div className="col-span-7 flex flex-col gap-3">
             <Button
-              className="bg-white text-textGray w-full flex items-center gap-3 hover:bg-textGray hover:text-white"
+              className="bg-white text-textGray w-full flex items-center gap-3 hover:bg-textGray hover:text-white text-sm md:text-base"
               onClick={() => setShowColorPicker(!showColorPicker)}
               disabled={loading}
             >
               <span
-                className="w-8 h-8 rounded-full ml-3 border border-textGray"
+                className="hidden md:flex md:w-8 md:h-8 rounded-full ml-3 border border-textGray"
                 style={{ backgroundColor: selectedColor }}
               ></span>
               Selecione sua Cor
             </Button>
 
             {showColorPicker && (
-              <div className="w-full mx-auto p-3 bg-white border border-primaryOrange rounded-lg">
+              <div className="w-full md:w-1/2 mx-auto md:mx-0 p-3 bg-white border border-primaryOrange rounded-lg">
                 <CirclePicker
                   colors={Object.values(Color)}
                   onChange={handleColorChange}
@@ -141,7 +141,7 @@ const InsertCategories = () => {
         </div>
 
         <Button
-          className="w-11/12 self-center mt-3"
+          className="w-11/12 self-center mt-3 flex gap-3 items-center justify-center"
           onClick={handleSubmit}
           disabled={loading}
         >

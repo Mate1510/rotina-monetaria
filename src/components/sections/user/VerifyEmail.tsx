@@ -44,14 +44,14 @@ const VerifyEmail = () => {
   }, [localToken, push])
 
   return (
-    <div className="border border-primaryOrange rounded-lg p-">
+    <div className="border border-primaryOrange rounded-lg lg:m-0 lg:p-0 mx-6 p-2">
       <div className="mx-auto bg-white rounded-lg p-5 flex flex-col gap-5">
         <div className="flex flex-col gap-1 mb-3 items-center">
-          <h3 className="text-center text-constrastBlack font-semibold text-xl">
+        <h3 className="text-center text-constrastBlack font-semibold text-sm md:text-lg lg:text-xl">
             Verificando seu E-mail
           </h3>
 
-          <p className="text-sm text-center">
+          <p className="text-xs text-center md:text-sm">
             Por favor, aguarde enquanto confirmamos seu cadastro.
           </p>
         </div>

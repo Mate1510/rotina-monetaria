@@ -19,15 +19,15 @@ const ChartsPage = () => {
 
   if (!hasYears) {
     return (
-      <div className="container flex min-h-screen flex-col items-center p-5 lg:max-w-screen-xl mx-auto">
-        <h1 className="text-primaryOrange font-semibold text-4xl mb-16">
+      <div className="w-11/12 md:4/5 flex min-h-[62vh] flex-col items-center justify-center lg:max-w-screen-xl mx-auto">
+        <h1 className="text-primaryOrange font-semibold text-2xl md:text-4xl mb-16 text-center">
           Você não possui Estatísticas =(
         </h1>
         <div className="w-3/4 border border-primaryOrange rounded-lg flex flex-col items-center justify-center p-5">
-          <h2 className="text-primaryOrange text-2xl text-center font-semibold mb-5">
+          <h2 className="text-primaryOrange text-lg md:text-2xl text-center font-semibold mb-5">
             Sentimos muito, mas você ainda não possui nenhuma estatística.
           </h2>
-          <h2 className="text-primaryOrange text-2xl text-center font-semibold">
+          <h2 className="text-primaryOrange text-lg md:text-2xl text-center font-semibold">
             Precisamos que você tenha pelo menos uma finança adicionada em nosso
             sistema para gerar suas estatísticas.
           </h2>
@@ -37,7 +37,7 @@ const ChartsPage = () => {
   }
 
   return (
-    <div className="container flex min-h-screen flex-col items-center p-5 gap-12 lg:max-w-screen-xl lg:mx-auto">
+    <div className="container flex flex-col items-center p-5 gap-12 lg:max-w-screen-xl lg:mx-auto">
       <h1 className="text-primaryOrange font-semibold text-4xl">
         Suas Estatísticas
       </h1>

@@ -29,7 +29,7 @@ export default function RootLayout({
           <AdminRoute>{children}</AdminRoute>
         </div>
       ) : (
-        <div className="container min-h-screen flex-grow lg:max-w-screen-2xl lg:mx-auto my-10">
+        <div className="container flex-grow lg:max-w-screen-2xl lg:mx-auto my-10">
           <PrivateRoute>{children}</PrivateRoute>
         </div>
       )}

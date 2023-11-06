@@ -42,10 +42,10 @@ const CardSection = ({
   }, [month, userid, year])
 
   return (
-    <div className='flex flex-col gap-10 mt-10 mb-16 px-16 md:flex-row'>
-      <Card title="Receitas" value={`R$${incomes}`} Icon={MdTrendingUp} className='flex-grow'/>
-      <Card title="Despesas" value={`R$${expenses}`} Icon={MdTrendingDown} className='flex-grow'/>
-      <Card title="Total" value={`R$${balance}`} Icon={MdAttachMoney} className='flex-grow'/>
+    <div className='flex flex-col md:flex-row flex-wrap gap-10 mt-10 mb-16 px-0 md:px-16'>
+      <Card title="Receitas" value={`R$${incomes}`} Icon={MdTrendingUp} className='lg:flex-grow'/>
+      <Card title="Despesas" value={`R$${expenses}`} Icon={MdTrendingDown} className='lg:flex-grow'/>
+      <Card title="Total" value={`R$${balance}`} Icon={MdAttachMoney} className='lg:flex-grow'/>
     </div>
   )
 }

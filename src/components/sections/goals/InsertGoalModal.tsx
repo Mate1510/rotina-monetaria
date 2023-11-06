@@ -212,11 +212,11 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
 
           <div className="col-span-5 flex flex-col gap-3">
             <Button
-              className="bg-white text-textGray w-full flex items-center gap-3 hover:bg-textGray hover:text-white"
+              className="bg-white text-textGray w-full flex items-center gap-3 hover:bg-textGray hover:text-white text-sm md:text-base"
               onClick={() => setShowColorPicker(!showColorPicker)}
             >
               <span
-                className="w-8 h-8 rounded-full ml-3 border border-textGray"
+                className="hidden md:flex md:w-8 md:h-8 rounded-full ml-3 border border-textGray"
                 style={{
                   backgroundColor: Color[data.color as keyof typeof Color],
                 }}
@@ -225,7 +225,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
             </Button>
 
             {showColorPicker && (
-              <div className="w-full mx-auto p-3 bg-white border border-primaryOrange rounded-lg">
+              <div className="w-full md:w-4/5 lg:w-full mx-auto md:mx-0 p-3 bg-white border border-primaryOrange rounded-lg">
                 <CirclePicker
                   colors={Object.values(Color)}
                   onChange={handleColorChange}
