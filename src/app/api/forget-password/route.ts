@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
   const resetUrl = `https://rotina-monetaria.vercel.app/from-email/reset-password?token=${token}`
 
   let mailOptions = {
-    from: 'contato@rotinamonetaria.com',
+    from: 'mateusabreucn@gmail.com',
     to: email,
     subject: 'Redefinição de Senha - Rotina Monetária',
     html: resetPasswordTemplate(resetUrl),

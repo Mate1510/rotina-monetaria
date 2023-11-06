@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     const verificationUrl = `https://rotina-monetaria.vercel.app/from-email/verify-email?token=${token}`
 
     let mailOptions = {
-      from: 'contato@rotinamonetaria.com',
+      from: 'mateusabreucn@gmail.com',
       to: email,
       subject: 'Verificação de E-mail - Rotina Monetária',
       html: emailValidationTemplate(verificationUrl),
