@@ -51,16 +51,30 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    var transporter = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
+    //ESTE CÓDIGO É PARA ENVIAR E-MAILS A PARTIR DO GMAIL
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
       auth: {
-        user: '0becb22f485095',
-        pass: 'a2ee48411287ba',
+        type: 'OAuth2',
+        user: process.env.MAIL_USERNAME,
+        pass: process.env.MAIL_PASSWORD,
+        clientId: process.env.OAUTH_CLIENTID,
+        clientSecret: process.env.OAUTH_CLIENT_SECRET,
+        refreshToken: process.env.OAUTH_REFRESH_TOKEN,
       },
-    })
+    } as nodemailer.TransportOptions)
 
-    const verificationUrl = `http://localhost:3000/from-email/verify-email?token=${token}`
+    //ESTE CÓDIGO É PARA ENVIAR E-MAILS DE TESTE PARA MAILTRAP
+    // var transporter = nodemailer.createTransport({
+    //   host: 'sandbox.smtp.mailtrap.io',
+    //   port: 2525,
+    //   auth: {
+    //     user: '0becb22f485095',
+    //     pass: 'a2ee48411287ba',
+    //   },
+    // })
+
+    const verificationUrl = `https://rotina-monetaria.vercel.app/from-email/verify-email?token=${token}`
 
     let mailOptions = {
       from: 'contato@rotinamonetaria.com',
