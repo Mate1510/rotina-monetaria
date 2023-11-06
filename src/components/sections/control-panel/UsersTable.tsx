@@ -17,18 +17,22 @@ import {
 } from 'react-icons/md'
 import Image from 'next/image'
 import EditUserModal from './EditUserModal'
+import { toast } from 'react-toastify'
+import styles from '@/app/style/LittleSpinner.module.css'
 
 const UsersTable = () => {
   const [users, setUsers] = useState<any[]>([])
   const [userToEdit, setUserToEdit] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const { data: session } = useSession()
 
   useEffect(() => {
     if (!session) {
-      console.error('User not authenticated.')
+      setError('User not authenticated.')
       return
     }
 
@@ -38,6 +42,8 @@ const UsersTable = () => {
     if (!isAdmin) {
       return
     }
+
+    setLoading(true)
 
     const fetchUsers = async () => {
       const params = { isadmin: isAdmin, page: currentPage }
@@ -49,7 +55,7 @@ const UsersTable = () => {
           setUsers(response.data)
         }
       } catch (error) {
-        console.error('Error fetching users:', error)
+        toast.error('Erro ao coletar usuários.')
       }
     }
 
@@ -65,12 +71,16 @@ const UsersTable = () => {
         const totalPages = Math.ceil(response.data.totalUsers / pageSize)
         setTotalPages(totalPages)
       } catch (error) {
-        console.error('Error fetching users:', error)
+        setError(
+          'Erro ao coletar usuários. Atualize a Página e tente novamente.',
+        )
+        toast.error('Erro ao coletar usuários.')
       }
     }
 
     fetchUsers()
     fetchTotalPages()
+    setLoading(false)
   }, [session, currentPage])
 
   const handleSwitch = async (
@@ -81,6 +91,7 @@ const UsersTable = () => {
     userId: string,
     type: string,
   ) => {
+    setLoading(true)
     const currentUser = users.find(user => user.id === userId)
     const currentValue = currentUser[type]
 
@@ -103,15 +114,20 @@ const UsersTable = () => {
       })
 
       if (response.status !== 200) {
-        console.error('Error updating:', response.data.error)
+        toast.error('Erro ao atualizar:', response.data.error)
         setUsers(prevUsers =>
           prevUsers.map(user =>
             user.id === userId ? { ...user, [type]: currentValue } : user,
           ),
         )
       }
+
+      toast.success('Usuário atualizado!')
     } catch (error) {
-      console.error('Error updating:', error)
+      setError('Erro ao coletar usuários. Atualize a Página e tente novamente.')
+      toast.error('Erro ao coletar usuários.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -128,7 +144,7 @@ const UsersTable = () => {
       })
 
       if (!response) {
-        throw new Error('Falha ao atualizar os dados do usuário.')
+        toast.error('Falha ao atualizar os dados do usuário.')
       }
 
       const updatedUsers = users.map(user =>
@@ -136,7 +152,10 @@ const UsersTable = () => {
       )
       setUsers(updatedUsers)
     } catch (error) {
-      console.error(error)
+      setError(
+        'Erro ao atualizar usuários. Atualize a Página e tente novamente.',
+      )
+      toast.error('Erro ao atualizar usuários.')
     }
   }
 
@@ -169,100 +188,119 @@ const UsersTable = () => {
           </thead>
 
           <tbody className="font-medium">
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td className="py-2 px-4 border-b">
-                  {user.image ? (
-                    <Image
-                      src={user.image}
-                      alt={user.name}
-                      width={42}
-                      height={42}
-                      className="rounded-full"
-                    ></Image>
-                  ) : (
-                    <MdOutlineAccountCircle
-                      size={42}
-                      className="text-primaryOrange cursor-pointer"
-                    />
-                  )}
-                </td>
-                <td className="py-2 px-4 border-b">
-                  <div className="truncate w-36">{user.name}</div>
-                </td>
-                <td className="py-2 px-4 border-b">
-                  <div className="truncate w-36">{user.email}</div>
-                </td>
-                <td className="py-2 px-4 border-b">
-                  {new Date(user.createdAt).toLocaleDateString()}
-                </td>
-                <td className="py-2 px-4 border-b">
-                  {new Date(user.updatedAt).toLocaleDateString()}
-                </td>
-                <td className="py-2 px-4 border-b">
-                  {new Date(user.lastEntry).toLocaleDateString()}
-                </td>
-                <td className="py-2 px-4 border-b">
-                  <div className="flex items-center justify-end">
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={user.status === 'ACTIVE'}
-                        onChange={e => handleSwitch(e, user.id, 'status')}
-                        className="sr-only peer"
-                      />
-
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orangeDarker rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaryOrange"></div>
-
-                      <span className="ml-3 text-xs font-medium text-gray-900">
-                        {user.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td className="py-2 px-4 border-b">
-                  <div className="flex items-center justify-end">
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={user.role === 'ADMIN'}
-                        onChange={e => handleSwitch(e, user.id, 'role')}
-                        className="sr-only peer"
-                      />
-
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orangeDarker rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaryOrange"></div>
-
-                      <span className="ml-3 text-xs font-medium text-gray-900">
-                        {user.role === 'ADMIN' ? 'Admin' : 'User'}
-                      </span>
-                    </label>
-                  </div>
-                </td>
-                <td className="py-2 px-4 border-b">
-                  <div className="flex justify-around items-center">
-                    <MdEdit
-                      className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
-                      onClick={() => handleEditClick(user)}
-                      size={20}
-                    />
-                    {/* <MdDelete
-                                            className="text-primaryOrange cursor-pointer"
-                                            // onClick={}
-                                        /> */}
-                  </div>
-                </td>
-              </tr>
-            ))}
-
-            {users.length === 0 && (
+            {loading ? (
               <tr>
                 <td
                   colSpan={9}
                   className="text-center text-constrastBlack font-medium text-lg"
                 >
-                  Não existem usuários cadastrados ainda...
+                  <div className="flex gap-3 items-center justify-center">
+                    <div className={styles.spinner}></div>
+                    Carregando os usuários... ⌛
+                  </div>
                 </td>
               </tr>
+            ) : error ? (
+              <tr>
+                <td
+                  colSpan={9}
+                  className="text-center text-constrastBlack font-medium text-lg"
+                >
+                  <div className="flex gap-3 items-center justify-center">
+                    Tivemos um pequeno erro, recarregue a página 😢
+                  </div>
+                </td>
+              </tr>
+            ) : !users || users.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={9}
+                  className="text-center text-constrastBlack font-medium text-lg"
+                >
+                  Os usuários não chegaram aqui ainda...
+                </td>
+              </tr>
+            ) : (
+              users.map((user, index) => (
+                <tr key={index}>
+                  <td className="py-2 px-4 border-b">
+                    {user.image ? (
+                      <Image
+                        src={user.image}
+                        alt={user.name}
+                        width={42}
+                        height={42}
+                        className="rounded-full"
+                      ></Image>
+                    ) : (
+                      <MdOutlineAccountCircle
+                        size={42}
+                        className="text-primaryOrange cursor-pointer"
+                      />
+                    )}
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="truncate w-36">{user.name}</div>
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="truncate w-36">{user.email}</div>
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    {new Date(user.updatedAt).toLocaleDateString()}
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    {new Date(user.lastEntry).toLocaleDateString()}
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="flex items-center justify-end">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={user.status === 'ACTIVE'}
+                          onChange={e => handleSwitch(e, user.id, 'status')}
+                          className="sr-only peer"
+                        />
+
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orangeDarker rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaryOrange"></div>
+
+                        <span className="ml-3 text-xs font-medium text-gray-900">
+                          {user.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                        </span>
+                      </label>
+                    </div>
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="flex items-center justify-end">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={user.role === 'ADMIN'}
+                          onChange={e => handleSwitch(e, user.id, 'role')}
+                          className="sr-only peer"
+                        />
+
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orangeDarker rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primaryOrange"></div>
+
+                        <span className="ml-3 text-xs font-medium text-gray-900">
+                          {user.role === 'ADMIN' ? 'Admin' : 'User'}
+                        </span>
+                      </label>
+                    </div>
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="flex justify-around items-center">
+                      <MdEdit
+                        className="text-primaryOrange cursor-pointer transform transition-transform duration-300 hover:scale-125"
+                        onClick={() => handleEditClick(user)}
+                        size={20}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>

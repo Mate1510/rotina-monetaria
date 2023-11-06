@@ -5,6 +5,8 @@ import Input from '@/components/components/Input'
 import Button from '@/components/components/Button'
 import ModalComponent from '@/components/sections/Modal'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 interface User {
   id: string
@@ -25,6 +27,38 @@ const EditUserModal: React.FC<Props> = ({ isOpen, onClose, user, onSave }) => {
   const [updatedUser, setUpdatedUser] = useState<User>(user)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isGoogleOAuth, setIsGoogleOAuth] = useState<boolean>(false)
+  const [errors, setErrors] = useState({
+    name: '',
+    newPassword: '',
+  })
+
+  const validateName = () => {
+    if (!updatedUser.name.trim()) {
+      setErrors(prev => ({ ...prev, name: 'O nome não pode estar vazio.' }))
+      return false
+    }
+    return true
+  }
+
+  const validatePassword = () => {
+    if (!updatedUser.password) {
+      setErrors(prev => ({
+        ...prev,
+        newPassword: 'A nova senha é obrigatória.',
+      }))
+      return false
+    }
+
+    if (updatedUser.passwordConfirmation && updatedUser.password !== updatedUser.passwordConfirmation) {
+      setErrors(prev => ({
+        ...prev,
+        newPassword: 'As senhas não correspondem.',
+      }))
+      return false
+    }
+
+    return true
+  }
 
   useEffect(() => {
     setUpdatedUser(user)
@@ -36,7 +70,6 @@ const EditUserModal: React.FC<Props> = ({ isOpen, onClose, user, onSave }) => {
         )
         setIsGoogleOAuth(response.data.userOAuth)
       } catch (error) {
-        console.error(error)
         setIsGoogleOAuth(false)
       }
     }
@@ -44,14 +77,21 @@ const EditUserModal: React.FC<Props> = ({ isOpen, onClose, user, onSave }) => {
   }, [user])
 
   const handleSave = async () => {
+    if (!validateName()) return
+    if (!validatePassword()) return
+
     setIsLoading(true)
     try {
-      if (updatedUser.password !== updatedUser.passwordConfirmation) {
-        return
-      }
+      const isPasswordUpdated = updatedUser.password !== user.password;
 
-      await onSave(updatedUser)
+      if (isPasswordUpdated || updatedUser.name !== user.name) {
+        await onSave(updatedUser);
+      } else {
+        toast.success("As informações do usuário foram atualizadas.");
+      }
+      onClose();
     } catch (error) {
+      toast.error("Falha ao atualizar usuário.")
     } finally {
       setIsLoading(false)
     }
@@ -64,11 +104,17 @@ const EditUserModal: React.FC<Props> = ({ isOpen, onClose, user, onSave }) => {
       modalTitle="Editar Usuário"
       actionButton={
         <Button
-          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg"
+        className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
           onClick={handleSave}
           disabled={isLoading}
         >
-          Salvar
+          {isLoading && (
+            <AiOutlineLoading3Quarters
+              size={20}
+              className="text-white font-bold animate-spin"
+            />
+          )}
+          {isLoading ? 'Carregando...' : 'Salvar'}
         </Button>
       }
     >
@@ -85,6 +131,8 @@ const EditUserModal: React.FC<Props> = ({ isOpen, onClose, user, onSave }) => {
                   name: e.target.value,
                 })
               }
+              error={!!errors.name}
+              errorMessage={errors.name}
             />
           </div>
 
@@ -99,14 +147,11 @@ const EditUserModal: React.FC<Props> = ({ isOpen, onClose, user, onSave }) => {
                   email: e.target.value,
                 })
               }
-              disabled={isGoogleOAuth}
+              disabled={true}
             />
-            {isGoogleOAuth && (
-              <p className="text-xs font-medium text-red-500 w-full mt-1">
-                Não é possível alterar o e-mail do usuário logado com
-                GoogleOAuth
-              </p>
-            )}
+            <p className="text-xs font-medium text-red-500 w-full mt-1">
+              Não é possível alterar o e-mail.
+            </p>
           </div>
         </div>
 
@@ -124,6 +169,8 @@ const EditUserModal: React.FC<Props> = ({ isOpen, onClose, user, onSave }) => {
                     password: e.target.value,
                   })
                 }
+                error={!!errors.newPassword}
+                errorMessage={errors.newPassword}
               />
             </div>
 

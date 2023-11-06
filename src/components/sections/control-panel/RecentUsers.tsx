@@ -55,7 +55,7 @@ const RecentUsers = () => {
   return (
     <div className="bg-white p-5 rounded-lg shadow-md w-full flex flex-col items-center justify-center gap-5">
       <h2 className="text-xl font-semibold text-primaryOrange">
-        Usuários Recentes
+        Usuários Criados Recentemente
       </h2>
       <div className="flex flex-wrap justify-center gap-5">
         {recentUsers?.map(user => (
