@@ -15,7 +15,7 @@ const Footer = () => {
 
       <div className="flex flex-col gap-3 text-white font-semibold text-lg self-center ml-4">
         <Link
-          href="https://www.google.com/"
+          href="https://forms.gle/hgE6jB3uQZfKXjNn8"
           target="blank"
           rel="noopener noreferrer"
           className="transform transition-transform duration-300 hover:scale-105"
