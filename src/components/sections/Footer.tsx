@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <div className="flex bg-primaryOrange bottom-0 py-14 px-6 justify-center relative">
       <div className="relative w-[200px] h-[75px] self-center mr-4 transform transition-transform duration-300 hover:scale-110">
-        <Image src={'/Logo white.svg'} alt={'Rotina Monetária'} fill></Image>
+        <Image src={'/LogoWhite.svg'} alt={'Rotina Monetária'} fill></Image>
       </div>
 
       <span className="border-2 bg-white mx-6 absolute top-8 bottom-8"></span>

@@ -40,7 +40,7 @@ const Header = () => {
           className="cursor-pointer transform transition-transform duration-300 hover:scale-110"
         >
           <Image
-            src={changeColor ? '/Logo white.svg' : '/Logo.svg'}
+            src={changeColor ? '/LogoWhite.svg' : '/Logo.svg'}
             alt={'Rotina Monetária'}
             width={150}
             height={50}
