@@ -4,7 +4,6 @@ import { CirclePicker } from 'react-color'
 import Button from '@/components/components/Button'
 import { Color } from '@/enum'
 import { useSession } from 'next-auth/react'
-import axios from 'axios'
 import ModalComponent from '../Modal'
 import { Goal, GoalInput } from '@/goal'
 import CurrencyInput from '@/components/components/CurrencyInput'
@@ -37,7 +36,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
   const [showColorPicker, setShowColorPicker] = useState(false)
 
   const { data: session } = useSession()
-  const { createGoal, loading } = useGoals();
+  const { createGoal, loading } = useGoals()
 
   const validateInputs = (): boolean => {
     let isValid = true
@@ -89,9 +88,9 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
         userId: session.user.userId,
         currentGoalValue: parseFloat(data.currentGoalValue || '0'),
         finalGoalValue: parseFloat(data.finalGoalValue || '0'),
-      };
+      }
 
-      createGoal(newGoalData);
+      createGoal(newGoalData)
       onClose()
     } catch (error) {
       toast.error('Erro ao criar a meta!')
@@ -122,7 +121,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
       modalTitle="Adicionar Meta"
       actionButton={
         <Button
-        className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
+          className="bg-primaryOrange p-2 rounded-lg text-white font-medium text-lg flex gap-3 items-center"
           onClick={handleSubmit}
           disabled={loading}
         >
@@ -187,7 +186,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
           <div className="col-span-7">
             <DatePicker
               className="w-full"
-              selected={data.finalGoalDate}
+              selected={data.finalGoalDate ? new Date(data.finalGoalDate) : ''}
               onChange={date =>
                 setData(prevData => ({
                   ...prevData,
