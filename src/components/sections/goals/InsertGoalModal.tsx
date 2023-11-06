@@ -18,8 +18,17 @@ type Props = {
   onGoalAdded: (newGoal: Goal) => void
 }
 
+type GoalDataInputs = {
+  name: string;
+  color: string;
+  currentGoalValue: string;
+  finalGoalValue: string;
+  finalGoalDate: string | Date | null;
+  userId: string;
+};
+
 const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
-  const [data, setData] = useState<GoalInput>({
+  const [data, setData] = useState<GoalDataInputs>({
     name: '',
     color: 'ORANGE',
     currentGoalValue: '',
@@ -90,7 +99,14 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
         finalGoalValue: parseFloat(data.finalGoalValue || '0'),
       }
 
-      createGoal(newGoalData)
+      createGoal({
+        userId: newGoalData.userId,
+        name: newGoalData.name,
+        currentGoalValue: parseFloat(newGoalData.currentGoalValue.toString()),
+        finalGoalValue: parseFloat(newGoalData.finalGoalValue.toString()),
+        finalGoalDate: newGoalData.finalGoalDate instanceof Date ? newGoalData.finalGoalDate : new Date(),
+        color: newGoalData.color
+      })
       onClose()
     } catch (error) {
       toast.error('Erro ao criar a meta!')
@@ -109,10 +125,9 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
     setShowColorPicker(false)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setData(prevData => ({ ...prevData, [name]: value }))
-  }
+  const handleChange = (field: keyof GoalInput, value: any) => {
+    setData((prevData) => ({ ...prevData, [field]: value }));
+  };
 
   return (
     <ModalComponent
@@ -141,7 +156,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
           className="w-full"
           name="name"
           value={data.name}
-          onChange={handleChange}
+          onChange={(e) => handleChange('name', e.target.value)}
           error={!!errors.name}
           errorMessage={errors.name}
         />
@@ -153,11 +168,8 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
               className="w-full"
               name="initialGoalValue"
               value={data.currentGoalValue}
-              onValueChange={value =>
-                setData(prevData => ({
-                  ...prevData,
-                  currentGoalValue: value,
-                }))
+              onValueChange={(value) =>
+                handleChange('currentGoalValue', value)
               }
               error={!!errors.currentGoalValue}
               errorMessage={errors.currentGoalValue}
@@ -170,11 +182,8 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
               className="w-full"
               name="finalGoalValue"
               value={data.finalGoalValue}
-              onValueChange={value =>
-                setData(prevData => ({
-                  ...prevData,
-                  finalGoalValue: value,
-                }))
+              onValueChange={(value) =>
+                handleChange('finalGoalValue', value)
               }
               error={!!errors.finalGoalValue}
               errorMessage={errors.finalGoalValue}
