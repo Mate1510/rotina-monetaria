@@ -147,7 +147,7 @@ const FinanceTable = () => {
                         : 'text-red-500'
                     }`}
                   >
-                    {currencyFormatter.format(finance.value)}
+                    {currencyFormatter.format(parseFloat(finance.value.toString()))}
                   </td>
                 </tr>
               ))

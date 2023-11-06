@@ -1,7 +1,6 @@
 'use client'
 
 import Finances from '@/components/sections/finances/InsertFinances'
-import CardSection from '@/components/sections/homepage/CardSection'
 import CategoriesSection from '@/components/sections/homepage/CategoriesSection'
 import ChartsSection from '@/components/sections/homepage/ChartsSection'
 import FinanceTable from '@/components/sections/homepage/FinanceTable'
@@ -25,7 +24,7 @@ export default function Home() {
         <h1 className="text-primaryOrange font-semibold text-4xl self-start">
           Bem vindo(a), {session?.user?.name}
         </h1>
-        <FinanceProvider>
+        <FinanceProvider selectedYear={new Date().getFullYear()}>
           <Finances />
           <FinanceTable />
         </FinanceProvider>
