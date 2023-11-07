@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import GoalCard from '@/components/sections/goals/GoalCard'
 import { Goal } from '@/goal'
 import Link from 'next/link'
 import { useGoals } from '@/contexts/GoalContext'
 
 const GoalsSection = () => {
-  const { goals, addGoal, deleteGoal, editGoal } = useGoals()
+  const { goals, deleteGoal, editGoal } = useGoals()
 
   const handleDelete = (goalId: string) => {
     deleteGoal(goalId)

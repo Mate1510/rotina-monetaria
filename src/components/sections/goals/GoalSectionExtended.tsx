@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Goal } from '@/goal'
 import GoalCard from './GoalCard'
 import { MdAdd } from 'react-icons/md'
