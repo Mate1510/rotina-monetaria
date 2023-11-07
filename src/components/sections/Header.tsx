@@ -139,7 +139,7 @@ const Header = () => {
               aria-label="menu-button"
             />
             {menuIsOpen && (
-              <div className="absolute top-16 right-1 rounded-lg shadow-md bg-primaryOrange flex flex-col justify-center items-center">
+              <div className="absolute top-16 right-1 z-10 rounded-lg shadow-md bg-primaryOrange flex flex-col justify-center items-center">
                 <Link
                   href="/finances"
                   className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
