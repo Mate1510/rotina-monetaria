@@ -1,30 +1,22 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import useFetchGoals from '@/data/useFetchGoals'
+import React, { useState } from 'react'
 import GoalCard from '@/components/sections/goals/GoalCard'
 import InsertGoalModal from '../goals/InsertGoalModal'
-import { useSession } from 'next-auth/react'
 import { Goal } from '@/goal'
 import Link from 'next/link'
+import { useGoals } from '@/contexts/GoalContext'
 
 const GoalsSection = () => {
-  const [goals, setGoals] = useState<Goal[]>([])
   const [isInsertModalOpen, setIsInsertModalOpen] = useState(false)
+  const { goals, addGoal, deleteGoal, editGoal } = useGoals()
 
-  const { data: session } = useSession()
-  const { data: goalsData } = useFetchGoals()
+  const handleDelete = (goalId: string) => {
+    deleteGoal(goalId)
+  }
 
-  useEffect(() => {
-    if (!session) return
-
-    if (Array.isArray(goalsData)) {
-      setGoals(goalsData.slice(0, 2))
-    }
-  }, [session, goalsData])
-
-  const handleAddClick = () => {
-    setIsInsertModalOpen(true)
+  const handleEdit = (updatedGoal: Goal) => {
+    editGoal(updatedGoal)
   }
 
   return (
@@ -41,8 +33,15 @@ const GoalsSection = () => {
 
       <div className="md:columns-2">
         {goals.map(goal => (
-          <div key={goal.id} className="w-11/12 md:w-9/12 lg:w-[18vw] mx-auto mb-5 md:mb-0">
-            <GoalCard goal={goal} onDelete={() => null} onEdit={() => null} />
+          <div
+            key={goal.id}
+            className="w-11/12 md:w-9/12 lg:w-[18vw] mx-auto mb-5 md:mb-0"
+          >
+            <GoalCard
+              goal={goal}
+              onDelete={() => handleDelete(goal.id)}
+              onEdit={() => handleEdit(goal)}
+            />
           </div>
         ))}
       </div>
@@ -59,7 +58,7 @@ const GoalsSection = () => {
         <InsertGoalModal
           isOpen={isInsertModalOpen}
           onClose={() => setIsInsertModalOpen(false)}
-          onGoalAdded={newGoal => setGoals([...goals, newGoal])}
+          onGoalAdded={addGoal}
         />
       )}
     </div>
