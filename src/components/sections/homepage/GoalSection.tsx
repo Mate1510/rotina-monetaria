@@ -14,6 +14,7 @@ const GoalsSection = () => {
 
   const { data: session } = useSession()
   const { data: goalsData } = useFetchGoals()
+  const { goals, addGoal, deleteGoal, editGoal } = useGoals()
 
   useEffect(() => {
     if (!session) return
@@ -23,8 +24,12 @@ const GoalsSection = () => {
     }
   }, [session, goalsData])
 
-  const handleAddClick = () => {
-    setIsInsertModalOpen(true)
+  const handleDelete = (goalId: string) => {
+    deleteGoal(goalId)
+  }
+
+  const handleEdit = (updatedGoal: Goal) => {
+    editGoal(updatedGoal)
   }
 
   return (
@@ -41,8 +46,15 @@ const GoalsSection = () => {
 
       <div className="md:columns-2">
         {goals.map(goal => (
-          <div key={goal.id} className="w-11/12 md:w-9/12 lg:w-[18vw] mx-auto mb-5 md:mb-0">
-            <GoalCard goal={goal} onDelete={() => null} onEdit={() => null} />
+          <div
+            key={goal.id}
+            className="w-11/12 md:w-9/12 lg:w-[18vw] mx-auto mb-5 md:mb-0"
+          >
+            <GoalCard
+              goal={goal}
+              onDelete={() => handleDelete(goal.id)}
+              onEdit={() => handleEdit(goal)}
+            />
           </div>
         ))}
       </div>
