@@ -35,6 +35,21 @@ const GoalsSection = () => {
             Parece que você não tem metas ainda... 😔
           </h3>
         </div>
+      ) : goals.length === 1 ? (
+        <div>
+          {goals.map(goal => (
+            <div
+              key={goal.id}
+              className="w-11/12 md:w-9/12 lg:w-[18vw] mx-auto mb-5 md:mb-0"
+            >
+              <GoalCard
+                goal={goal}
+                onDelete={() => handleDelete(goal.id)}
+                onEdit={() => handleEdit(goal)}
+              />
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="md:columns-2">
           {goals.map(goal => (

@@ -143,24 +143,28 @@ const Header = () => {
                 <Link
                   href="/finances"
                   className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
+                  onClick={() => setMenuIsOpen(!menuIsOpen)}
                 >
                   Finanças
                 </Link>
                 <Link
                   href="/categories"
                   className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
+                  onClick={() => setMenuIsOpen(!menuIsOpen)}
                 >
                   Categorias
                 </Link>
                 <Link
                   href="/goals"
                   className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
+                  onClick={() => setMenuIsOpen(!menuIsOpen)}
                 >
                   Metas
                 </Link>
                 <Link
                   href="/charts"
                   className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
+                  onClick={() => setMenuIsOpen(!menuIsOpen)}
                 >
                   Estatísticas
                 </Link>
@@ -169,6 +173,7 @@ const Header = () => {
                   <Link
                     href="/control-panel"
                     className="w-full text-white text-sm text-center font-semibold p-2 border-b-2"
+                    onClick={() => setMenuIsOpen(!menuIsOpen)}
                   >
                     Usuários
                   </Link>

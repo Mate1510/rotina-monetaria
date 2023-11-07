@@ -99,6 +99,11 @@ export function GoalProvider({ children }: GoalProviderProps) {
         return
       }
 
+      if (createdGoal.currentGoalValue === 0) {
+        toast.success('Meta criada com sucesso!')
+        return
+      }
+
       const finance = {
         name: createdGoal.name + ' - Meta',
         value: createdGoal.currentGoalValue,

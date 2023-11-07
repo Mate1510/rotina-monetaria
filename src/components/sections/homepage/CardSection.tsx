@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Card from '@/components/components/Card'
 import axios from 'axios'
-
 import { MdTrendingUp, MdTrendingDown, MdAttachMoney } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { FinanceContext } from '@/contexts/FinanceContext'
 
 const CardSection = ({
   month,
@@ -17,6 +17,7 @@ const CardSection = ({
   const [incomes, setIncomes] = useState<number>(0)
   const [expenses, setExpenses] = useState<number>(0)
   const [balance, setBalance] = useState<number>(0)
+  const { finances } = useContext(FinanceContext)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,13 +40,28 @@ const CardSection = ({
     }
 
     fetchData()
-  }, [month, userid, year])
+  }, [month, userid, year, finances])
 
   return (
-    <div className='flex flex-col md:flex-row flex-wrap gap-10 mt-10 mb-16 px-0 md:px-16'>
-      <Card title="Receitas" value={`R$${incomes}`} Icon={MdTrendingUp} className='lg:flex-grow'/>
-      <Card title="Despesas" value={`R$${expenses}`} Icon={MdTrendingDown} className='lg:flex-grow'/>
-      <Card title="Total" value={`R$${balance}`} Icon={MdAttachMoney} className='lg:flex-grow'/>
+    <div className="flex flex-col md:flex-row flex-wrap gap-10 mt-10 mb-16 px-0 md:px-16">
+      <Card
+        title="Receitas"
+        value={`R$${incomes}`}
+        Icon={MdTrendingUp}
+        className="lg:flex-grow"
+      />
+      <Card
+        title="Despesas"
+        value={`R$${expenses}`}
+        Icon={MdTrendingDown}
+        className="lg:flex-grow"
+      />
+      <Card
+        title="Total"
+        value={`R$${balance}`}
+        Icon={MdAttachMoney}
+        className="lg:flex-grow"
+      />
     </div>
   )
 }

@@ -17,6 +17,7 @@ export default function RootLayout({
 
   const isPublicPage = checkIsPublicRoute(pathname)
   const isAdminPage = checkIsAdminRoute(pathname)
+  const isUserProfile = pathname.endsWith('user-profile') ? true : false
 
   return (
     <>
@@ -27,6 +28,10 @@ export default function RootLayout({
       ) : isAdminPage ? (
         <div className="container min-h-screen flex-grow lg:max-w-screen-2xl lg:mx-auto my-10">
           <AdminRoute>{children}</AdminRoute>
+        </div>
+      ) : isUserProfile ? (
+        <div className="container flex-grow lg:max-w-screen-2xl lg:mx-auto bg-orangeDarker">
+          <PrivateRoute>{children}</PrivateRoute>
         </div>
       ) : (
         <div className="container flex-grow lg:max-w-screen-2xl lg:mx-auto my-10">

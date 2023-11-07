@@ -136,7 +136,7 @@ const ContributionGoalModal: React.FC<Props> = ({
           placeholder="Valor do Aporte R$"
           className="w-full"
           value={contributionValue}
-          onValueChange={value => value && setContributionValue(value)}
+          onValueChange={value => setContributionValue(value || '')}
           error={!!errors.contributionValue}
           errorMessage={errors.contributionValue}
         />

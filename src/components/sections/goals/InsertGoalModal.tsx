@@ -64,12 +64,12 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
 
     if (
       !data.currentGoalValue ||
-      parseFloat(data.currentGoalValue) <= 0 ||
+      parseFloat(data.currentGoalValue) < 0 ||
       parseFloat(data.currentGoalValue) > 1000000
     ) {
       isValid = false
       newErrors.currentGoalValue =
-        'Valor atual da meta é obrigatório, deve ser maior que zero e menor que R$1.000.000,00.'
+        'Aporte inicial da meta é obrigatório, deve ser maior que zero e menor que R$1.000.000,00.'
     }
 
     if (!data.finalGoalValue || parseFloat(data.finalGoalValue) <= 0) {
@@ -164,7 +164,7 @@ const InsertGoalModal: React.FC<Props> = ({ isOpen, onClose, onGoalAdded }) => {
         <div className="grid grid-cols-12 gap-3 items-center">
           <div className="col-span-6">
             <CurrencyInput
-              placeholder="Valor Inicial R$"
+              placeholder="Aporte Inicial R$"
               className="w-full"
               name="initialGoalValue"
               value={data.currentGoalValue}

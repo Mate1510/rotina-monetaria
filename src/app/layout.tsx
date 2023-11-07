@@ -18,13 +18,6 @@ export const metadata: Metadata = {
   description:
     'Um planejador financeiro de uso pessoal para a gestão de suas finanças',
   icons: './favicon.svg',
-  openGraph: {
-    type: 'website',
-    title: 'Rotina Monetária',
-    description:
-      'Um planejador financeiro de uso pessoal para a gestão de suas finanças',
-    images: [{ url: './opengraph-image.png' }],
-  },
 }
 
 export default function RootLayout({
