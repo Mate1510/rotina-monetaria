@@ -6,6 +6,7 @@ import ChartsSection from '@/components/sections/homepage/ChartsSection'
 import FinanceTable from '@/components/sections/homepage/FinanceTable'
 import GoalsSection from '@/components/sections/homepage/GoalSection'
 import { FinanceProvider } from '@/contexts/FinanceContext'
+import { GoalProvider } from '@/contexts/GoalContext'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
@@ -33,7 +34,9 @@ export default function Home() {
       <ChartsSection />
 
       <div className="w-11/12 lg:w-4/5 flex flex-col lg:flex-row">
-        <GoalsSection />
+        <GoalProvider>
+          <GoalsSection />
+        </GoalProvider>
         <span className="border-2 border-constrastBlack bg-constrastBlack mx-24 md:mx-32 lg:mx-auto my-10"></span>
         <CategoriesSection />
       </div>

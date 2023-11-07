@@ -2,17 +2,13 @@
 
 import React, { useEffect, useState } from 'react'
 import { Goal } from '@/goal'
-import { useSession } from 'next-auth/react'
-import axios from 'axios'
 import GoalCard from './GoalCard'
 import { MdAdd } from 'react-icons/md'
 import InsertGoalModal from './InsertGoalModal'
-import useFetchGoals from '@/data/useFetchGoals'
 import { useGoals } from '@/contexts/GoalContext'
 
 const GoalsSectionExtended = () => {
   const [isInsertModalOpen, setIsInsertModalOpen] = useState(false)
-
   const { goals, addGoal, deleteGoal, editGoal } = useGoals()
 
   const handleAddClick = () => {
