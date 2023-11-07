@@ -9,6 +9,7 @@ import { useGoals } from '@/contexts/GoalContext'
 
 const GoalsSectionExtended = () => {
   const [isInsertModalOpen, setIsInsertModalOpen] = useState(false)
+
   const { goals, addGoal, deleteGoal, editGoal } = useGoals()
 
   const handleAddClick = () => {
