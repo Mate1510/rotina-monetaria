@@ -41,14 +41,14 @@ const GoalsSection = () => {
 
       <div className="md:columns-2">
         {goals.map(goal => (
-          <div key={goal.id} className="w-11/12 md:w-11/12 lg:w-[15vw] mx-auto mb-5 md:mb-0">
+          <div key={goal.id} className="w-11/12 md:w-9/12 lg:w-[18vw] mx-auto mb-5 md:mb-0">
             <GoalCard goal={goal} onDelete={() => null} onEdit={() => null} />
           </div>
         ))}
       </div>
 
       {goals.length === 0 && (
-        <div className="transition-all duration-300 ease-in-out transform hover:scale-105 container mx-auto flex items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-5 w-11/12 md:w-5/12 lg:w-[20vw] h-[23.5vh] md:h-[19vh] lg:h-[21.5vh]">
+        <div className="transition-all duration-300 ease-in-out transform hover:scale-105 container mx-auto flex items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-5 w-11/12 md:w-5/12 lg:w-[20vw] h-[26vh]">
           <h3 className="text-constrastBlack text-lg font-semibold">
             Parece que você não tem metas ainda... 😔
           </h3>

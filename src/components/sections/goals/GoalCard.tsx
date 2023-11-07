@@ -72,7 +72,7 @@ const GoalCard = ({
     <div>
       <div
         onClick={handleGoalCardClick}
-        className="transition-all duration-300 ease-in-out transform hover:scale-105 container flex flex-col gap-3 p-5 border border-solid border-primaryOrange rounded-lg h-[23.5vh] md:h-[19vh] lg:h-[21.5vh] cursor-pointer shadow-sm"
+        className="transition-all duration-300 ease-in-out transform hover:scale-105 container flex flex-col gap-3 p-5 border border-solid border-primaryOrange rounded-lg cursor-pointer shadow-sm"
       >
         <div className="flex justify-between items-center">
           <div className="flex gap-3">

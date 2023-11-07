@@ -35,7 +35,7 @@ const GoalsSectionExtended = () => {
     >
       <div
         onClick={handleAddClick}
-        className="transition-all duration-300 ease-in-out transform hover:scale-105 container flex flex-col items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-5 h-[23.5vh] md:h-[19vh] lg:h-[21.5vh] w-11/12 md:w-5/12 lg:w-[20vw] cursor-pointer shadow-sm"
+        className="transition-all duration-300 ease-in-out transform hover:scale-105 container flex flex-col items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-5 h-[26vh] w-11/12 md:w-5/12 lg:w-[20vw] cursor-pointer shadow-sm"
       >
         <MdAdd size={42} className="text-primaryOrange" />
 
@@ -45,7 +45,7 @@ const GoalsSectionExtended = () => {
       </div>
 
       {goals.map(goal => (
-        <div key={goal.id} className="w-11/12 md:w-5/12 lg:w-[20vw]">
+        <div key={goal.id} className="w-11/12 md:w-5/12 lg:w-[20vw] xl:w-[18vw]">
           <GoalCard
             goal={goal}
             onDelete={() => handleDelete(goal.id)}
@@ -55,7 +55,7 @@ const GoalsSectionExtended = () => {
       ))}
 
       {goals.length === 0 && (
-        <div className="transition-all duration-300 ease-in-out transform hover:scale-105 container flex items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-5 h-[23.5vh] md:h-[19vh] lg:h-[21.5vh] w-11/12 md:w-5/12 lg:w-[20vw]">
+        <div className="transition-all duration-300 ease-in-out transform hover:scale-105 container flex items-center justify-center gap-6 border border-solid border-primaryOrange rounded-lg p-5 h-[26vh] w-11/12 md:w-5/12 lg:w-[20vw]">
           <h3 className="text-constrastBlack text-lg font-semibold">
             Parece que você não tem metas ainda... 😔
           </h3>
