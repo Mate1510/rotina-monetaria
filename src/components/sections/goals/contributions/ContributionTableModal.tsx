@@ -87,9 +87,9 @@ const ContributionTableModal: React.FC<ContributionTableModalProps> = ({
       onClose={onClose}
       modalTitle="Histórico de Aportes"
     >
-      <div className="min-w-full rounded-2xl bg-primaryOrange p-0.5">
+      <div className="min-w-full overflow-x-auto rounded-2xl bg-primaryOrange p-0.5 no-scrollbar">
         <table className="min-w-full bg-white overflow-hidden rounded-2xl">
-          <thead className="bg-primaryOrange rounded-t-lg">
+          <thead className="bg-primaryOrange text-left text-white font-medium text-base">
             <tr>
               <th className="py-2 px-4 border-b text-white font-medium text-lg text-center">
                 Nome
