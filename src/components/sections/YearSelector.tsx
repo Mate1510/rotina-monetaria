@@ -58,7 +58,7 @@ const YearSelector = ({
   }, [onYearsFetched, session])
 
   return (
-    <div className="self-start">
+    <div data-testid="year-selector" className="self-start">
       <h3 className="text-constrastBlack mb-2 font-medium text-lg">
         Ano da Consulta
       </h3>

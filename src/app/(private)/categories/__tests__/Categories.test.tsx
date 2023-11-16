@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import CategoriesPage from '@/app/categories/page'
+import CategoriesPage from '@/app/(private)/categories/page'
+import { CategoriesProvider } from '@/contexts/CategoriesContext'
 
 jest.mock('@/components/sections/categories/InsertCategories', () => {
   return function MockedInsertCategories() {
@@ -13,14 +14,30 @@ jest.mock('@/components/sections/categories/CategoriesTableExtended', () => {
   }
 })
 
+jest.mock('@/contexts/CategoriesContext', () => {
+  const mockCategoriesProvider = ({ children }: { children: any }) => {
+    return <div>{children}</div>
+  }
+  return {
+    __esModule: true,
+    CategoriesProvider: mockCategoriesProvider,
+  }
+})
+
 describe('CategoriesPage', () => {
   it('Should render InsertCategories and CategoriesTableExtended components', () => {
-    render(<CategoriesPage />)
+    render(
+      <CategoriesProvider>
+        <CategoriesPage />
+      </CategoriesProvider>,
+    )
 
     const insertCategoriesComponent = screen.getByTestId('insert-categories')
     expect(insertCategoriesComponent).toBeInTheDocument()
 
-    const categoriesTableExtendedComponent = screen.getByTestId('categories-table-extended')
+    const categoriesTableExtendedComponent = screen.getByTestId(
+      'categories-table-extended',
+    )
     expect(categoriesTableExtendedComponent).toBeInTheDocument()
   })
 })

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Finances from '@/components/sections/finances/InsertFinances'
+import InsertFinances from '@/components/sections/finances/InsertFinances'
 import axios from 'axios'
 
 jest.mock('axios')
@@ -20,14 +20,14 @@ describe('Finances Component', () => {
 
   describe('Render', () => {
     it('renders correctly', async () => {
-      render(<Finances />)
+      render(<InsertFinances />)
 
       await waitFor(() => {
         expect(screen.getByTestId('insert-finances')).toBeInTheDocument()
       })
 
       expect(screen.getByTestId('insert-finances')).toBeInTheDocument()
-      expect(screen.getByPlaceholderText('Nome')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('Nome da Finança')).toBeInTheDocument()
       expect(screen.getByPlaceholderText('R$')).toBeInTheDocument()
       expect(screen.getByPlaceholderText('Data')).toBeInTheDocument()
       expect(screen.getByText('Adicionar')).toBeInTheDocument()
@@ -43,13 +43,13 @@ describe('Finances Component', () => {
         ],
       })
 
-      render(<Finances />)
+      render(<InsertFinances />)
 
       await waitFor(() => {
         expect(screen.getByTestId('insert-finances')).toBeInTheDocument()
       })
 
-      await userEvent.type(screen.getByPlaceholderText('Nome'), 'Salary')
+      await userEvent.type(screen.getByPlaceholderText('Nome da Finança'), 'Salario')
       await userEvent.type(screen.getByPlaceholderText('R$'), '5000')
       await userEvent.selectOptions(
         screen.getByRole('combobox', { name: /categorias/i }),

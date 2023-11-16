@@ -93,7 +93,7 @@ const InsertFinances = () => {
       </h3>
       <div className="flex flex-col gap-3">
         <Input
-          placeholder="Título"
+          placeholder="Nome da Finança"
           className="w-full"
           value={financeData.name}
           onChange={e => handleChange('name', e.target.value)}

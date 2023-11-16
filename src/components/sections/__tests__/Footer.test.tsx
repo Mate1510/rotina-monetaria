@@ -22,7 +22,7 @@ describe('Footer', () => {
 
     const feedbackLink = screen.getByRole('link', { name: /feedback/i })
     expect(feedbackLink).toBeInTheDocument()
-    expect(feedbackLink).toHaveAttribute('href', 'https://www.google.com/')
+    expect(feedbackLink).toHaveAttribute('href', 'https://forms.gle/hgE6jB3uQZfKXjNn8')
 
     const emailLink = screen.getByRole('link', { name: /email/i })
     expect(emailLink).toBeInTheDocument()
