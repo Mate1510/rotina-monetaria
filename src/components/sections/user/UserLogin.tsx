@@ -87,6 +87,7 @@ const UserLogin = () => {
 
   const handleGoogleClick = () => {
     signIn('google', { callbackUrl: '/' })
+    toast.success('Login bem sucedido! 👌')
   }
 
   return (
