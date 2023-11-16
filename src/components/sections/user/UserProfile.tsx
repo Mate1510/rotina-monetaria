@@ -279,9 +279,11 @@ const UserProfile = () => {
           <div className="relative group">
             {session?.user?.image ? (
               <Image
-                className="rounded-full border-2 border-primaryOrange w-[100px] h-[100px]"
+                className="rounded-full border-2 border-primaryOrange"
                 src={session?.user?.image ?? ''}
                 alt={session?.user?.name ?? ''}
+                height={100}
+                width={100}
                 fill
               ></Image>
             ) : (
