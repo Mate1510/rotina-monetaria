@@ -80,14 +80,12 @@ const LineChart = ({ selectedYear }: { selectedYear?: number }) => {
                     data: income,
                     borderColor: "rgba(75, 192, 192, 1)",
                     backgroundColor: "rgba(75, 192, 192, 0.6)",
-                    fill: true,
                 },
                 {
                     label: "Despesas",
                     data: expense,
                     backgroundColor: "rgba(255, 99, 132, 0.6)",
                     borderColor: "rgba(255, 99, 132, 1)",
-                    fill: true,
                 },
             ],
         });
