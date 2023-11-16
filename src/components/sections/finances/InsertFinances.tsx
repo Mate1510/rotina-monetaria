@@ -71,9 +71,9 @@ const InsertFinances = () => {
     setFinanceData({
       name: '',
       value: '',
-      categoryId: '',
+      categoryId: financeData.categoryId,
       date: null,
-      type: '',
+      type: financeData.type,
     })
   }
 
